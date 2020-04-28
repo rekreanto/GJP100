@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <script>
+    /*
+    
+    2. Skapa 3 funktioner och ett formulär. Den första funktionen ska köras när man trycker på knappen och ska använda sig av de andra funktionerna. De andra två funktionerna ska räkna ut summan av två tal och produkten av två tal. Se exempel nedan när man tryckt på knappen:
+      Tal1 	2
+      Tal2 	3
+      [CALCULATE KNAPP] 	 
+      Summa 	5
+      Produkt 	6
+    
+    */
+    function sum(x,y){
+      return x+y;
+    }
+    function product(x,y){
+      return x*y;
+    }
+    function showResults(){
+      // get input
+      let x = parseInt( document.getElementById("inpX").value );
+      let y = parseInt( document.getElementById("inpY").value );
+      // show output
+      document.getElementById("sum").value = sum(x,y);
+      document.getElementById("product").value = product(x,y);
+    }
+    
+
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 2</h1>
+  <form action="javascript:void(0);">
+    <br> Argument 1 <input id="inpX" type="text" value="3">
+    <br> Argument 2 <input id="inpY" type="text" value="6">
+    <br> <input type="button" onclick="showResults();" value="Beräkna">
+    <br> Summa:  <input id="sum"      type="text">
+    <br> Produkt: <input id="product" type="text">
+  </form>
+</body>
+</html>

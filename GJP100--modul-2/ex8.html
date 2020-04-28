@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    /*
+        
+      8. Skapa en array med orden "det", "är", "kul", "att", "programmera". Använd en loop för att skriva ut texten "det är kul att programmera".
+
+    */
+
+    let words = ["det", "är", "kul", "att", "programmera"];
+    //  index      0      1      2      3             4
+
+    function showPhrase(){
+      for(let i=0;i<words.length;i++){
+        document.getElementById("output" ).innerHTML += words[i] + " ";
+      }
+    }
+  
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 8</h1>
+  Klicka på knappen så skrivs en passande affirmation ut.  Ju fler gånger du klickar desto roligare blir det.
+  <form action="javascript:void(0);">
+    <br><input type="button" onclick="showPhrase();" value="Visa en passande affirmation">
+  </form>
+  <div id="output"></div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+body {
+  background-color: hsl(0,0%,95%);
+}
+
+#output {
+  border: solid 1px black;
+  border-radius: 0.2rem;
+  margin: 2rem;
+  padding: 2rem;
+  background-color: white;
+}
+
+button, input[type=button] {
+  text-transform: uppercase;
+}

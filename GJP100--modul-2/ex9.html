@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    /*
+              
+      9. Morgan, som är högstadielärare, behöver ett register för att hålla ordning på sina elevers betyg. Antag att du har två arrayer, en med namn och en med betyg. Exempelvis: namn = ["Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert"] med betygen: betyg = ["A", "B", "C", "A", "D", "C", "E", "E"]. Gör därefter en funktion (getGrade) som söker efter ett namn och returnerar betyget (första matchande namnet räcker). Gör därefter en sida som testar och demonstrerar din nya funktion (automatiskt när sidan laddas eller via en knapptryckning). Arrayerna namn och betyg kan vara globala variabler eller, lite snyggare, lokala variabler som skickas som indata till funktionerna.
+
+    */
+
+    const PERSONS  = ["Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert"];
+    const GRADES = [    "A",      "B",    "C",     "A",      "D",      "C",      "E",      "E"];
+
+    // uses two arrays xs, ys as an associative array looking up an element in xs, 
+    //returning the corresponding element in ys
+    // returns undefined if x is not in xs
+    function name2grade(xs,ys,x){
+      return ys[ xs.indexOf(x) ];
+    }
+    function pickRandom(xs){
+      let idx = Math.floor( xs.length * Math.random() );
+      return xs[ idx ];
+    }
+    function showGrade(givenName){
+      let name = givenName||document.getElementById("name").value;
+      let grade = name2grade(PERSONS, GRADES, name);
+      document.getElementById("output").innerHTML+= `<strong>${name}</strong> har betyget <strong>${grade}</strong>.<br>`;
+    }
+    function showRandomGrade(){
+      let name = pickRandom(PERSONS);
+      document.getElementById("name").value = name;
+      showGrade(name);
+    }
+  
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 9</h1>
+  Här kan du söka i vår betygsdatabas. Skriv in ett namn så får du fram betyget för den personen. Bekymra dig icke; alla elever har unika förnamn i vår skola. Här är några av våra elever som du akn prova att söka på: "Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert". De har godkänt publicering av sina betyg enligt GDPR.
+  <form action="javascript:void(0);">
+    <br> Ange elevens namn: <input id="name" type="text" value="Victor"> <input type="button" onclick="showGrade();" value="Visa betyg"> 
+    <br> eller slumpa fram en elev och visa dennes betyg <input type="button" onclick="showRandomGrade();" value="Visa slumpvis betyg">
+  </form>
+  <div id="output"></div>
+</body>
+</html>

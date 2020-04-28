@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <script src="ex4.js" type="text/javascript"></script>
+  <script>
+    /*
+        
+    4. Lägg de två funktionerna från förra uppgiften, som tar inparametrar och ger returvärde, i en extern javascript fil och länka in den. Testa så det fortfarande fungerar.
+    
+    */
+
+    /* 
+    
+    functions sum and product are factored out into separate file
+    
+    */
+
+    function showResults(){
+      // get input
+      let x = parseInt( document.getElementById("inpX").value );
+      let y = parseInt( document.getElementById("inpY").value );
+      // show output
+      document.getElementById("sum").value = sum(x,y);
+      document.getElementById("product").value = product(x,y);
+      document.getElementById("total").value = sum( sum(x,y), product(x,y) ); /* ADDED in ex 3 */
+ }
+    
+
+  </script>
+</head>
+<body onload="">
+  <form action="javascript:void(0);">
+    <br> Argument 1 <input id="inpX" type="text" value="3">
+    <br> Argument 2 <input id="inpY" type="text" value="6">
+    <br> <input type="button" onclick="showResults();" value="Beräkna">
+    <br> Summa:  <input id="sum"      type="text">
+    <br> Produkt: <input id="product" type="text">
+    <br> Summa + Produkt: <input id="total" type="text"> <!-- ADDED in ex 3 -->
+    
+  </form>
+</body>
+</html>

@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    /*
+        
+    5. Skapa en array med orden "God", "och", "JUL", "Gott", "år", "Nytt" (i den ordningen). När användaren trycker på en knapp ska texten "God Jul och Gott Nytt år" skrivas ut med hjälp av arrayen.
+    
+    */
+
+    let words = ["God", "och", "JUL", "Gott", "år", "Nytt"];
+    //  index      0      1      2      3      4      5
+    function showGreeting(){
+      let greeting = [0,2,1,3,5,4].map(i=>words[i]).join(" ");
+      document.getElementById("output").innerHTML += greeting + "<br>";
+    }
+    
+
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 5</h1>
+  Tryck på knappen för att få en spenvarm julhälsning uppbyggd av från strängkonkatenerade array-element. 
+  <form action="javascript:void(0);">
+    <br> <input type="button" onclick="showGreeting();" value="Visa hälsning">
+  </form>
+  <div id="output"></div>
+</body>
+</html>

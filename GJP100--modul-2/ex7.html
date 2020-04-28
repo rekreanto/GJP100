@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    /*
+        
+      7. Skapa en array med orden "Hej", "Nej", "EJ", "Leverpastej", "42". Slumpa fram ett av orden och visa dem med valfri metod när ni trycker på en knapp.
+
+    */
+
+    let words = ["Hej", "Nej", "EJ", "Leverpastej", "42"];
+    //  index      0      1      2      3             4
+
+    function showElement(){
+      let idx = Math.floor(5*Math.random());
+      let elem = words[idx]; 
+      document.getElementById("output").innerHTML += idx + ": ";
+      document.getElementById("output").innerHTML += elem + "<br>";
+    }
+  
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 7</h1>
+  Klicka på knappen så väljs ett ord på en slumpad position från en hemlig lista.
+  <form action="javascript:void(0);">
+    <br><input type="button" onclick="showElement();" value="Visa slumpvis Element">
+  </form>
+  <div id="output"></div>
+</body>
+</html>

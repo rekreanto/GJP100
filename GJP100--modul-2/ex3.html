@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <script>
+    /*
+        
+    3. Bygg ut tidigare exempel utan att skapa några nya funktioner så ni även skriver ut summan av de tidigare framräknade talen (vilket bör bli 11 i ovanstående exempel)
+    
+    */
+    function sum(x,y){
+      return x+y;
+    }
+    function product(x,y){
+      return x*y;
+    }
+    function showResults(){
+      // get input
+      let x = parseInt( document.getElementById("inpX").value );
+      let y = parseInt( document.getElementById("inpY").value );
+      // show output
+      document.getElementById("sum").value = sum(x,y);
+      document.getElementById("product").value = product(x,y);
+      document.getElementById("total").value = sum( sum(x,y), product(x,y) ); /* ADDED in ex 3 */
+    }
+    
+
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 3</h1>
+  <form action="javascript:void(0);">
+    <br> Argument 1 <input id="inpX" type="text" value="3">
+    <br> Argument 2 <input id="inpY" type="text" value="6">
+    <br> <input type="button" onclick="showResults();" value="Beräkna">
+    <br> Summa:  <input id="sum"      type="text">
+    <br> Produkt: <input id="product" type="text">
+    <br> Summa + Produkt: <input id="total" type="text"> <!-- ADDED in ex 3 -->
+    
+  </form>
+</body>
+</html>
