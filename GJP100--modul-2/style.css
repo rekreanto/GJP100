@@ -2,14 +2,24 @@ body {
   background-color: hsl(0,0%,95%);
 }
 
-#output {
-  border: solid 1px black;
-  border-radius: 0.2rem;
-  margin: 2rem;
-  padding: 2rem;
-  background-color: white;
-}
-
 button, input[type=button] {
   text-transform: uppercase;
+}
+
+#output {
+  border: solid 1px black;
+  margin: 2rem;
+  padding: 0;
+  background-color: hsl(0,0%,90%);
+  min-height: 4rem;
+}
+
+#output > * {
+  padding: 1rem;
+  margin: 0;
+  border-bottom: solid 1px black;
+}
+
+#output>*:nth-child(1) {
+  background-color: hsl(0,0%,100%);
 }

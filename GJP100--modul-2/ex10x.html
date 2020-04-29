@@ -12,17 +12,25 @@
 
     */
 
+    // lägg till resultat överst i elementet #output 
+    function display(html){
+      document.getElementById("output").innerHTML= 
+        "<div>"+html+"</div>" +
+        document.getElementById("output").innerHTML 
+    }
+
     const PERSONS  = ["Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert"];
     const GRADES = [    "A",      "B",    "C",     "A",      "D",      "C",      "E",      "E"];
 
-    // uses two arrays xs, ys as an associative array looking up an element in xs, 
-    //returning the corresponding element in ys
-    // returns undefined if x is not in xs
 
+    // returnera ett slumpvis valt element från en array
     function pickRandom(xs){
       let idx = Math.floor( xs.length * Math.random() );
       return xs[ idx ];
-    }    
+    }  
+    // uses two arrays xs, ys as an associative array looking up an element in xs, 
+    // returning the corresponding element in ys
+    // returns undefined if x is not in xs  
     function grade2names(xs,ys,y){
       let idxs = [];
       ys.forEach((cand,idx) => { if (cand === y) idxs.push(idx); } );
@@ -32,7 +40,7 @@
     function showNames(givenGrade){
       let grade = givenGrade||document.getElementById("grade").value;
       let names = grade2names(PERSONS, GRADES, grade);
-      document.getElementById("output").innerHTML+= `Betyget <strong>${grade}</strong> innehas av följande personer: <strong>${names.join(", ")}</strong>.<br>`;
+      display( `Betyget <strong>${grade}</strong> innehas av följande personer: <strong>${names.join(", ")}</strong>.<br>` );
     }
 
     function showRandomNames(){
@@ -48,14 +56,27 @@
     function showGrade(givenName){
       let name = givenName||document.getElementById("name").value;
       let grade = name2grade(PERSONS, GRADES, name);
-      document.getElementById("output").innerHTML+= `<strong>${name}</strong> har betyget <strong>${grade}</strong>.<br>`;
+      display( `<strong>${name}</strong> har betyget <strong>${grade}</strong>.<br>` );
     }
     function showRandomGrade(){
       let name = pickRandom(PERSONS);
       document.getElementById("name").value = name;
       showGrade(name);
     }
-
+    
+    function showRanking(){
+      // sortera all elever baserat på deras betyg
+      // gör en lista [[person,grade]] så att elemetnen går att jämföra
+      let xs = PERSONS.map( (x, i) => [GRADES[i], x] );
+      // gör en komparator för elever 
+      let cmp = ( ([g1,],[g2,]) => g1<g2?-1:1 );
+      // sort in place
+      xs.sort(cmp);
+      // show persons with grades
+      let str = xs.map(([grade,person])=>`${grade}: ${person}`).join("<br>");
+      // add to document
+      display( "<strong>Rangordnad lista</strong><br>" + str );
+    }
   
   </script>
 </head>
@@ -67,13 +88,18 @@
       <input id="name" type="text" value="Victor"> <input type="button" onclick="showGrade();" value="Visa betyg"> 
     <br> eller slumpa fram en elev och visa dennes betyg 
       <input type="button" onclick="showRandomGrade();" value="Visa betyg för slumpvis elev">
-
+      <hr>
     <br> Sök på betyg: 
-      <input id="grade" type="text" value="C"> <input type="button" onclick="showNames();" value="Visa alla son har detta betyg"> 
+      <input id="grade" type="text" value="C"> <input type="button" onclick="showNames();" value="Visa alla som har detta betyg"> 
     <br> eller slumpa fram ett betyg och visa elever som har det 
       <input type="button" onclick="showRandomNames();" value="Visa alla elever för ett slumpvis betyg">
-
+      <hr>
+    <br> Eller få en rangordnad lista 
+      <input type="button" onclick="showRanking();" value="Visa elever ordnade efter betyg, högst först">
+      <hr>
+      
   </form>
+  <h2>RESULTAT</h2>
   <div id="output"></div>
 </body>
 </html>
