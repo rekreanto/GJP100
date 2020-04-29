@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Henning von Rosen</title>
   <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
   <script>
     /*
               
@@ -28,14 +29,14 @@
     function showGrade(givenName){
       let name = givenName||document.getElementById("name").value;
       let grade = name2grade(PERSONS, GRADES, name);
-      document.getElementById("output").innerHTML+= `<strong>${name}</strong> har betyget <strong>${grade}</strong>.<br>`;
+      display( `<strong>${name}</strong> har betyget <strong>${grade}</strong>.<br>` );
     }
     function showRandomGrade(){
       let name = pickRandom(PERSONS);
       document.getElementById("name").value = name;
       showGrade(name);
     }
-    
+
   
   </script>
 </head>

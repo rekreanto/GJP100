@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Henning von Rosen</title>
   <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
   <script>
     /*
 
@@ -32,7 +33,7 @@
     function showNames(givenGrade){
       let grade = givenGrade||document.getElementById("grade").value;
       let names = grade2names(PERSONS, GRADES, grade);
-      document.getElementById("output").innerHTML+= `Betyget <strong>${grade}</strong> innehas av följande personer: <strong>${names.join(", ")}</strong>.<br>`;
+      display( `Betyget <strong>${grade}</strong> innehas av följande personer: <strong>${names.join(", ")}</strong>.<br>` );
     }
 
     function showRandomNames(){
@@ -48,7 +49,7 @@
     function showGrade(givenName){
       let name = givenName||document.getElementById("name").value;
       let grade = name2grade(PERSONS, GRADES, name);
-      document.getElementById("output").innerHTML+= `<strong>${name}</strong> har betyget <strong>${grade}</strong>.<br>`;
+      display( `<strong>${name}</strong> har betyget <strong>${grade}</strong>.<br>` );
     }
     function showRandomGrade(){
       let name = pickRandom(PERSONS);

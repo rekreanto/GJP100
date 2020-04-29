@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
+  <script>
+    /*
+
+      14. Gör ett program som frågar efter en text och sedan skriver ut texten flera gånger. Först med bara en bokstav, därefter två, och så vidare. T ex: matar användaren in "Thomas" så ska strängarna "T", "Th", "Tho", "Thom", "Thoma", "Thomas" skrivas ut. 
+      
+       x. Fortsätt med mer utskrifter i föregående uppgift. Efter att "Thomas" har skrivit uts (6 st delsträngar) så ska allt börja om från andra bokstaven i strängen. Dvs, följande skrivs ut: "h", "ho", "hom", "homa", "homas" (5 st delsträngar). Därefter ska allt skrivas om från 3:e bokstaven, 4:e bokstaven, osv, tills strängen inte har fler bokstäver. Vi skulle alltså få även: "o", "om", "oma", "omas", och: "m", "ma", "mas", och: "a", "as", och slutligen "s".
+
+    */
+    function doFunnyPrint(){
+      let text = document.getElementById("text").value;
+      for(let i = 1; i<=text.length; i++) display( text.slice(0,i) );
+    }
+    function doSuperFunnyPrint(){
+      let text = document.getElementById("text").value;
+      for(let h = 0; h<text.length; h++){ 
+        display("-------- NY OMGÅNG ---------", true);
+        for(let i = h+1; i<=text.length; i++) display( text.slice(h,i), true );
+      }
+    }
+    
+
+  </script>
+</head>
+<body onload="show();">
+  <h1>Övning 14x</h1>
+  <form action="javascript:void(0);">
+      <textarea id="text" type="text zize = 100" rows="10" cols="60">Thomas</textarea>
+      <br> <input type="button" onclick="doSuperFunnyPrint();" value="Skriv ut texten som en trappa av trappor, tack!"> 
+        
+      
+  </form>
+  <h2>RESULTAT</h2>
+  <div id="output"></div>
+</body>
+</html>

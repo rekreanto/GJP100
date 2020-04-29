@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Henning von Rosen</title>
   <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
   <script>
     /*
 
@@ -12,22 +13,11 @@
 
     */
 
-    // lägg till resultat överst i elementet #output 
-    function display(html){
-      document.getElementById("output").innerHTML= 
-        "<div>"+html+"</div>" +
-        document.getElementById("output").innerHTML 
-    }
+
 
     const PERSONS  = ["Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert"];
     const GRADES = [    "A",      "B",    "C",     "A",      "D",      "C",      "E",      "E"];
 
-
-    // returnera ett slumpvis valt element från en array
-    function pickRandom(xs){
-      let idx = Math.floor( xs.length * Math.random() );
-      return xs[ idx ];
-    }  
     // uses two arrays xs, ys as an associative array looking up an element in xs, 
     // returning the corresponding element in ys
     // returns undefined if x is not in xs  
@@ -67,7 +57,7 @@
     function showRanking(){
       // sortera all elever baserat på deras betyg
       // gör en lista [[person,grade]] så att elemetnen går att jämföra
-      let xs = PERSONS.map( (x, i) => [GRADES[i], x] );
+      let xs = zip(GRADES, PERSONS);;
       // gör en komparator för elever 
       let cmp = ( ([g1,],[g2,]) => g1<g2?-1:1 );
       // sort in place
@@ -81,7 +71,7 @@
   </script>
 </head>
 <body onload="">
-  <h1>Övning 10</h1>
+  <h1>Övning 10x</h1>
   Här kan du söka i vår betygsdatabas. Skriv in ett namn så får du fram betyget för den personen. Bekymra dig icke; alla elever har unika förnamn i vår skola. Här är några av våra elever som du kan prova att söka på: "Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert". De har godkänt publicering av sina betyg enligt GDPR.
   <form action="javascript:void(0);">
     <br> Ange elevens namn: 

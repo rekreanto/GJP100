@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
+  <script>
+    /*
+
+      14. Gör ett program som frågar efter en text och sedan skriver ut texten flera gånger. Först med bara en bokstav, därefter två, och så vidare. T ex: matar användaren in "Thomas" så ska strängarna "T", "Th", "Tho", "Thom", "Thoma", "Thomas" skrivas ut.   
+
+    */
+    function doFunnyPrint(){
+      let text = document.getElementById("text").value;
+      for(let i = 1; i<=text.length; i++) display( text.slice(0,i), true );
+    }
+
+    
+
+  </script>
+</head>
+<body onload="show();">
+  <h1>Övning 14</h1>
+  <form action="javascript:void(0);">
+      <textarea id="text" type="text zize = 100" rows="10" cols="60">Thomas</textarea>
+      <br> <input type="button" onclick="doFunnyPrint();" value="Skriv ut texten som en trappa, tack!"> 
+
+        
+      
+  </form>
+  <h2>RESULTAT</h2>
+  <div id="output"></div>
+</body>
+</html>

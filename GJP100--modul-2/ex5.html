@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Henning von Rosen</title>
-  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
   <script>
     /*
         
@@ -17,7 +18,7 @@
     //  index      0      1      2      3      4      5
     function showGreeting(){
       let greeting = [0,2,1,3,5,4].map(i=>words[i]).join(" ");
-      document.getElementById("output").innerHTML += greeting + "<br>";
+      display(  greeting + "<br>" );
     }
     
 

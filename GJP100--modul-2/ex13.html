@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
+  <script>
+    /*
+
+      13. Det finns även andra strängmetoder som är väldigt användbara: indexOf(), charAt(), toUpperCase(), och toLowerCase(). Läs på hur dessa fungerar och skriv ett program som demonstrerar dessa metoder.(kolla boken)
+
+    */
+
+    // expression är en text och information om vilken avdelare som används
+    let expr = {text:"Lorem ipsum dolor sit amet consectetur adipiscing elit", delim:" "};
+    let delims=" !+*%&/=?^¨#";
+
+    function demo1(){
+      let ch  = pickRandom(expr.text);
+      let idx = expr.text.indexOf(ch);
+      let html = expr.text.slice(0,idx) +"<strong class='highlight'>"+ expr.text.charAt(idx) +"</strong>"+ expr.text.slice(idx+1,expr.text.length);
+      display(`${html}<br>Bokstaven ${ch} finns på position ${idx} i texten.`); 
+
+    }
+
+    function replaceDelims(){
+      // välj en slumpvis ny avgränsare
+      let delim = pickRandom(delims);
+      // dela upp uttrycket
+      expr.text = expr.text.split(expr.delim).join(delim);
+      expr.delim = delim;
+    }
+    function hackWord(str){
+      if(str.length < 2) return str; // words must be longer than 1 letter in order to be hacked
+      let breakpoint = Math.floor(Math.random()*(str.length-1))+1; // första och sista utesluts
+      let pre  = str.slice(0,breakpoint);
+      let post = str.slice(breakpoint,str.length);
+      return post+pre; // change order
+    }
+    function hackWords(){
+      // använd slice för att dela upp och sätta ihop varje ord till ett nytt ord
+      expr.text = expr.text
+        .split(expr.delim)
+        .map(hackWord)
+        .join(expr.delim);
+      show();
+    }
+    function show(){
+      display(expr.text.split(expr.delim).join("<strong style='color:red'>"+expr.delim+"</strong>"));
+    }
+    function randomizeCase(str){
+      return str.split('').map(ch=>Math.random()<0.5?ch.toLocaleUpperCase():ch.toLocaleLowerCase()).join('');
+    }
+  </script>
+</head>
+<body onload="show();">
+  <h1>Övning 13</h1>
+  <form action="javascript:void(0);">
+      <br> Använd <code>split</code> och <code>join</code> för att ersätta ersätta avgränsare i uttrycket <input type="button" onclick="replaceDelims();show();" value="byt avgränsare"> 
+      <br> Använd <code>slice</code> för att dela upp och sätta ihop varje ord till ett nytt ord <input type="button" onclick="hackWords();show();" value="omforma orden"> 
+      <hr>
+      <br> 
+        Välj en slumpvis bokstav, hittaden i texten och skriv ut dess index <code></code> <input type="button" onclick="demo1();" value="Demo 1: indexOf, charAt">
+        <br> 
+        <hr>
+          <input type="button" onclick="expr.text = expr.text.toLocaleUpperCase();show()" value="gör om till stora bokstäver"> 
+          <input type="button" onclick="expr.text = expr.text.toLocaleLowerCase();show()" value="gör om till små bokstäver"><br>
+          Ge varje tecken slumpvis case <input type="button" onclick="expr.text = randomizeCase(expr.text);show();" value="Slumpa case">
+        <hr>
+        
+        
+      
+  </form>
+  <h2>RESULTAT</h2>
+  <div id="output"></div>
+</body>
+</html>

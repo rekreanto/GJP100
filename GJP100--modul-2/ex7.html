@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Henning von Rosen</title>
-  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
   <script>
     /*
         
@@ -19,8 +20,7 @@
     function showElement(){
       let idx = Math.floor(5*Math.random());
       let elem = words[idx]; 
-      document.getElementById("output").innerHTML += idx + ": ";
-      document.getElementById("output").innerHTML += elem + "<br>";
+      display( idx + ": " + elem );
     }
   
   </script>
