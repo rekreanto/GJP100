@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
+  <style>
+    textarea {
+      font-size: 16px;
+      font-family: monospace;
+    };
+  </style>
+  <script>
+    /*
+
+x. En IT-avdelning behöver skicka ut lösenord till sina användare. Skriv ett program som genererar (skriver ut) 10 st slumpmässiga lösenord. Lösenorden ska inte vara helt slumpmässiga utan vara uppbyggda enligt vissa regler för att lättare komma ihåg dem: 
+(1) de ska vara 9 tecken långa (3 grupper med 3 tecken), 
+(2) varje grupp av 3 tecken ska bestå av konsonant + vokal + konsonant, 
+(3) bara små bokstäver ska användas.
+
+Ett lösenord skulle t ex kunna se ut som: "kolnimpup" - mycket lätt att komma ihåg!
+
+    */
+    const ABC = "abdefghijklmnoprstuvy"; // exclude letters lacking clear pronounciation, such as 'x'
+    const VOCALS = "aoueiy";
+    const CONSONANTS = ABC.split('').filter(ch=>!VOCALS.includes(ch)).join('') ; // the method includes introduced in ES2015
+
+    const getGroup = () => 
+      pickRandom(CONSONANTS) +
+      pickRandom(VOCALS) +
+      pickRandom(CONSONANTS);
+    
+      const mkPassword = () => getGroup() + getGroup() + getGroup();
+
+
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 15</h1>
+  <p>Detta program skapar lösenord som går att uttala pga de skapas enligt följande regler:
+    <ol>
+      <li>lösenorden är 9 tecken långa (3 grupper med 3 tecken)</li>
+      <li>varje grupp av 3 tecken ska bestå av konsonant + vokal + konsonant</li>
+      <li>bara små bokstäver ska användas</li>
+    </ol>
+  </p>
+  <form action="javascript:void(0);">
+    <input type="button" onclick="display(  getGroup());" value="Skapa en stavelse">
+    <input type="button" onclick="display(mkPassword());" value="Skapa ett lösenord">
+    <input type="button" onclick="display(
+      [mkPassword(),mkPassword(),mkPassword(),
+       mkPassword(),mkPassword(),mkPassword(),
+       mkPassword(),mkPassword(),mkPassword(),
+       mkPassword()].join(', ')
+      );" value="Skapa tio stycken lösenord">
+      
+  </form>
+
+  <h2>RESULTAT</h2>
+  <div id="output" style="font-family:monospace;"></div>
+</body>
+</html>

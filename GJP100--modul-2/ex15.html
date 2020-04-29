@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
+  <style>
+    textarea {
+      font-size: 16px;
+      font-family: monospace;
+    };
+  </style>
+  <script>
+    /*
+
+      15. Gör en funktion (kryptera) som krypterar en text genom att byta ut bokstäverna "o", "e", "t", och "n" till tecknen "!", "#", "%", och "&" (om du vill kan du lägga till lite fler bokstäver som byts ut). Gör också en funktion (dekryptera) som byter tillbaks tecknen till klartext igen. Testa och demonstrera att dina funktioner fungerar.
+
+    */
+
+    const TABLE = {from:"oetn", to:"!#%&"};
+    const reverse = tbl => ({from:tbl.to, to:tbl.from});
+    const lookup = 
+      (tbl) =>
+        (ch) => 
+          tbl.from.indexOf(ch)!==-1?tbl.to[tbl.from.indexOf(ch)]:ch; // ej mest effektiva lösningen
+
+    const encrypt = str => str.split('').map(lookup(         TABLE  )).join('');    
+    const decrypt = str => str.split('').map(lookup( reverse(TABLE) )).join('');    
+
+  </script>
+</head>
+<body onload="show();">
+  <h1>Övning 15</h1>
+  <form action="javascript:void(0);">
+      <textarea id="text" type="text zize = 100" rows="10" cols="60">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. </textarea>
+      <br> 
+      <input type="button" onclick="applyToValue(encrypt,'text');" value="Kryptera">
+      <input type="button" onclick="applyToValue(decrypt,'text');" value="Avkryptera">
+      
+
+        
+      
+  </form>
+
+</body>
+</html>

@@ -23,3 +23,9 @@ function pickRandom(xs){
 // zip :: ([a],[b]) => [[a,b]]
 let zip = (xs,ys) => xs.map( (x, i) => [x, ys[i]] );
 
+// applies a functio to a DOM element with a value and updates it with the result
+// applicable e.g. to input[type=text] and textarea elements
+function applyToValue(f,id){
+  let elem = document.getElementById(id);
+  elem.value = f(elem.value);
+}
