@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .elem {
+      color: red; 
+      background-color: green;
+      position: absolute;
+      transition: all 0.225s;
+      border: solid 1px black;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin:0;
+      text-align: center;
+      width: 50px;
+      height: 50px
+    }
+  </style>
+  <script src="utils.js"></script>
+  <script>
+    /*
+ 
+      21. Gör ett program som  placerar ut 1 st div-element 50*50 pixlar per sekund på en slumpad position. (Det kan finnas flera sätt att lösa uppgiften på, t.ex. kan ett div-element flyttas till en ny position en gång per sekund, eller så kan ett nytt div-element skapas en gång per sekund.)
+
+    */
+
+    /*
+
+    Kod som lagts till från övning 18 är endast en rad i `addGreeting`:
+          let x = 0; setInterval(()=>elem.style.left = `${x++ % window.innerWidth}px`, 50);
+
+    */
+ 
+    function addElem(id){
+      id = id||`id_${rnd(1000000)}`; // om man inte känner sig lyckosam, bör man ha en räknare här
+      let elem = document.createElement("div");
+      elem.classList.add("elem");
+      elem.id = id;
+      document.body.appendChild(elem);
+      mvRandom(id); setInterval(()=>mvRandom(id), 50);
+    }
+    function mvRandom(id){
+      console.log("mv id:",id)
+      let elem = document.getElementById(id);
+      let X = window.innerWidth;
+      let Y = window.innerHeight;
+      let dx = elem.getBoundingClientRect().width;
+      let dy = elem.getBoundingClientRect().height;
+      let x = rnd(X-dx);
+      let y = rnd(Y-dy);
+      let style.left = `${x}px`;
+      let style.top  = `${y}px`;
+    }
+  </script>
+</head>
+<body onload="addElem('theGreeting');">
+  <h1>Övning 18</h1>
+  <form action="javascript:void(0);">
+    <input type="button" onclick="addElem();" value="Lägg till ett element">
+  </form>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .flying-greeting {
+      color: red; 
+      background-color: white;
+      position: absolute;
+      transition: all 0.225s;
+      border: solid 1px black;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin:0;
+      text-align: center;
+    }
+  </style>
+  <script src="utils.js"></script>
+  <script>
+    /*
+      19. Gör en sida som visar en text med olika fontstorlekar. Fråga användaren först efter en text och ett antal gånger att visa texten. Skapa därefter en massa element som visar texten från användaren (så många element som användaren valde). Varje text ska ha lite större fontstorlekar. Variera, till exempel, storleken från 10% upp till 200% i lagom många steg.      
+
+    */
+    let sample = (txt,rem) => `<div style="font-size: ${rem}rem">${txt}</div>`;
+    function sampleElem(txt,rem){
+      let elem = document.createElement("div");
+      elem.innerText = txt;
+      elem.style = `font-size: ${rem}rem`;
+      return elem;
+    };
+
+    function showSamples(txt, n){
+      // calcualte the size of a step
+      let min = 0.5, max = 5; // Size limits in rem
+      let step = (max - min)/n;
+      let container = document.createElement("div");
+      // rem is the size in rem units of the current sample
+      for(let rem = min; rem<max; rem += step){
+        let e = sampleElem(txt,rem);
+        container.appendChild(e);
+      }
+      elem('output').appendChild(container);
+    }
+  </script>
+</head>
+<body onload="showSamples(val('text'), parseInt(val('qty')));">
+  <h1>Övning 19</h1>
+  <form action="javascript:void(0);">
+    Text?                  <input id="text" type="text" value="Lorem ipsum dolor">
+    <br> Hur många? <input id="qty" type="text" size="3" value="10"               >
+    <br> <input type="button" onclick="showSamples(val('text'), parseInt(val('qty')));" value="Visa">
+  </form>
+
+  <h2>RESULTAT</h2>
+  <div id="output"></div>
+</body>
+</html>

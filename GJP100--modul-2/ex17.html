@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="utils.js"></script>
+  <script>
+    /*
+      17. Gör en sida som innehåller en knapp. När man trycker på knappen ska texten "Glad påsk" skrivas ut som ett h1 element (ett nytt h1-element ska läggas till) inuti body-elementet. Färgen på Glad påsk ska vara röd.
+
+    */
+    function addGreeting(){
+      let h1 = document.createElement("h1");
+      h1.innerText = "Glad Påsk!";
+      h1.style = "color: red";
+      document.body.appendChild(h1);
+    }
+  </script>
+</head>
+<body onload="">
+  <h1>Övning 17</h1>
+  
+  <form action="javascript:void(0);">
+    <input type="button" onclick="addGreeting();" value="Skapa en påskhälsning på sidan">
+  </form>
+
+</body>
+</html>

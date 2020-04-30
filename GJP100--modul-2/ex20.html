@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .flying-greeting {
+      color: red; 
+      background-color: white;
+      position: absolute;
+      transition: all 0.225s;
+      border: solid 1px black;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin:0;
+      text-align: center;
+    }
+  </style>
+  <script src="utils.js"></script>
+  <script>
+    /*
+      20. Gör en sida som har ett div-element som det står Glad påsk i med absolut positionering. Sätt en timer som kallar på en funktion som flyttar elementet 1 pixel åt höger 20 ggr per sekund.
+    */
+
+    /*
+
+    Kod som lagts till från övning 18 är endast en rad i `addGreeting`:
+          let x = 0; setInterval(()=>elem.style.left = `${x++ % window.innerWidth}px`, 50);
+
+    */
+ 
+    function addGreeting(id){
+      id = id||`id_${rnd(1000000)}`; // om man inte känner sig lyckosam, bör man ha en räknare här
+      let elem = document.createElement("div");
+      elem.innerHTML  = '<h1>Glad Påsk!</h1>';
+      elem.innerHTML += `<br><button>TA MIG OM DU kan!</button></code>`;
+      elem.innerHTML += `<br><code>mitt id är '${id}</code>'`;
+      elem.addEventListener('mouseover', () => moveGreeting(id));
+      elem.classList.add("flying-greeting");
+      elem.id = id;
+      document.body.appendChild(elem);
+      moveGreeting(id);
+      let x = 0; setInterval(()=>elem.style.left = `${x++ % window.innerWidth}px`, 50); // lösning övning 20
+    }
+    function moveGreeting(id){
+      console.log("id",id)
+      let elem = document.getElementById(id);
+      let X = window.innerWidth;
+      let Y = window.innerHeight;
+      let dx = elem.getBoundingClientRect().width;
+      let dy = elem.getBoundingClientRect().height;
+      let x = rnd(X-dx);
+      let y = rnd(Y-dy);
+      let style =  `left:${x}px; top:${y}px;`;
+      elem.style = style;
+    }
+  </script>
+</head>
+<body onload="addGreeting('theGreeting');">
+  <h1>Övning 18</h1>
+  <form action="javascript:void(0);">
+    <input type="button" onclick="addGreeting();" value="Skapa en påskhälsning på sidan">
+  </form>
+
+</body>
+</html>

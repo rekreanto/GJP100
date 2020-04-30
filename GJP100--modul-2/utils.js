@@ -29,3 +29,21 @@ function applyToValue(f,id){
   let elem = document.getElementById(id);
   elem.value = f(elem.value);
 }
+
+// produce a random integer between and the argument
+const rnd = (n) => Math.floor( n * Math.random() );
+
+// get the value of an element given the id
+// if second arg give, set the value
+function val(id,x){
+  if(typeof x==='undefined'){
+    return document.getElementById(id).value;
+  }else{
+    document.getElementById(id).value = x;
+  }
+}
+
+// get the elem for an id
+function elem(id){
+  return document.getElementById(id);
+}

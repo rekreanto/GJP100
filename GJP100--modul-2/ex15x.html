@@ -6,21 +6,15 @@
   <title>Henning von Rosen</title>
   <link rel="stylesheet" href="style.css">
   <script src="utils.js"></script>
-  <style>
-    textarea {
-      font-size: 16px;
-      font-family: monospace;
-    };
-  </style>
   <script>
     /*
 
-x. En IT-avdelning behöver skicka ut lösenord till sina användare. Skriv ett program som genererar (skriver ut) 10 st slumpmässiga lösenord. Lösenorden ska inte vara helt slumpmässiga utan vara uppbyggda enligt vissa regler för att lättare komma ihåg dem: 
-(1) de ska vara 9 tecken långa (3 grupper med 3 tecken), 
-(2) varje grupp av 3 tecken ska bestå av konsonant + vokal + konsonant, 
-(3) bara små bokstäver ska användas.
+      x. En IT-avdelning behöver skicka ut lösenord till sina användare. Skriv ett program som genererar (skriver ut) 10 st slumpmässiga lösenord. Lösenorden ska inte vara helt slumpmässiga utan vara uppbyggda enligt vissa regler för att lättare komma ihåg dem: 
+      (1) de ska vara 9 tecken långa (3 grupper med 3 tecken), 
+      (2) varje grupp av 3 tecken ska bestå av konsonant + vokal + konsonant, 
+      (3) bara små bokstäver ska användas.
 
-Ett lösenord skulle t ex kunna se ut som: "kolnimpup" - mycket lätt att komma ihåg!
+      Ett lösenord skulle t ex kunna se ut som: "kolnimpup" - mycket lätt att komma ihåg!
 
     */
     const ABC = "abdefghijklmnoprstuvy"; // exclude letters lacking clear pronounciation, such as 'x'
