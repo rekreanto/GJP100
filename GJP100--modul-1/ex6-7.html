@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <style></style>
+  <script src="utils.js"></script>
+  <script>
+    /*
+      Övning 6
+        Gör ett program med två variabler som heter x och y. Ge x värdet 10 och y värdet 5. Skriv villkor (if satser) så att utmatningen blir "x är större än y" eller "x är lika med y" eller "x är mindre än y" om så är fallet. Ändra värden på x och y så ni ser att er if sats fungerar.
+
+        
+
+      Övning 7
+
+      Gör ett program med tre variabler som heter x, y och z. Använd if, else if och else för att göra följande utskrifter:
+
+        om x är större än y och x är större än z, skriv ut "x är det högsta talet"
+        om y är större än x och y är större än z, skriv ut "y är det högsta talet"
+        om z är större än x och z är större än y, skriv ut "z är det högsta talet"
+        om inget av detta är sant, skriv ut "Det högsta talet finns lagrat i fler än en variabel"
+
+     */
+  </script>
+</head>
+<body onload="">
+  <h1>Modul 1, Övning 6-7</h1>
+  <script>
+    // varje övning för ett eget scope, då annars variabelnamn kolliderar
+    {
+      document.write("<h2>Övning 6: </h2>");
+
+      let x = 10, y=5;
+      if(x  >  y){ document.write("x är större än y"); }
+      if(x  <  y){ document.write("x är mindre än y"); }
+      if(x === y){ document.write("x är lika med y" ); }
+      
+      document.write("<hr>");
+    }
+    {
+      document.write("<h2>Övning 7: </h2>");
+
+      let x = 20, y = 31, z = 42;
+      if( x > y  &&  x > z ){
+        document.write("x är det högsta talet"); 
+      } else if( y > x  &&  y > z){
+        document.write("y är det högsta talet");
+      } else if( z > x  && z > y){
+        document.write("z är det högsta talet");
+      } else {
+        document.write("Det högsta talet finns lagrat i fler än en variabel");
+      }
+      
+      document.write("<hr>");
+    }
+  </script>
+</body>
+</html>
