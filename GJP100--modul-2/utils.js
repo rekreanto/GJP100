@@ -30,14 +30,17 @@ function applyToValue(f,id){
   elem.value = f(elem.value);
 }
 
-// one argument n: return a random integer between 0 and n non-inclusive
-// no  argument: return a float between 0 and 1 non-inclusive
-const rnd = (n) => typeof n == 'undefined'? Math.random(): Math.floor( n * Math.random() );
 
+
+//const rnd = (n) => typeof n == 'undefined'? Math.random(): Math.floor( n * Math.random() );
+
+// no  argument: return a float between 0 and 1 non-inclusive
+// one int argument n: return a random integer between 0 and n non-inclusive
+// two int arguments a, b: return a random integer between a inclusive and b non-inclusive
 const rnd = (...xs) => [_rnd0, _rnd1, _rnd2][xs.length](...xs); // dispatch on numer of args
-  const _rnd0 = ( ) => Math.random();
-  const _rnd1 = (n) => Math.floor( n * Math.random() );
-  const _rnd0 = (a,b) => a + _rnd1(b-a);
+  const _rnd0 = ( ) => Math.random(); 
+  const _rnd1 = (n) => Math.floor( n * _rnd0() );
+  const _rnd2 = (a,b) => a + _rnd1(b-a);
    
 
 // pick a random element from all args
