@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .elem {
+      color: red; 
+      position: absolute;
+      border: solid 1px black;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin:0;
+      text-align: center;
+      width: 200px;
+      height: 50px
+    }
+  </style>
+  <script src="utils.js"></script>
+  <script>
+    /*
+
+      23. Gör ett div-element 50*200 pixlar som rör sig fram och tillbaka på skärmen med texten Glad påsk den ska röra sig en pixel åt höger i ett visst intervall. när elementet flyttat sig 200 pixlar ska det byta till motsatt riktning. 
+    
+    */
+    let identity = 0; // gives unique ids to elems, always use as `identity++`
+    function addElem(){
+      let id = `id_${identity++}`; 
+      let elem = document.createElement("div");
+      elem.classList.add("elem");
+      elem.innerHTML = "<h1>Glad Påsk</h1>"
+      elem.id = id;
+      elem.style.backgroundColor = `hsla(${rnd(360)},100%,${rnd(100)}%,${rnd()})`;
+      document.body.appendChild(elem);
+      let xmax = window.innerWidth -elem.getBoundingClientRect().width;
+      let ymax = window.innerHeight-elem.getBoundingClientRect().height;
+      elem.style.top = `${rnd(ymax)}px`;
+      begMovingX(elem,rnd(xmax),rnd(15)+1,0,xmax);
+    }
+
+    function begMovingX(elem,x,dx,min,max){
+        const step = () => { 
+        x=x+dx;
+        if(x > max){ x=max; dx=-dx; }
+        if(x < min){ x=min; dx=-dx; }
+        elem.style.left = `${x}px`;
+      }
+      setInterval(step,20);
+    }
+    function mvRandom(id){
+      let elem = document.getElementById(id);
+      let x = rnd(window.innerWidth -elem.getBoundingClientRect().width );
+      let y = rnd(window.innerHeight-elem.getBoundingClientRect().height);
+      elem.style.left = `${x}px`;
+      elem.style.top  = `${y}px`;
+    }
+
+    
+  </script>
+</head>
+<body onload="times(1,addElem);">
+  <h1>Övning 23</h1>
+  <form action="javascript:void(0);">
+    <input type="button" onclick="times(5,addElem);" value="Lägg till fem element">
+  </form>
+
+</body>
+</html>

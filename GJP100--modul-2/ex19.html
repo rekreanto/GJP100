@@ -42,16 +42,16 @@
         let e = sampleElem(txt,rem);
         container.appendChild(e);
       }
-      elem('output').appendChild(container);
+      id2elem('output').appendChild(container);
     }
   </script>
 </head>
-<body onload="showSamples(val('text'), parseInt(val('qty')));">
+<body onload="showSamples(id2val('text'), parseInt(id2val('qty')));">
   <h1>Övning 19</h1>
   <form action="javascript:void(0);">
     Text?                  <input id="text" type="text" value="Lorem ipsum dolor">
     <br> Hur många? <input id="qty" type="text" size="3" value="10"               >
-    <br> <input type="button" onclick="showSamples(val('text'), parseInt(val('qty')));" value="Visa">
+    <br> <input type="button" onclick="showSamples(id2val('text'), parseInt(id2val('qty')));" value="Visa">
   </form>
 
   <h2>RESULTAT</h2>

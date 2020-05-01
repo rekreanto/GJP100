@@ -18,7 +18,7 @@ button, input[type=button] {
 #output > * {
   padding: 0.4rem;
   margin: 0;
-  border-bottom: solid 1px hsl(0,0%,66 %);;
+  border-bottom: solid 1px hsl(0,0%,66%);
 }
 
 #output>*:nth-child(odd) {

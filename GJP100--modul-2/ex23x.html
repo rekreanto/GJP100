@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .elem {
+      color: red; 
+      position: absolute;
+      border: solid 1px black;
+      padding: 2rem;
+      border-radius: 1rem;
+      margin:0;
+      text-align: center;
+      width: 200px;
+      height: 50px
+    }
+  </style>
+  <script src="utils.js"></script>
+  <script>
+    /*
+
+23. Gör ett div-element 50*200 pixlar som rör sig fram och tillbaka på skärmen med texten Glad påsk den ska röra sig en pixel åt höger i ett visst intervall. när elementet flyttat sig 200 pixlar ska det byta till motsatt riktning. 
+
+x. Gör nu samma uppgift igen men få nu Glad påsk att röra sig i en cirkel på sidan istället.
+
+    */
+    let identity = 0; // gives unique ids to elems, always use as `identity++`
+    function addElem(){
+      // give each new elem a unique identity
+      let id = `id_${identity++}`; 
+      let elem = document.createElement("div");
+      elem.classList.add("elem");
+      elem.innerHTML = "<h1>Glad Påsk</h1>"
+      elem.id = id;
+      // set the background to random hue, max sturation, random, brightness and opacity
+      elem.style.backgroundColor = `hsla(${rnd(360)},100%,${rnd(100)}%,${rnd()})`; 
+      document.body.appendChild(elem);
+      let r = 100+rnd(window.innerWidth/4); // rörelsens radie
+      let cx = window.innerWidth /2 - elem.getBoundingClientRect().width/2; // centrera rörelsen i viewporten
+      let cy = window.innerHeight/2 - elem.getBoundingClientRect().height/2;// centrera rörelsen i viewporten
+      begMovingCircle(elem, cx, cy, r, rnd(360), pick(1,-1)*2, 20+rnd(40)); // starta upp cirkel-rörelsen med slumpade parameterar
+    }
+
+    /* 
+     * @elem -- ett absolut positionerat element som ska animeras i en cirkelbana
+     * @cx @cy  -- rörelsens centrum
+     * @r @v -- elementets avstånd och vinkel från rörelsecentrum
+     * @dv skillnaden i vinkel mellan två steg 
+     */ 
+    function begMovingCircle(elem,cx,cy,r,v,dv,fr){
+        const step = () => { 
+        v=(v+dv)%360;
+        rad = v*Math.PI/180;
+        elem.style.left = `${cx+r*Math.cos(rad)}px`;
+        elem.style.top  = `${cy+r*Math.sin(rad)}px`;
+      }
+      setInterval(step,1000/fr);
+    }
+    
+  </script>
+</head>
+<body onload="times(1,addElem);">
+  <h1>Övning 23</h1>
+  <form action="javascript:void(0);">
+    <input type="button" onclick="times(5,addElem);" value="Lägg till fem element">
+  </form>
+
+</body>
+</html>

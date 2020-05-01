@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .elem {
-      color: red; 
+      color: white; 
       position: absolute;
       transition: all 0.825s;
       border: solid 1px black;
@@ -22,10 +22,10 @@
   <script src="utils.js"></script>
   <script>
     /*
- 
-      21. Gör ett program som  placerar ut 1 st div-element 50*50 pixlar per sekund på en slumpad position. (Det kan finnas flera sätt att lösa uppgiften på, t.ex. kan ett div-element flyttas till en ny position en gång per sekund, eller så kan ett nytt div-element skapas en gång per sekund.)
 
-    */
+      22. Gör ett program som  placerar ut 5 st div-element med storleken 50*50 pixlar (ok om man skapar dem direkt i HTML-koden) på slumpade positioner. När användaren drar musen över dem ska de slumpas ut på en ny position.
+    
+      */
  
     function addElem(id){
       id = id||`id_${rnd(1000000)}`; // om man inte känner sig lyckosam, bör man ha en räknare här
@@ -35,7 +35,9 @@
       elem.style.backgroundColor = `hsla(${rnd(360)},100%,${rnd(100)}%,${rnd()})`;
       console.log(`hsla(${rnd(360)},100%,50%,${Math.random})`);
       document.body.appendChild(elem);
-      mvRandom(id); setInterval(()=>mvRandom(id), 1000);
+      mvRandom(id); 
+      // setInterval(()=>mvRandom(id), 1000);
+      elem.addEventListener( "mouseover", partial(mvRandom, id) );
 
 
     }
@@ -52,10 +54,10 @@
     }
   </script>
 </head>
-<body onload="times(10,addElem);">
-  <h1>Övning 21</h1>
+<body onload="times(5,addElem);">
+  <h1>Övning 22</h1>
   <form action="javascript:void(0);">
-    <input type="button" onclick="addElem();" value="Lägg till ett element">
+    <input type="button" onclick="times(5,addElem);" value="Lägg till fem element">
   </form>
 
 </body>
