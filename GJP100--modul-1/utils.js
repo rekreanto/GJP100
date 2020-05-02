@@ -1,5 +1,5 @@
 /**************************************************
- * Gemansam funktionalitet för övningar i modul 2 *
+ * Gemansam funktionalitet för övningar i modul 1 *
  **************************************************/
 
 // lägg till resultat överst i elementet #output 
@@ -50,6 +50,15 @@ const pick = (...xs) => xs[Math.floor( xs.length * Math.random() )];
 const id2val = (...xs) => [,id2val_1,id2val_2][xs.length](...xs);
   const id2val_1 = (id) => document.getElementById(id).value;
   const id2val_2 = (id,val) => { document.getElementById(id).value = x; };
+
+// get the elem for an id
+const id2elem = (id) => document.getElementById(id);
+// get the elem for an query
+const query2elem = (q) => document.querySelector(q);
+// get all elems for an query
+// return a real Array for convenience, not a node list
+const query2elems = (q) => Array.from( document.querySelectorAll(q) );
+
 
 
 // apply an action f n times to 0 or more args

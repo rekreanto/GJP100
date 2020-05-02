@@ -7,61 +7,238 @@
   <link rel="stylesheet" href="style.css">
   <style></style>
   <script src="utils.js"></script>
-  <script>
-    /*
-        Övning 8
-          Gör ett program som skriver ut texten: "Hej!" tio gånger använd en loop för detta.
-
-        Övning 9
-
-          Gör ett program som använder sig av en for-loop och skriver ut texten:
-            "Loopen har körts gång  0"
-            "Loopen har körts gång  1"
-            "Loopen har körts gång  2"
-            "Loopen har körts gång  3"
-            "Loopen har körts gång  4"
-
-        Övning 10
-
-          Gör ett program som slumpar ut 5 decimaltal mellan 0 och 1 i en loop. För varje slumpat tal ska texten:
-
-            "Det var ett litet tal" skrivas ut om talet är mindre än 0,5
-            "Det var ett stort tal" skrivas ut om talet är större än eller lika med 0,5
-
-     */
-  </script>
 </head>
 <body onload="">
   <h1>Modul 1, Övning 11-17</h1>
   <script>
-    // varje övning för ett eget scope, då annars variabelnamn kolliderar
-    {
-      document.write("<h2>Övning 8: </h2>");
-
-      for(let i = 0; i<10; i++) document.write("<div>Hej!</div>")
-
-      document.write("<hr>");
-    }
-
-    {
-      document.write("<h2>Övning 9: </h2>");
-
-      for(let i = 0; i<5; i++) document.write(`Loopen har körts gång ${i}<br>` );
-
-      document.write("<hr>");
-    }
-
-    {
-      document.write("<h2>Övning 10: </h2>");
-
-      for(let i = 0; i<5; i++){
-        let x = Math.random();
-        if( x <  0.5) document.write("<div>Det var ett litet tal</div>");
-        if( x >= 0.5) document.write("<div>Det var ett <strong>stort</strong> tal</div>");
-      }
-
-      document.write("<hr>");
-    }
+    // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
   </script>
+ 
+ <section>
+  <h2>Övning 11:</h2>
+  <p>Skapa ett program där ni matar in två tal. När man trycker på en knapp ska summan av de båda talen visas i en annan textruta.</p>
+  <form id="ex11">
+    <input class="in" type="text" size="10"  value="5">
+    <input class="in" type="text" size="10"  value="6">
+    <input type="button" value="Visa summa">
+    <input class="out" type="text" size="10"  placeholder="resultat">
+  </form>
+  
+  <script>
+    {
+      // Bind all DOM elems (names in upper case for clarity)
+      let [A,B,BTN,RES] = query2elems("#ex11 > input");
+
+      // Bind the handler
+      BTN.addEventListener(
+        'click', 
+        ( ) => {
+          let a = parseFloat(A.value);      // read argument 1
+          let b = parseFloat(B.value);      // read argument 2 
+          RES.value = (a + b).toString(); // show result
+        }
+      );
+    }
+
+  </script>
+</section>
+
+<section> 
+<h2>Övning 12:</h2>
+<p>Skapa ett program där ni matar in två tal. Gör tre olika knappar "+", "-" och "*". Skapa tre olika funktioner för de olika räknesätten och koppla knapparna till rätt funktion. (Ett tips är att börja med en av dem och sedan bygga vidare).</p>
+  <form id="ex12">
+    <input class="in" type="text" size="10"  value="5">
+    <input class="in" type="text" size="10"  value="6">
+    
+    <input type="button" value="Visa summa">
+    <input type="button" value="Visa differens">
+    <input type="button" value="Visa produkt">
+    
+    <input class="out" type="text" size="10"  placeholder="resultat">
+  </form>
+  
+
+<script>
+{
+  // Bind all DOM elems (names in upper case for clarity)
+  let [A, B, CALC_SUM, CALC_DIFF, CALC_MUL, RES] = query2elems("#ex12 > input");
+
+  // The handler is parameterized on the operation
+  let operation = (f) => ( ) => {
+      let a = parseFloat(A.value);       // read argument 1
+      let b = parseFloat(B.value);       // read argument 2 
+      RES.value = f(a, b).toString(); // show result
+    }
+  // Bind the handlers
+  CALC_SUM .addEventListener( 'click', operation( (a,b)=>a+b ) );
+  CALC_DIFF.addEventListener( 'click', operation( (a,b)=>a-b ) );
+  CALC_MUL .addEventListener( 'click', operation( (a,b)=>a*b ) );
+}
+</script>
+</section>
+
+<section> 
+ <h2>Övning 13:</h2>
+ <p>Skapa en slumpgenerator som varje gång man trycker på en knapp skriver ut ett slumptal i en ruta.</p>
+   <form id="ex13">
+     <input type="button" value="Kasta tärning">
+     <input class="out" type="text" size="10"  placeholder="resultat">
+   </form>
+   
+ <script>
+ {
+   // Bind all DOM elems (names in upper case for clarity)
+   let [CALC_RND, RES] = query2elems("#ex13 > input");
+
+   // Bind the handler
+   CALC_RND.addEventListener(
+     'click', 
+     ( ) => {
+       RES.value = (rnd(1,7)).toString(); // show result
+     }
+   );
+  }
+  </script>
+ </section>
+
+ <section> 
+  <h2>Övning 14:</h2>
+  <p>På ett torg säljs potatis som kostar 2kr/kg. Gör ett program som kan räkna ut pris då vi matar in vikten.</p>
+    <form id="ex14">
+      Vikt i kg:  <input class="in" type="text" size="10"     value="6">
+                  <input type="button"  value="Beräkna pris">
+                  <input class="out" type="text" size="10"     placeholder="resultat">SEK
+    </form>
+
+  <script>
+  {
+    // Bind all DOM elems (names in upper case for clarity)
+    let [WEIGHT,COMPUTE,RESULT] = query2elems("#ex14 > input");
+    // price in kr per kg
+    let PRICE_PER_UNIT = 2;
+    // Bind the handler
+    COMPUTE.addEventListener(
+      'click', 
+      ( ) => {
+        let w = parseFloat(WEIGHT.value);      // read argument 1
+        RESULT.value = (PRICE_PER_UNIT * w).toFixed(2); // show result
+      }
+    );
+  }
+
+  </script>
+ </section>
+
+ <section> 
+ <h2>Övning 15:</h2>
+   <p>På ett torg säljs potatis och andra grönsaker som har olika pris/kg. Gör ett program som kan räkna ut pris då vi matar in vikten samt kilopriset.</p>
+   <form id="ex15">
+     Vikt i kg:         <input class="in" type="text" size="10"       value="2.1">
+     Pris per kg: <input class="in" type="text" size="10"       value="9.95">
+                        <input type="button"    value="Beräkna pris">
+                        <input class="out" type="text" size="10"       placeholder="resultat">SEK
+   </form>
+   
+ 
+ <script>
+ {
+   // Bind all DOM elems (names in upper case for clarity)
+   let [PRICE_PER_UNIT,WEIGHT,COMPUTE,RESULT] = query2elems("#ex15 > input");
+
+   // Bind the handler
+   COMPUTE.addEventListener(
+     'click', 
+     ( ) => {
+       let ppu = parseFloat(PRICE_PER_UNIT.value);
+       let w   = parseFloat(WEIGHT.value); 
+       RESULT.value = (ppu*w).toFixed(2); // show result
+     }
+   );
+ }
+</script>
+</section>
+
+<section> 
+  <h2>Övning 16:</h2>
+  <p>På ett torg säljs potatis och andra grönsaker som har olika pris/kg. Gör ett program som kan räkna ut pris då vi matar in vikten samt kilopriset. Gör också ett till fält där kan mata in hur mycket kunden betalat. Det ska sedan skrivas ut hur mycket kunden ska få tillbaka i växel. (De fetmarkerade fälten ska skrivas in av användaren. De andra ska beräknas fram.)</p>
+   <form id="ex16">
+    <br>  Pris per kg:  <input class="in" type="text" size="10"     value="9.95">
+          Vikt:          <input class="in" type="text" size="10"     value="2.1">kg
+                              <input type="button"  value="Beräkna pris">
+          Pris:         <input class="out" type="text" size="10"     placeholder="resultat">SEK
+    <br>  Mottaget:     <input class="in" type="text" size="10"     value="500">SEK
+                              <input type="button"  value="Beräkna växel">
+                              <input class="out" type="text" size="10"     placeholder="resultat">SEK
+   </form>
+   
+ 
+ <script>
+ {
+   // Bind all DOM elems to variables (names in upper case for clarity)
+   let [
+    PRICE_PER_UNIT,   // in
+    WEIGHT,           // in
+    COMPUTE_PRICE,    // fn
+    PRICE,            // out
+    AMOUNT,           // in
+    COMPUTE_CHANGE,   // fn
+    CHANGE            // out
+    ] = query2elems("#ex16 > input");
+
+   // Bind the handlers
+   COMPUTE_PRICE.addEventListener('click', 
+     ( ) => {
+       let ppu = parseFloat(PRICE_PER_UNIT.value);
+       let w   = parseFloat(WEIGHT.value);    
+       PRICE.value = (ppu*w).toFixed(2); // show result
+     }
+   );
+   COMPUTE_CHANGE.addEventListener('click', 
+      ( ) => {
+        COMPUTE_PRICE.dispatchEvent(new Event('click')); // in case user forgot to click
+        let price  = parseFloat(PRICE.value);     
+        let amount = parseFloat(AMOUNT.value);
+        CHANGE.value = (amount-price).toFixed(2); // show result
+      }
+   );
+ }
+  </script>
+  </section>
+
+  <section> 
+
+    <h2>Övning 17:</h2>
+    <p>Gör ett program där användaren får mata in sin ålder. Om användaren är 14 år eller yngre, skriv ut texten "Du får hålla dig till cykel", om användaren är 15-17 år "Du får köra moped" och om användaren är 18 år eller äldre "Du kan ta bilen".</p>
+    <form id="ex17">
+      Ålder (år): <input class="in" type="text" size="5" value = "-22">
+      <input type="button" value="Visa rättigheter">
+      <input class="out" type="text" size="45"  placeholder="resultat">
+    </form>
+    
+  <script>
+  {
+    // Bind all DOM elems (names in upper case for clarity)
+    let [AGE, CALC_ADVICE, RIGHTS] = query2elems("#ex17 > input");
+    console.log(AGE, CALC_ADVICE, RIGHTS);
+    // Bind the handler
+    CALC_ADVICE.addEventListener(
+      'click', 
+      ( ) => {
+        let age = parseFloat(AGE.value); 
+        let r;
+        // vi tillåter att ålder är float så använder non-inclusive mindre-än på gräns-åldern,
+        // tex `< 15` istället för `<= 14`. Då funkar det även för t ex ålder = 14.9999 år.
+        if(              age <  0) r = `Du får vänta ${-age} år på att födas`;
+        if(  0 <= age && age < 15) r = "Du får hålla dig till cykel";
+        if( 15 <= age && age < 18) r = "Du får köra moped";
+        if( 18 <= age            ) r = "Du kan ta bilen";
+
+        RIGHTS.value = r; // show result
+      }
+    );
+   }
+   </script>
+    
+  </section>
 </body>
 </html>
