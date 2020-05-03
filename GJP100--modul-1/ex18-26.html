@@ -228,18 +228,15 @@
 
     <form id="ex24" action="javasctipt:void(0)">
       Mata in tre tal: 
-      <br> Antal:           <input class="in" type="text" value="20">st
-      <br> Pris per styck:  <input class="in" type="text" value="99.95">kr
-      <br>                  <input type="button" value="Beräkna totalt pris och eventuell rabatt">
-      <br> Totalt pris före rabatt:     <input class="out" type="text" placeholder="resultat">kr
+      <br> Antal:                   <input class="in" type="text" value="20">st
+      <br> Pris per styck:          <input class="in" type="text" value="99.95">kr
+      <br>                          <input type="button" value="Beräkna totalt pris och ev rabatt">
+      <br> Totalt pris före rabatt: <input class="out" type="text" placeholder="resultat">kr
       <br> Erhållen rabatt: <input class="out" type="text" placeholder="resultat">kr  
     </form>
     <script>
       {
         let [QTY,PPU,CALC,TOTAL,DISCOUNT] = query2elems("#ex24 > input");
-        console.log([QTY,PPU,CALC,TOTAL,DISCOUNT]);
-        // set the values to random defaults for convenience
-        
 
         CALC.addEventListener('click',()=>{
           let qty = parseInt(QTY.value);
@@ -307,7 +304,6 @@
     <script>
       {
         let [A,B,C,D,CALC,SCORE] = query2elems("#ex26 > input");
-        console.log([A,B,C,D,CALC,SCORE]);
         // set the values to random defaults for convenience
         [A,B,C,D].forEach( elem => elem.value = (50+rnd(50))/10 );
 
@@ -316,7 +312,6 @@
           let max = Math.max(...xs);
           let min = Math.min(...xs);
           // poängen är summan minus extremvärdena
-          console.log(xs,max,min)
           let score = xs.reduce((a,b) => a+b, 0) - (max+min);
           SCORE.value = score.toFixed(1);
         });
