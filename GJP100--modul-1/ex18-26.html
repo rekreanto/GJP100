@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Henning von Rosen</title>
+  <link rel="stylesheet" href="style.css">
+  <style></style>
+  <script src="utils.js"></script>
+</head>
+<body onload="">
+  <h1>Modul 1, Övning 18-26</h1>
+  <script>
+    // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+  </script>
+
+
+
+    <section>
+    <h1>Övning 18</h1>
+
+    Gör ett program som slumpar fram ett tal (1-9). Användaren får sedan tre försök att gissa på rätt tal. Efter tre gissningar ska texten "Tyvärr, du misslyckades" komma upp och om användaren gissar rätt ska texten "Grattis" komma upp.
+
+    
+    <form id="ex18" action="javasctipt:void(0)">
+      <h2>Gissa mitt tal</h2>
+      <p>Jag tänker på ett tal mellan 1 och 9. Du har tre försök att gissa det.</p>
+ 
+
+      <h2>Spela:</h2>      
+      <div id="ex18-game" class="game out"> 
+        <div class="console"></div>
+        Mata in din gissning: <input class="guess in" type ="text">
+        <input class="continue" type="button" value="FORTSÄTT">
+      </div>
+    </form>
+    <script>
+      {
+        // Bind all DOM elems (names in upper case for clarity)
+        GAME     = query2elem("#ex18 .game"    );
+        GUESS    = query2elem("#ex18 .guess"   );
+        CONSOLE  = query2elem("#ex18 .console" );
+        CONTINUE = query2elem("#ex18 .continue");
+        console.log(CONSOLE,GUESS,CONTINUE);
+        let show = (str) => {
+          CONSOLE.innerHTML += `<div>${str}</div>`;
+        };
+        let game;
+        let max_guesses = 3;
+        let init = () => {
+          game = {
+            guesses: max_guesses,
+            number: rnd(1,10),
+          };
+          console.table(game);
+        };
+        init();
+        CONTINUE.addEventListener('click',() => {
+          game.guesses--;
+          let guess = parseInt(GUESS.value);
+          show("Du gissade "+ guess);
+          if(guess === game.number){
+            show("<h1>Grattis</h1>");
+            show("<hr>");
+            show("Varsågod att spela en gång till!");
+            show("Jag tänker på ett heltal mellan 1 och 9");
+            init();
+          } else if(game.guesses <= 0){
+            show("<h1>Tyvärr, du misslyckades</h1>");
+            show("<hr>");
+            show("Varsågod att spela en gång till!");
+            show("Jag tänker på ett heltal mellan 1 och 9");
+            init();
+          } else {
+            show(`Men det var inte ${guess} jag tänkte på.`);
+            show(`Det var fel med ${Math.abs(guess - game.number)}`);
+            show(`<strong>Försök igen!</strong>`)
+          }
+          console.table(game);
+        });
+      }
+      </script>
+
+    </section>
+
+    <section>
+    <h1>Övning 19</h1>
+
+    Gör ett formulär där man kan mata in en varas pris samt antal och momssats (t.ex. 25%). När användaren trycker på en knapp ska priset visas både med och utan moms.
+    <form id ="ex19">
+      <br> Pris per vara:         <input class="in" type="text" value="9.95">kr
+      <br> Antal varor:           <input class="in" type="text" value="10">st
+      <br> Momssats:              <input class="in" type="text" value="25">%
+      <br>                        <input type="button" value="Beräkna totalt pris">
+      <br> Totalt pris utan moms: <input class="out" type="text">kr
+      <br> Totalt pris med moms:  <input class="out" type="text">kr
+    </form>
+    <script>
+      {
+        let [PPU,QTY,TAX,CALC,TOTAL_EXCL,TOTAL_INCL] = query2elems("#ex19 > input");
+        console.log([PPU,QTY,TAX,CALC,TOTAL_EXCL,TOTAL_INCL]);
+
+        CALC.addEventListener('click', ()=>{
+          let [ppu,qty,tax] = [PPU,QTY,TAX].map( elem => parseFloat(elem.value) );
+          console.log([ppu,qty,tax]);
+          let total_excl = ppu*qty;
+          let total_incl = total_excl*(1+tax/100);
+          console.log([total_excl,total_incl]);
+          TOTAL_EXCL.value = total_excl.toFixed(2);
+          TOTAL_INCL.value = total_incl.toFixed(2);
+        })
+      }
+    </script>
+    </section>
+
+    <section>
+    <h1>Övning 20</h1>
+
+    Gör ett formulär där användaren matar in hur många gånger han vill få fram texten "I am the best". Använd alertruta eller console.log() och trigga genom att trycka på en knapp.
+
+    <form id="ex20" action="javasctipt:void(0)">
+      Antal gånger: <input class="in" type="text" value="10">
+                    <button>Skriv ut affirmationer i konsollen</button>
+    </form>
+    <script>
+      {
+        let [QTY,RUN] = query2elems("#ex20 > *");
+        console.log([QTY,RUN]);
+        RUN.addEventListener('click',()=>{
+          let qty = parseInt(QTY.value);
+          let pad = num => num.toString().padStart(qty.toString().length," ");
+          for(let i=0;i<qty;i++) console.log(`${pad(i+1)}: I am the best`);
+        })
+      }
+    </script>
+    </section>
+
+    <section>
+      <h1>Övning 21</h1>
+
+      <p>Man vill ha ett program som omvandlar en temperatur i Celsius till Fahrenheit enligt formeln: tempF = 1.8 * tempC + 32. Utforma dialogen med användaren på ditt eget sätt.</p>
+
+      <form id="ex21" action="javasctipt:void(0)">
+        <br> <input class="in" type="text" value="10">°C
+        <br> <input type="button" value="Omvandla">
+        <br> <input class="out" type="text" placeholder="resultat">°F
+      </form>
+      <script>
+        {
+          let [C,C2F,F] = query2elems("#ex21 > input");
+          C2F.addEventListener('click',()=>{
+            let c = parseFloat(C.value);
+            let f = c*1.8 + 32;
+            F.value = f.toFixed(2);
+          });
+        }
+      </script>
+    </section>
+
+    <section>
+    <h1>Övning 22</h1>
+
+    Gör ett program som frågar användaren efter ett antal dagar och svarar med antal år, månader och dagar. För enkelhets skull kan du anta att alla månader har 30 dagar.
+
+    Här kan ni t.ex. använda er av Math.floor().
+
+    exempel: http://www.w3schools.com/jsref/jsref_floor.asp
+
+    <form id="ex22" action="javasctipt:void(0)">
+      Antal dagar:  <input class="in" type="text" value="999">
+                    <input type="button" value="=">
+      <br>          <input class="out" type="text" size="8" placeholder="resultat">år
+      <br>          <input class="out" type="text" size="8" placeholder="resultat">månader
+      <br>          <input class="out" type="text" size="8" placeholder="resultat">dagar
+    </form>
+    <script>
+      {
+        let [DAYS,CALC,Y,M,D] = query2elems("#ex22 > input");
+        console.log(DAYS,CALC,Y,M,D);
+        CALC.addEventListener('click',()=>{
+          let days = parseInt(DAYS.value);
+          let y = Math.floor(days/365);
+          let m = Math.floor( (days - y*365) / 30 );
+          let d = days -y*365 -m*30;
+          Y.value = y;
+          M.value = m;
+          D.value = d;
+        });
+      }
+    </script>
+
+  </section>
+
+    <section>
+    <h1>Övning 23</h1>
+
+    <p>Skriv ett program som ber användaren mata in tre tal och skriver ut det största av dem.</p>
+    <form id="ex23" action="javasctipt:void(0)">
+      Mata in tre tal: 
+            <input class="in" type="text" value="10">
+            <input class="in" type="text">
+            <input class="in" type="text">
+      <br>  <input type="button" value="Visa det största">
+            <input class="out" type="text">   
+    </form>
+    <script>
+      {
+        let [A,B,C,CALC,MAX] = query2elems("#ex23 > input");
+        console.log([A,B,C,CALC,MAX]);
+        // set the values to random defaults for convenience
+        [A,B,C].forEach( elem => elem.value = rnd(10) );
+
+        CALC.addEventListener('click',()=>{
+          let xs = [A,B,C].map(elem=>parseInt(elem.value));
+          let max = Math.max(...xs);
+          MAX.value = max;
+        });
+      }
+    </script>
+
+    </section>
+
+    <section>
+    <h1>Övning 24</h1>
+
+    <p>Skriv ett program där användaren matar in antal och styckpris av en vara. Om antal är större än 20 samtidigt som totalpriset är över 1000 kr, får användaren 20% rabatt. Annars, om antingen antal är större än 20 eller totalpriset är över 1000, får man 10% rabatt. I övriga fall ges ingen rabatt. Totalpriset och rabatten ska visas.</p>
+
+    <form id="ex24" action="javasctipt:void(0)">
+      Mata in tre tal: 
+      <br> Antal:           <input class="in" type="text" value="20">st
+      <br> Pris per styck:  <input class="in" type="text" value="99.95">kr
+      <br>                  <input type="button" value="Beräkna totalt pris och eventuell rabatt">
+      <br> Totalt pris före rabatt:     <input class="out" type="text" placeholder="resultat">kr
+      <br> Erhållen rabatt: <input class="out" type="text" placeholder="resultat">kr  
+    </form>
+    <script>
+      {
+        let [QTY,PPU,CALC,TOTAL,DISCOUNT] = query2elems("#ex24 > input");
+        console.log([QTY,PPU,CALC,TOTAL,DISCOUNT]);
+        // set the values to random defaults for convenience
+        
+
+        CALC.addEventListener('click',()=>{
+          let qty = parseInt(QTY.value);
+          let ppu = parseFloat(PPU.value);
+          let discount;
+          let total = qty*ppu;
+          if( qty >= 20 && total >= 1000){
+            discount = 20; 
+          } else if( qty >= 20 || total >= 1000){
+            discount = 10;
+          } else{
+            discount = 0;
+          }
+          TOTAL.value    = total.toFixed(2);
+          DISCOUNT.value = (total*discount/100).toFixed(2) 
+
+        });
+      }
+    </script>
+
+    </section>
+    <section>
+    <h1>Övning 25</h1>
+
+    Skriv ett program som skriver ut talen 1-10 och deras kvadrater. Använd console.log() och en loop.
+
+    D.v.s. exempelutmatning skulle kunna se ut enligt följande:
+
+    <pre>
+    1 1
+    2 4 
+    3 9
+    4 16
+    5 25
+    6 36
+    7 49
+    8 64
+    9 81
+    10 100
+    </pre>
+    <form id="ex24" action="javasctipt:void(0)">
+      <input 
+        type="button" 
+        value="Skriv ut kvadrater" 
+        onclick="for(let i = 1; i<=10;i++) console.log(i, i*i);"
+      >
+    </form>
+    </section>
+
+    <section>
+    <h1>Övning 26</h1>
+
+    I många idrotter erhålls de tävlandes poäng som summan av alla domarpoäng sedan den högsta och lägsta poängen dragits av. Skriv ett program som frågar efter fyra domarpoäng, summerar poängen och håller reda på den lägsta och den högsta poängen. När beräkning sker ska den tävlandes totalpoäng visas sedan man dragit av den högsta och lägsta poängen.
+    <form id="ex26" action="javasctipt:void(0)">
+      Mata in fyra tal: 
+            <input class="in" type="text" size="6">
+            <input class="in" type="text" size="6">
+            <input class="in" type="text" size="6">
+            <input class="in" type="text" size="6">
+
+      <br>  <input type="button" value="Visa domparpoängen">
+
+            <input class="out" type="text">   
+    </form>
+    <script>
+      {
+        let [A,B,C,D,CALC,SCORE] = query2elems("#ex26 > input");
+        console.log([A,B,C,D,CALC,SCORE]);
+        // set the values to random defaults for convenience
+        [A,B,C,D].forEach( elem => elem.value = (50+rnd(50))/10 );
+
+        CALC.addEventListener('click',()=>{
+          let xs = [A,B,C,D].map(elem=>parseFloat(elem.value));
+          let max = Math.max(...xs);
+          let min = Math.min(...xs);
+          // poängen är summan minus extremvärdena
+          console.log(xs,max,min)
+          let score = xs.reduce((a,b) => a+b, 0) - (max+min);
+          SCORE.value = score.toFixed(1);
+        });
+      }
+    </script>
+    </section>
+  </body>
+</html>

@@ -18,10 +18,11 @@ form {
   border: solid thin hsl(0,0%,64%);
   border-radius: 0.6rem;
   padding: 2rem 3rem 2rem 3rem;
+  margin: 1rem 0 1rem 0;
   background-color: hsl(0,0%,85%);
   box-shadow: 3px 3px 8px 0px rgba(0,0,0,0.35);
 }
-input {
+input, button {
   font-size: 1rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 600;
@@ -35,6 +36,15 @@ input.out {
   box-shadow: 3px 3px 8px 0px rgba(0,0,0,0.35);
   border: solid 1px hsl(0,0%,55%);
   background-color: hsl(0,0%,90%);
+}
+
+div.game {
+  box-shadow: 3px 3px 8px 0px rgba(0,0,0,0.35);
+  border: solid 1px hsl(0,0%,55%);
+  background-color: hsl(0,0%,90%);
+  min-height: 1rem;
+  padding: 1rem;
+  margin: 1rem 0 1rem 0;
 }
 
 button, input[type=button] {
