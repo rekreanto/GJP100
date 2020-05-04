@@ -5,6 +5,7 @@
 * 3. MATH RANDOMNESS
 * 4. MATH ARITHMETIC
 * 5. HTML GENERATION
+* 6. ARRAY MANIPULATION
 *
 */
 
@@ -84,3 +85,12 @@ const tag = (...xs) => [tag0,tag1,tag2][xs.length](...xs); // dispatch on arity
 // sample usage of `tag`: creating a html table
 // table2html :: [[[ html ]]] => html
 const table2html = tag("table", tag("tr", tag("td")));
+
+
+/***********************
+ *  ARRAY MANIPULATION *
+ **********************/
+
+// zippa ihop två arrayer 
+// zip :: ([a],[b]) => [[a,b]]
+let zip = (xs,ys) => xs.map( (x, i) => [x, ys[i]] );
