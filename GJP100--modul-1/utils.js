@@ -28,16 +28,18 @@ function applyToValue(f,id){
  * RANDOM *
  **********/
 
-// no      argument: return a float between 0 inclusive and 1 non-inclusive
-// one int argument n: return a random integer between 0 and n non-inclusive
-// two int arguments a, b: return a random integer between a inclusive and b non-inclusive
-const rnd = (...xs) => [_rnd0, _rnd1, _rnd2][xs.length](...xs); // dispatch on numer of args
-  const _rnd0 = ( ) => Math.random(); 
-  const _rnd1 = (n) => Math.floor( n * _rnd0() );
-  const _rnd2 = (a,b) => a + _rnd1(b-a);
-
 // pick a random element from all args
 const pick = (...xs) => xs[Math.floor( xs.length * Math.random() )];
+
+// no  argument:       return a float between 0 inclusive and 1 non-inclusive
+// one argument n:     return a random integer between 0 and n non-inclusive
+// two arguments a, b: return a random integer between a inclusive and b non-inclusive
+const rnd = (...xs) => [rnd0, rnd1, rnd2][xs.length](...xs); // dispatch on numer of args
+  const rnd0 = ()    => Math.random(); 
+  const rnd1 = (n)   => Math.floor( n * rnd0() );
+  const rnd2 = (a,b) => a + rnd1(b-a);
+
+
 
 
 
@@ -72,5 +74,9 @@ function times(n, f, ...args){
 // retuns a function with the args fixed
 // when applied with 0 or more args these are used after the fixed arguments
 const fx = (f, ...xs) => (...ys) => f(...xs, ...ys);
+const fy = (f, ...xs) => (...ys) => f(...ys, ...xs);
+
+
+
 
 

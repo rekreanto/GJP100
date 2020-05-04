@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henning von Rosen</title>
+    <link rel="stylesheet" href="style3.css">
+    <style></style>
+    <script src="utils3.js"></script>
+  </head>
+  <body onload="">
+    <h1>Modul 3, Övning 1-2</h1>
+    <section>
+      <h1>Övning 1</h1>
+      <p>1. Utgå från följande data:
+
+        <pre>var tempen = [ 
+         ["","00-08","08-16","16-24"], 
+         ["Malmö",12,16,9], 
+         ["Mariestad",13,15,10], 
+         ["Stockholm",13,15,13], 
+         ["Upphärad",14,16,15], 
+         ["Göteborg",13,14,12] 
+         ];</pre>
+        
+        Vi har ett antal mätstationer utplacerade på strategiska positioner i sverige där vi mäter temperaturen. Vi vill göra utskriften enligt nedan och medeltemperaturen skal räknas ut (gör er lösning så likt utskriften nedan som möjligt):</p>
+      <form id="ex1" action="javasctipt:void(0)">
+        <input class="elem" type="button" value="generate table">
+        <input class="elem" type="button" value="generate table with average">
+        <div class="elem"><!-- generated content goes here --></div>
+      </form>
+      
+      <script>
+      { // varje övning har ett eget scope, så inte variabelnamn riskerar kollidera
+        // DATA
+       let tempen = [ 
+          ["","00-08","08-16","16-24"], 
+          ["Malmö",12,16,9], 
+          ["Mariestad",13,15,10], 
+          ["Stockholm",13,15,13], 
+          ["Upphärad",14,16,15], 
+          ["Göteborg",13,14,12] 
+          ];
+        let [GENERATE, GENERATE_AVG,HERE] = query2elems("#ex1 > .elem");
+        console.log(GENERATE, HERE);
+
+        // append a column with title and calculated average temperatures
+        let withAverage = ([row, ...rows]) => {
+          return [
+            [ ...row, "medel"],
+            ...rows.map(
+              ([x, ...xs]) => [ x, ...xs, avg(...xs).toFixed(2) ]
+            ),
+          ];
+        }
+
+        let showTable = (xss) => () => {
+          console.table(xss);
+          HERE.innerHTML = tag("table", tag("tr", tag("td")))(xss);
+        };
+        GENERATE    .addEventListener('click', showTable(tempen));
+        GENERATE_AVG.addEventListener('click', showTable( withAverage(tempen) ) );
+      }
+      </script>
+    </section>
+
+
+    <section>
+      <h1>Övning 2</h1>
+      <p>2. Nedan är data som kommer från svenska städers mätstationer. Använd alert (eller annat valfritt sätt) för att skriva ut alla Stockholms temperaturer med hjälp av datan nedan:
+
+        <pre>
+        var tempen = {
+          "stad" : [
+            {"namn" : "Malmö", "natt" : "12", "morgon" : "14","kväll" : "10"},
+            {"namn" : "Göteborg", "natt" : "11", "morgon" : "15","kväll" : "9"},
+            {"namn" : "Stockholm", "natt" : "10", "morgon" : "13","kväll" : "10"},
+            {"namn" : "Mariestad", "natt" : "11", "morgon" : "16","kväll" : "11"}
+          ]
+        };
+        </pre>
+      <form id="ex2" action="javasctipt:void(0)">
+        Stad: <input class="elem" type="text" value="Stockholm">
+        <input class="elem" type="button" value="visa temperaturdata">
+        <div class="elem"><!-- generated content goes here --></div>
+      </form>
+      <script>
+         // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+          let [CITY,SHOW_TEMPS, HERE] = query2elems("#ex2 > .elem");
+          // DATA 
+          let tempen = {
+            "stad" : [
+              {"namn" : "Malmö", "natt" : "12", "morgon" : "14","kväll" : "10"},
+              {"namn" : "Göteborg", "natt" : "11", "morgon" : "15","kväll" : "9"},
+              {"namn" : "Stockholm", "natt" : "10", "morgon" : "13","kväll" : "10"},
+              {"namn" : "Mariestad", "natt" : "11", "morgon" : "16","kväll" : "11"},
+            ]
+          };
+          let name2city = (name) => {
+            for(let cty of  tempen["stad"]){
+              console.log(cty);
+              if(cty["namn"] == name) return cty; 
+            }
+            // no error handling
+            // if name not found, `undefined` is returned
+          }
+          let city2table = (cty) => {
+            let tbl = ["namn","natt","morgon","kväll"].map( (key) => [key,cty[key]] );
+            console.table(tbl);
+            return tbl;
+          }
+          SHOW_TEMPS.addEventListener('click',()=>{
+            let cityname = CITY.value;
+            let cty = name2city(cityname);
+            let tbl = city2table(cty);
+            let html = tag("table", tag("tr", tag("td")))( tbl );
+            HERE.innerHTML = html;
+          });
+
+        
+      </script>
+    </section>
+    <section>
+      <h1>Övning 3</h1>
+      <p></p>
+      <form id="ex_" action="javasctipt:void(0)">
+
+      </form>
+      <script>{ // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+      
+      }</script>
+    </section>
+    <section>
+      <h1>Övning 4</h1>
+      <p>4. Studera koden nedan och förklara vad som skrivs ut. Tänk först - provkör sedan!
+        <pre>
+        // Vad skrivs ut?
+        
+        var personA = {firstName:"Thomas", lastName:"Lundqvist", age:47, favorite:"apple"}
+        var personB = personA;
+        
+        personB.favorite = "pear";
+        
+        printit(personA);
+        printit(personB);
+        
+        personA = {firstName:"Robert", lastName:"Andersson Dahlberg", age:23, favorite:"banana"} 
+        
+        printit(personA);
+        printit(personB);
+        
+        function printit(person) {
+             console.log(person.firstName + " likes " + person.favorite);
+        }</pre>
+      </p>
+      <form id="ex4" action="javasctipt:void(0)">
+
+      </form>
+      <script>{ // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+      
+      }</script>
+    </section>
+  </body>
+</html>
+
+<!-- TEMPLATE för övningar
+    <section>
+      <h1>Övning _</h1>
+      <p></p>
+      <form id="ex_" action="javasctipt:void(0)">
+
+      </form>
+      <script>{ // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+      
+      }</script>
+    </section>
+-->
+
+
