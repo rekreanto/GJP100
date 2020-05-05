@@ -11,7 +11,7 @@
   <body onload="">
     <h1>Modul 3, Övning 1-4</h1>
     <section>
-      <h1>Övning 1</h1>
+      <h2>Övning 1</h2>
       <p>1. Utgå från följande data:
 
         <pre>var tempen = [ 
@@ -56,7 +56,7 @@
 
         let showTable = (xss) => () => {
           console.table(xss);
-          HERE.innerHTML = tag("table", tag("tr", tag("td")))(xss);
+          HERE.innerHTML = csv2html(xss);
         };
         GENERATE    .addEventListener('click', showTable(tempen));
         GENERATE_AVG.addEventListener('click', showTable( withAverage(tempen) ) );
@@ -66,7 +66,7 @@
 
 
     <section>
-      <h1>Övning 2</h1>
+      <h2>Övning 2</h2>
       <p>2. Nedan är data som kommer från svenska städers mätstationer. Använd alert (eller annat valfritt sätt) för att skriva ut alla Stockholms temperaturer med hjälp av datan nedan:
 
         <pre>
@@ -82,44 +82,41 @@
       <form id="ex2" action="javasctipt:void(0)">
         Stad: 
         <input class="ui in" type="text" value="Stockholm">
-        <input class="ui" type="button" value="slumpa stad">
         <input class="ui" type="button" value="visa temperaturdata">
+        <input class="ui" type="button" value="slumpa och visa stad">
         <div   class="ui"><!-- generated content goes here --></div>
       </form>
       <script>
         {
-         // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
-          let [CITY, RND, SHOW_TEMPS, HERE] = query2elems("#ex2 > .ui");
+         // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [CITY, SHOW_TEMPS, RND, HERE] = query2elems("#ex2 > .ui");
           // DATA 
           let tempen = {
             "stad" : [
-              {"namn" : "Malmö", "natt" : "12", "morgon" : "14","kväll" : "10"},
-              {"namn" : "Göteborg", "natt" : "11", "morgon" : "15","kväll" : "9"},
-              {"namn" : "Stockholm", "natt" : "10", "morgon" : "13","kväll" : "10"},
-              {"namn" : "Mariestad", "natt" : "11", "morgon" : "16","kväll" : "11"},
+              {"namn" : "Malmö", "natt" : "12", "morgon" : "14","kvall" : "10"},
+              {"namn" : "Göteborg", "natt" : "11", "morgon" : "15","kvall" : "9"},
+              {"namn" : "Stockholm", "natt" : "10", "morgon" : "13","kvall" : "10"},
+              {"namn" : "Mariestad", "natt" : "11", "morgon" : "16","kvall" : "11"},
             ]
           };
-          let name2city = (name) => {
-            for(let cty of  tempen["stad"]){
-              console.log(cty);
-              if(cty["namn"] == name) return cty; 
-            }
-            // no error handling
-            // if name not found, `undefined` is returned
-          }
-          let city2table = (cty) => {
-            let tbl = ["namn","natt","morgon","kväll"].map( (key) => [key,cty[key]] );
-            console.table(tbl);
-            return tbl;
-          }
+
           RND.addEventListener('click',()=>{
-            CITY.value = rnd(tempen.stad).namn;
+            CITY.value = rnd(["*","Malmö", "Göteborg", "Stockholm", "Mariestad"]);
+            SHOW_TEMPS.dispatchEvent(new Event('click'));
           })
           SHOW_TEMPS.addEventListener('click',()=>{
             let cityname = CITY.value;
-            let cty = name2city(cityname);
-            let tbl = city2table(cty);
-            let html = tag("table", tag("tr", tag("td")))( tbl );
+            // filtrera ut stad, wildcard "*" matchar alla
+            let objs = tempen.stad.filter( (o) => "*"==cityname||o["namn"]==cityname );
+            // gör om från objektlista till en csv array
+            let csv  = objs2csv(
+              objs,
+              ["namn","natt","morgon","kvall"], // Nyckar som används i objekten
+              ["Stad","Natt","Morgon","Kväll"], // Kolumntitlar som visas
+              );
+            // formatera csv som html
+            let html = csv2html(csv); 
+            // lägg till tabellen i dokumentet
             HERE.innerHTML = html;
           });
 
@@ -127,7 +124,7 @@
       </script>
     </section>
     <section>
-      <h1>Övning 3</h1>
+      <h2>Övning 3</h2>
       <p>3. Gör om uppgift 9 och 10 från modul 2 som handlar om läraren Morgan. Programmet ska ha samma funktionalitet men istället för att lagra namn och betyg som två arrayer ska du använda en array av lämpliga objekt istället. se exemplet på en aray med objekt nedan.
 
        <pre>var exempelArayMedObjekt = [
@@ -140,20 +137,20 @@
       <form id="ex3" action="javasctipt:void(0)">
         <input class="ui" type="button" value="visa datastruktur i konsollen"> <hr>
         <br>Elev: <input class="ui in" type="text" value="Emil">
-        <input class="ui" type="button" value="slumpa elev">
         <input class="ui" type="button" value="visa betyg för elev">
+        <input class="ui" type="button" value="slumpa elev och visa betyg">
         <div class="ui out"><!-- generated content --></div>
         <hr>
         <br>Betyg: <input class="ui in" type="text" value="C">
-        <input class="ui" type="button" value="slumpa betyg">
-        <input class="ui" type="button" value="visa elever för betyg">
+        <input class="ui" type="button" value="visa elever med detta betyg">
+        <input class="ui" type="button" value="slumpa betyg och visa elever">
         <div class="ui out"><!-- generated content --></div>
 
         
         
       </form>
       <script>
-      { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+      { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
         // DATA from module 2, ex9:
         const Names  = ["Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert"];
         const Grades   = [    "A",      "B",    "C",     "A",      "D",      "C",      "E",      "E"];
@@ -161,14 +158,16 @@
 
 
         // bind UI
-        let [SHOW_DATA,NAME, RND1, SHOW_GRADE, HERE1, GRADE, RND2, SHOW_NAMES, HERE2] = query2elems("#ex3 .ui");
+        let [SHOW_DATA,NAME, SHOW_GRADE, RND1, HERE1, GRADE, SHOW_NAMES, RND2, HERE2] = query2elems("#ex3 .ui");
       
         RND1.addEventListener('click',()=>{
           NAME.value = rnd(Objects.map(o=>o.name));
+          SHOW_GRADE.dispatchEvent(new Event('click'));
         });
 
         RND2.addEventListener('click',()=>{
           GRADE.value = rnd(Objects.map(o=>o.grade));
+          SHOW_NAMES.dispatchEvent(new Event('click'));
         });
 
         SHOW_DATA.addEventListener('click',() => {
@@ -191,20 +190,59 @@
       }
       </script>
     </section>
-
-
-
-
+    
+    
+    
+    
+    <section>
+      <h2>Övning 3x</h2>
+      <p>x. Det finns färdig kod (<a href="https://studenthv-my.sharepoint.com/:u:/g/personal/imwj_hv_se/EWftnc2bsj5HkHly64_U5gcBLBH60Evq0VJuRERtXNL6CQ?e=64cc8e322bac42138478d5436fbf111c" class="external" target="_blank" rel="noreferrer noopener"><span>Libris Kod</span><span aria-hidden="true" class="ui-icon ui-icon-extlink ui-icon-inline" title="Länkar till en externa sida."></span><span class="screenreader-only">&nbsp;(Länkar till en externa sida.)</span></a>) (använd filen som finns under övriga filer på disco istället) för att söka efter böcker i Kungliga bibliotektets databas Libris. Gör en sida som frågar efter ett sökord, utför en sökning på libris.kb.se och presentera resultatet av sökningen snyggt på sidan. Välj själv 3-4 st fält du vill visa upp från resultatet. Du behöver inte kunna hur själva sökningen går till - du får färdig kod för detta.</p>
+      <!--  Lånad kod för script injection -->
+      <p>Ange sökord:</p>
+      <form id="ex3x"  action="javasctipt:void(0)">
+        <input class="ui" type="text" id="query" value="javascript">
+        <input class="ui" type="button" onclick="doSearch(query.value)" value="Sök Libris">
+        <div class="ui"></div>
+      </form>
+      
+      <script>
+      {
+        let [QUERY, SEARCH, HERE] = query2elems("#ex3x .ui");
+        console.log([QUERY, SEARCH, HERE]);
+        function doSearch(query) {
+          console.log("Startar sökning efter: " + query);
+        
+          // Begär padded JSON
+          let search_url = "http://libris.kb.se/xsearch?format=json&callback=finishedLoading&n=20&query=" + encodeURI(query);
+          
+          // script tag injection: JSON-data i form av ett funktionsanrop som ges JSON-datan
+          let scrpt = document.createElement("script");
+          document.body.appendChild(scrpt);
+          scrpt.src = search_url;
+        }
+        function finishedLoading(result_json) {
+          // Uppgift: skriv ut resultatet snyggare här än med bara en console.log:
+          let objs = result_json.xsearch.list;
+          let keys      = ["identifyer","title", "creator"      , "isbn", "language"];
+          let disp_keys = ["ID","Titel", "Upphovsperson", "ISBN"   , "Språk"   ];
+          let csv = objs2csv(objs, keys, disp_keys);
+          let html = csv2html(csv);
+          HERE.innerHTML = html;
+        }
+        // publicera callback så den kan nås av jsonp-anropet i det globala scopet
+        window.finishedLoading = finishedLoading;
+      }
+      </script>
 
     <section>
-      <h1>Övning 4</h1>
+      <h2>Övning 4</h2>
       <p>4. Studera koden nedan och förklara vad som skrivs ut. Tänk först - provkör sedan!</p>
       <form id="ex4" action="javasctipt:void(0)">
         <pre class="ui"></pre>
         <input class="ui" type="button" value="Provkör koden i konsollen">
       </form>
       <script>  
-        { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
 
           let [CODE,RUN] = query2elems("#ex4 > .ui");
           let code = `
@@ -235,16 +273,16 @@
 
 <!-- TEMPLATE för övningar
     <section>
-      <h1>Övning _</h1>
+      <h2>Övning _</h2>
       <p></p>
       <form id="ex_" action="javasctipt:void(0)">
 
       </form>
       <script>
-        { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
       
-      }
-    </script>
+        }
+      </script>
     </section>
 -->
 

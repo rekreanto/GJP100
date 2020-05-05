@@ -8,7 +8,8 @@
 * 6. HTML GENERATION
 * 7. ARRAY MANIPULATION
 * 8. PRETTYPRINT
-
+* 9. COMMA SEPARATED VALUES
+*
 *
 */
 
@@ -37,6 +38,8 @@ const query2elems = (q) => Array.from( document.querySelectorAll(q) );
 const fx = (f, ...xs) => (...ys) => f(...xs, ...ys);
 // fixes the given args *after* the remaining args, returning a new function
 const fy = (f, ...xs) => (...ys) => f(...ys, ...xs);
+
+
 
 
 /**********************
@@ -89,6 +92,7 @@ const rnd = arity(
 
 const plus    = (a,b)   => a+b;
 const mul     = (a,b)   => a*b;
+const rest    = (a,b)   => a%b;
 const qty     = (...xs) => xs.length;
 const sum     = (...xs) => xs.reduce( plus, 0 );
 const prod    = (...xs) => xs.reduce( mul,  0 ); 
@@ -106,17 +110,18 @@ const avg     = (...xs) => sum(...xs) / qty(...xs);
 // tag :: (str, tag) -> [html] -> str
 // tag :: str -> html -> html
 // html = [html] | str
+/*
 const tag = (...xs) => [tag0,tag1,tag2][xs.length](...xs); // dispatch on arity
-  const tag0 = ()           => { throw "The function `tag` must receive at least one argument" };
+  const tag0 = ()           => { throw "Function `tag` called with zero args" };
   const tag1 = (tagname)    => (str)  =>`<${tagname}>${ str }</${tagname}>`;
   const tag2 = (tagname, f) => (strs) => tag1(tagname)( strs.map( f ).join("\n") );
+*/
 
-// sample usage of `tag`: creating a html table
-// array2html :: [[[ html ]]] => html
-const array2html = tag("table", tag("tr", tag("td")));
-
-
-
+const tag = arity( // dispatch on arity
+  ()           => { throw "Function `tag` called with zero args" },
+  (tagname)    => (str)  =>`<${tagname}>${ str }</${tagname}>`,       // base case
+  (tagname, f) => (strs) => tag(tagname)( strs.map( f ).join("\n") ), // recursive case
+);
 
 /***********************
  *  ARRAY MANIPULATION *
@@ -131,7 +136,27 @@ let zip = (xs,ys) => xs.map( (x, i) => [x, ys[i]] );
 
 /****************
  *  PRETTYPRINT *
- ***************/
+ ****************/
 
  // prettyprint js data structuress
  let pretty = (str) => JSON.stringify(str,null,2);
+
+
+
+
+/**************************
+ * COMMA SEPARATED VALUES *
+ **************************/
+
+// takes a list of objects and a list of keys and
+// returns a an array of rows, where the first row contains the keys
+// optionally, a third list with display forms of the keys can be given
+// objs2csv :: ([{k,v}],[k],[str]) => [[k],[v]*]
+const objs2csv = (objs, ks, ds) => [ds||ks, ...objs.map( (o) => ks.map( (k)=> o[k]) ) ];
+
+// takes an array of arrays and serializes it into a html table
+// csv2html :: [[[ html ]]] => html
+const csv2html = tag("table", tag("tr", tag("td")));
+
+
+
