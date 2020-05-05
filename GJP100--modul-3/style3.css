@@ -38,7 +38,7 @@ input.out, div.out {
   background-color: hsl(0,0%,90%);
 }
 
-div.out {
+div.out, pre.out {
   padding: 1rem;
   margin: 1rem
 

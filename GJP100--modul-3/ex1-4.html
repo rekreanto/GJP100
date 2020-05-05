@@ -113,7 +113,7 @@
             return tbl;
           }
           RND.addEventListener('click',()=>{
-            CITY.value = pick(...tempen.stad).namn;
+            CITY.value = rnd(tempen.stad).namn;
           })
           SHOW_TEMPS.addEventListener('click',()=>{
             let cityname = CITY.value;
@@ -152,43 +152,44 @@
         
         
       </form>
-      <script>{ // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
-      // DATA from module 2, ex9:
-      const Names  = ["Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert"];
-      const Grades   = [    "A",      "B",    "C",     "A",      "D",      "C",      "E",      "E"];
-      const Objects = zip(Names, Grades).map( ([n,g]) => ({name:n,grade:g}) );
+      <script>
+      { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+        // DATA from module 2, ex9:
+        const Names  = ["Klara", "Andrea", "Emil", "Sarah", "Alicia", "Victor", "Thomas", "Robert"];
+        const Grades   = [    "A",      "B",    "C",     "A",      "D",      "C",      "E",      "E"];
+        const Objects = zip(Names, Grades).map( ([n,g]) => ({name:n,grade:g}) );
 
 
-      // bind UI
-      let [SHOW_DATA, NAME, RND1, SHOW_GRADE, HERE1, GRADE, RND2, SHOW_NAMES, HERE2] = query2elems("#ex3 .ui");
-     
-      RND1.addEventListener('click',()=>{
-        NAME.value = pick(...Objects.map(o=>o.name));
-      });
+        // bind UI
+        let [SHOW_DATA,NAME, RND1, SHOW_GRADE, HERE1, GRADE, RND2, SHOW_NAMES, HERE2] = query2elems("#ex3 .ui");
+      
+        RND1.addEventListener('click',()=>{
+          NAME.value = rnd(Objects.map(o=>o.name));
+        });
 
-      RND2.addEventListener('click',()=>{
-        GRADE.value = pick(...Objects.map(o=>o.grade));
-      });
+        RND2.addEventListener('click',()=>{
+          GRADE.value = rnd(Objects.map(o=>o.grade));
+        });
 
-      SHOW_DATA.addEventListener('click',() => {
-          console.log( pretty(Objects) );
-      });
+        SHOW_DATA.addEventListener('click',() => {
+            console.log( pretty(Objects) );
+        });
 
-      SHOW_GRADE.addEventListener('click', () => {
-        let name = NAME.value;
-        let grade = Objects
-          .filter(o => o.name == name)[0]
-          .grade; // assume exactly one result
-        HERE1.innerHTML = `Eleven <strong>${name}</strong> har betyget <strong>${grade}</strong>`;
-      });
-      SHOW_NAMES.addEventListener('click',()=>{
-        let grade = GRADE.value;
-        let names = Objects.filter(o => o.grade == grade).map(o => o.name); // accept all results
-        HERE2.innerHTML = `För betyget <strong>${grade}</strong> hittades följande elever: <strong>${names.join(',')}</strong>.`;
-      });
-
-
-      }</script>
+        SHOW_GRADE.addEventListener('click', () => {
+          let name = NAME.value;
+          let grade = Objects
+            .filter(o => o.name == name)[0]
+            .grade; // assume exactly one result
+          HERE1.innerHTML = `Eleven <strong>${name}</strong> har betyget <strong>${grade}</strong>`;
+        });
+        SHOW_NAMES.addEventListener('click',()=>{
+          let grade = GRADE.value;
+          let names = Objects.filter(o => o.grade == grade).map(o => o.name); // accept all results
+          HERE2.innerHTML = "För ";
+          HERE2.innerHTML += "betyget <strong>"+grade+"</strong> hittades följande elever: <strong>"+names.join(',') + "</strong>";
+        });
+      }
+      </script>
     </section>
 
 
@@ -202,10 +203,12 @@
         <pre class="ui"></pre>
         <input class="ui" type="button" value="Provkör koden i konsollen">
       </form>
-      <script>  { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+      <script>  
+        { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
 
-          let [RUN] = query2elems("#ex4 > .ui");
-          let code = `function printit(person) {
+          let [CODE,RUN] = query2elems("#ex4 > .ui");
+          let code = `
+          function printit(person) {
               console.log(person.firstName + " likes " + person.favorite);
           }
 
@@ -214,14 +217,15 @@
 
           personB.favorite = "pear";
 
-          printit(personA);
-          printit(personB);
+          printit(personA); // <strong>skriver ut "Thomas likes pear"</strong>
+          printit(personB); // <strong>skriver ut samma, personB är ett alias för personA</strong>
 
           personA = {firstName:"Robert", lastName:"Andersson Dahlberg", age:23, favorite:"banana"} 
 
-          printit(personA);
-          printit(personB);`;
+          printit(personA); // <strong>skriver ut "Robert likes banana", pekar till nytt objekt</strong>
+          printit(personB); // <strong>skriver ut "Thomas likes pear", ej påverkat av nydefinitionen av personA</strong>`;
 
+          CODE.innerHTML = code;
           RUN.addEventListener('click', ()=>eval(code));
         }
       </script>
@@ -236,9 +240,11 @@
       <form id="ex_" action="javasctipt:void(0)">
 
       </form>
-      <script>{ // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+      <script>
+        { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
       
-      }</script>
+      }
+    </script>
     </section>
 -->
 
