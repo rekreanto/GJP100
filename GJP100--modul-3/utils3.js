@@ -6,8 +6,11 @@
 * 4. MATH ARITHMETIC
 * 5. HTML GENERATION
 * 6. ARRAY MANIPULATION
+* 7. PRETTYPRINT
 *
 */
+
+
 
 
 /********************
@@ -87,6 +90,8 @@ const tag = (...xs) => [tag0,tag1,tag2][xs.length](...xs); // dispatch on arity
 const table2html = tag("table", tag("tr", tag("td")));
 
 
+
+
 /***********************
  *  ARRAY MANIPULATION *
  **********************/
@@ -94,3 +99,13 @@ const table2html = tag("table", tag("tr", tag("td")));
 // zippa ihop två arrayer 
 // zip :: ([a],[b]) => [[a,b]]
 let zip = (xs,ys) => xs.map( (x, i) => [x, ys[i]] );
+
+
+
+
+/****************
+ *  PRETTYPRINT *
+ ***************/
+
+ // prettyprint js data structuress
+ let pretty = (str) => JSON.stringify(str,null,2);

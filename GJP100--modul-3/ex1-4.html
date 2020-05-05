@@ -80,14 +80,16 @@
         };
         </pre>
       <form id="ex2" action="javasctipt:void(0)">
-        Stad: <input class="elem" type="text" value="Stockholm">
-        <input class="elem" type="button" value="visa temperaturdata">
-        <div class="elem"><!-- generated content goes here --></div>
+        Stad: 
+        <input class="ui in" type="text" value="Stockholm">
+        <input class="ui" type="button" value="slumpa stad">
+        <input class="ui" type="button" value="visa temperaturdata">
+        <div   class="ui"><!-- generated content goes here --></div>
       </form>
       <script>
         {
          // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
-          let [CITY,SHOW_TEMPS, HERE] = query2elems("#ex2 > .elem");
+          let [CITY, RND, SHOW_TEMPS, HERE] = query2elems("#ex2 > .ui");
           // DATA 
           let tempen = {
             "stad" : [
@@ -110,6 +112,9 @@
             console.table(tbl);
             return tbl;
           }
+          RND.addEventListener('click',()=>{
+            CITY.value = pick(...tempen.stad).namn;
+          })
           SHOW_TEMPS.addEventListener('click',()=>{
             let cityname = CITY.value;
             let cty = name2city(cityname);
@@ -166,7 +171,7 @@
       });
 
       SHOW_DATA.addEventListener('click',() => {
-          console.log( JSON.stringify(Objects,null,4) );
+          console.log( pretty(Objects) );
       });
 
       SHOW_GRADE.addEventListener('click', () => {
@@ -178,10 +183,8 @@
       });
       SHOW_NAMES.addEventListener('click',()=>{
         let grade = GRADE.value;
-        let names = Objects
-          .filter(o => o.grade == grade)
-          .map(o => o.name); // accept all results
-        HERE2.innerHTML = `För betyget <strong>${grade}</strong> hittades följande elever: <strong>${names.join(", ")}</strong>.`;
+        let names = Objects.filter(o => o.grade == grade).map(o => o.name); // accept all results
+        HERE2.innerHTML = `För betyget <strong>${grade}</strong> hittades följande elever: <strong>${names.join(',')}</strong>.`;
       });
 
 
@@ -194,42 +197,15 @@
 
     <section>
       <h1>Övning 4</h1>
-      <p>4. Studera koden nedan och förklara vad som skrivs ut. Tänk först - provkör sedan!
-        <pre>
-        // Vad skrivs ut?
-        
-        var personA = {firstName:"Thomas", lastName:"Lundqvist", age:47, favorite:"apple"}
-        var personB = personA;
-        
-        personB.favorite = "pear";
-        
-        printit(personA); 
-        printit(personB); 
-        <strong>
-        personB är satt att referera tillsamma som personA, 
-        och dennes favorit är ändrad till "pear";
-        samma utskrift i bägge fallen: "Thomas Likes pear"
-        </strong>
-        
-        personA = {firstName:"Robert", lastName:"Andersson Dahlberg", age:23, favorite:"banana"} 
-        
-        printit(personA);
-        printit(personB);
-        <strong>personA gavs en ny referens, så nu refererar de till olika objekt
-        personB påverkas ej av att personA skiftar till att referera till ett annat objekt, så:
-        Robert likes banana
-        Thomas likes pear
-        </strong>
-        function printit(person) {
-             console.log(person.firstName + " likes " + person.favorite);
-        }</pre>
-      </p>
+      <p>4. Studera koden nedan och förklara vad som skrivs ut. Tänk först - provkör sedan!</p>
       <form id="ex4" action="javasctipt:void(0)">
+        <pre class="ui"></pre>
         <input class="ui" type="button" value="Provkör koden i konsollen">
       </form>
-      <script>
-          let code = 
-          `function printit(person) {
+      <script>  { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
+
+          let [RUN] = query2elems("#ex4 > .ui");
+          let code = `function printit(person) {
               console.log(person.firstName + " likes " + person.favorite);
           }
 
@@ -246,8 +222,6 @@
           printit(personA);
           printit(personB);`;
 
-        { // varje övning för ett eget scope, så inte variabelnamn riskerar kollidera
-          let [RUN] = query2elems("#ex4 > .ui");
           RUN.addEventListener('click', ()=>eval(code));
         }
       </script>

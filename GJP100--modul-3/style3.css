@@ -64,6 +64,11 @@ pre {
   padding: 1rem;
 }
 
+
+/**************
+* TABLE STYLE *
+**************/
+
 table {
   border-collapse: collapse;
   background-color: hsl(0,0%,90%);
@@ -74,7 +79,7 @@ table {
 tr:nth-child(1),
 td:nth-child(1) {
   font-weight: bold;
-  background-color: hsla(210,30%,50%,0.24);
+  background-color: hsla(210,33%,50%,0.24);
 }
 
 td {

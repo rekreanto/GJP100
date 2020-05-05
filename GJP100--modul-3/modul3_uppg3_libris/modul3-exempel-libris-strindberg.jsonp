@@ -1,0 +1,409 @@
+finishedLoading(
+        {"xsearch": {
+"from": 1,
+"to": 30,
+"records": 7740,
+"list": [
+{
+"identifier": "http://libris.kb.se/bib/7732484",
+"title": "August Strindberg : Paradiesbilder - Infernomalerei",
+"creator": "Feuk, Douglas, 1943-",
+"isbn": "8788978273",
+"type": "book",
+"publisher": "Hellerup : Bløndal",
+"date": "1991",
+"language": "ger"
+},
+{
+"identifier": "http://libris.kb.se/bib/8281864",
+"title": "Strindberg : painter and photographer",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "0300091877",
+"type": "book",
+"publisher": "New Haven ; London : Yale Univ. Press in association with the Nationalmuseum, Stockholm",
+"date": "2001",
+"language": "eng",
+"description": "NB: Övers. av: Nancy Adler, Roger Tanner and Laurie Thompson"
+},
+{
+"identifier": "http://libris.kb.se/bib/7602596",
+"title": "Strindberg : målaren och fotografen",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9171006346",
+"type": "book",
+"publisher": "Stockholm : Nationalmuseum",
+"date": "2001",
+"language": "swe"
+},
+{
+"identifier": "http://libris.kb.se/bib/895291",
+"title": "August Strindberg : \"Underlandet\" : [Malmö konsthall 26 december 1989-4 februari 1990]",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9177040406",
+"type": "book",
+"publisher": "Malmö : Malmö konsthall",
+"date": "[1990]",
+"language": "swe",
+"description": "Li:S"
+},
+{
+"identifier": "http://libris.kb.se/bib/8203289",
+"title": "I havsbandet",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9120065639",
+"type": "book",
+"publisher": "Stockholm : Almqvist & Wiksell",
+"date": "1982",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li: S"
+],
+"relation": "I havsbandet"
+},
+{
+"identifier": "http://libris.kb.se/bib/8203282",
+"title": "Tjänstekvinnans son",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9119644027",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1996",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+],
+"relation": "Tjänstekvinnans son. 3-4."
+},
+{
+"identifier": "http://libris.kb.se/bib/262907",
+"title": "Tjänstekvinnans son",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9118719422",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1989",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+],
+"relation": "Tjänstekvinnans son. 1-2."
+},
+{
+"identifier": "http://libris.kb.se/bib/7268542",
+"title": "Strindberg",
+"isbn": [
+"9138900378",
+"9138900475"
+],
+"type": "book",
+"publisher": "Stockholm : LiberFörlag : Kulturhuset",
+"date": "1981",
+"language": "swe"
+},
+{
+"identifier": "http://libris.kb.se/bib/4568601",
+"title": "Strindberg : a collection of critical essays",
+"isbn": [
+"0138527989",
+"0138528063"
+],
+"type": "book",
+"publisher": "Englewood Cliffs, N.J. : Prentice-Hall",
+"date": "1971",
+"language": "eng"
+},
+{
+"identifier": "http://libris.kb.se/bib/7642444",
+"title": "\"Jag är en djefla man som kan göra många konster\" : August Strindberg om sig själv, medmänniskor och omvärld : citat",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9174487779",
+"type": "book",
+"publisher": "Stockholm : En bok för alla",
+"date": "1994",
+"language": "swe",
+"description": "Li:S"
+},
+{
+"identifier": "http://libris.kb.se/bib/14722372",
+"title": "Strindberg : escritor, pintor, fotógrafo",
+"creator": "Strindberg, August 1849-1912",
+"isbn": "9788415717133",
+"type": "book",
+"publisher": "Madrid : Nórdica Libros",
+"date": "2012",
+"language": "spa",
+"description": "Imported from: sigb.bne.es:2200/unicorn (Do not remove)"
+},
+{
+"identifier": "http://libris.kb.se/bib/8203255",
+"title": "Teater och Intima teatern",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9113007890",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1999",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+],
+"relation": "Teater och Intima teatern."
+},
+{
+"identifier": "http://libris.kb.se/bib/7280408",
+"title": "August Strindberg",
+"creator": "Lagercrantz, Olof, 1911-2002",
+"isbn": "9146134778",
+"type": "book",
+"publisher": "Stockholm : Wahlström & Widstrand",
+"date": "1979",
+"language": "swe"
+},
+{
+"identifier": "http://libris.kb.se/bib/262948",
+"title": "Fadren ; Fröken Julie ; Fordringsägare",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9120071140",
+"type": "book",
+"publisher": "Stockholm : Almqvist & Wiksell",
+"date": "1984",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"NB: 2. revid. tr: rev. gäller ordlistan, ej texten/PL",
+"Li: S"
+],
+"relation": "Fadren ..."
+},
+{
+"identifier": "http://libris.kb.se/bib/8203264",
+"title": "Ungdomsdramer",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "911871952X",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1989",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+],
+"relation": "Ungdomsdramer. 1"
+},
+{
+"identifier": "http://libris.kb.se/bib/7408686",
+"title": "Vänligen August Strindberg : ett år, ett liv i brev",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "915183636X",
+"type": "book",
+"publisher": "Stockholm : Prisma",
+"date": "1999",
+"language": "swe",
+"description": "Li:S"
+},
+{
+"identifier": "http://libris.kb.se/bib/262950",
+"title": "Folk-komedin Hemsöborna ; Himmelrikets nycklar",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9120071795",
+"type": "book",
+"publisher": "Stockholm : Almqvist & Wiksell",
+"date": "1985",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+],
+"relation": "olk-komedin Hemsöborna..."
+},
+{
+"identifier": "http://libris.kb.se/bib/262909",
+"title": "Dödsdansen : drama",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9118719724",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1988",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+]
+},
+{
+"identifier": "http://libris.kb.se/bib/10298827",
+"title": "Strindberg - urtida, samtida, framtida : texter",
+"creator": "Delblanc, Sven, 1931-1992",
+"isbn": [
+"9789173310338",
+"9173310336"
+],
+"type": "book",
+"publisher": "Stockholm : Carlsson",
+"date": "2007",
+"language": "swe"
+},
+{
+"identifier": "http://libris.kb.se/bib/7732485",
+"title": "August Strindberg : paradisbilder - infernomåleri",
+"creator": "Feuk, Douglas, 1943-",
+"isbn": "8788978281",
+"type": "book",
+"publisher": "Hellerup : Bløndal",
+"date": "1991",
+"language": "swe"
+},
+{
+"identifier": "http://libris.kb.se/bib/7333107",
+"title": "Strindberg : IVAM centre Julio González 16 febrero-2 mayo 1993",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "8448201051",
+"type": "book",
+"publisher": "Valencia : IVAM",
+"date": "1993",
+"language": "spa"
+},
+{
+"identifier": "http://libris.kb.se/bib/8370174",
+"title": "August Strindberg som målare och kritiker : ett urval",
+"isbn": "9171004963 ;",
+"type": "book",
+"publisher": "Stockholm : Nationalmuseum",
+"date": "1994",
+"language": "swe",
+"description": "Li:S"
+},
+{
+"identifier": "http://libris.kb.se/bib/10038722",
+"title": "Nils Strindberg : en biografi om fotografen på Andrées polarexpedition",
+"creator": "Martinsson, Tyrone 1967-",
+"isbn": [
+"9185057606",
+"9789185057603"
+],
+"type": "book",
+"publisher": "Lund : Historiska Media",
+"date": "2006",
+"language": "swe"
+},
+{
+"identifier": "http://libris.kb.se/bib/8203291",
+"title": "Två berättelser",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9120071116",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1984",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li: S",
+"NB: 2. rev. tr: Korrekturfel i ordlistan rättat/UR"
+]
+},
+{
+"identifier": "http://libris.kb.se/bib/262906",
+"title": "Tal till svenska nationen ; Folkstaten ; Religiös renässans ; Tsarens kurir",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9118719325",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1988",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+],
+"relation": "Tal till svenska nationen"
+},
+{
+"identifier": "http://libris.kb.se/bib/8203269",
+"title": "Ensam ; Sagor",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9119110421",
+"type": "book",
+"publisher": "Stockholm : Norstedt",
+"date": "1994",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li:S"
+],
+"relation": "Ensam ; Sagor"
+},
+{
+"identifier": "http://libris.kb.se/bib/262941",
+"title": "I vårbrytningen",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9120065388",
+"type": "book",
+"publisher": "Stockholm : Almqvist & Wiksell",
+"date": "1981",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li: S"
+],
+"relation": "I vårbrytningen"
+},
+{
+"identifier": "http://libris.kb.se/bib/8314752",
+"title": "Strindberg : peintre et photographe : [Stockholm, Nationalmuseum 9 février 2001 - 13 mai 2001, Copenhague, Statens Museum for Kunst 9 juin 2001 - 16 septembre 2001, Paris, Musée d'Orsay 15 octobre 2001 - 27 janvier 2002]",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "2711842991",
+"type": "book",
+"publisher": "Paris : Réunion des musées nationaux",
+"date": "2001",
+"language": "fre"
+},
+{
+"identifier": "http://libris.kb.se/bib/8203288",
+"title": "Vid högre rätt : två dramer",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9120065353",
+"type": "book",
+"publisher": "Stockholm : Almqvist & Wiksell",
+"date": "1983",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li: S",
+"Skr 128:00"
+]
+},
+{
+"identifier": "http://libris.kb.se/bib/262944",
+"title": "Vivisektioner ; Blomstermålningar och djurstycken ; Skildringar av naturen ; Silverträsket",
+"creator": "Strindberg, August, 1849-1912",
+"isbn": "9120065884",
+"type": "book",
+"publisher": "Stockholm : Almqvist & Wiksell",
+"date": "1985",
+"language": "swe",
+"description": [
+"hum",
+"H: pb",
+"Li: S"
+],
+"relation": "Vivisektioner."
+}
+]
+}}
+        )
+                    

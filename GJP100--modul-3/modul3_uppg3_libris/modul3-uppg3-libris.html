@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>Librissökning</title>
+</head>
+<body>
+	<h1 id="rubrik">Librissökning</h1>
+	
+	<p>Ange sökord:</p>
+	<input type="text" id="query">
+	<input type="button" onclick="doSearch(query.value)" value="Sök Libris">
+	
+	<script>
+		// Skicka en sökning efter "query" till libris.kb.se
+		function doSearch(query) {
+			console.log("Startar sökning efter: " + query);
+		
+			// Begär JSON format med callback, dvs JSONP-format. Lägg till query-strängen sist.
+			// encodeURI gör att speciella bokstäver som mellanslag översätts till URI-godkända tecken
+			// När laddningen är klar kommer vår callback anropas: finishedLoading()
+			var search_url = "http://libris.kb.se/xsearch?format=json&callback=finishedLoading&n=20&query=" + encodeURI(query);
+			
+			// Fulhack: script tag injection. Webbläsaren tror att det är javascript-kod som ska hämtas och laddas
+			// Men egentligen är det JSON-data
+			var scrpt = document.createElement("script");
+			document.body.appendChild(scrpt);
+			scrpt.src = search_url;
+		}
+
+		// Denna funktion anropas när resultatet av sökningen har hämtats klart. Argumentet kommer att bli
+		// JSON-datan i form av ett vanligt javascript-objekt.
+		function finishedLoading(result_json) {
+			// Uppgift: skriv ut resultatet snyggare här än med bara en console.log:
+			console.log(result_json);
+		}
+	</script>
+</body>
