@@ -9,6 +9,8 @@
 * 7. ARRAY MANIPULATION
 * 8. PRETTYPRINT
 * 9. COMMA SEPARATED VALUES
+* 10. OBJECTS
+* 11. UNIT CONVERSION
 *
 *
 */
@@ -158,5 +160,68 @@ const objs2csv = (objs, ks, ds) => [ds||ks, ...objs.map( (o) => ks.map( (k)=> o[
 // csv2html :: [[[ html ]]] => html
 const csv2html = tag("table", tag("tr", tag("td")));
 
+// Equivalent to SRE?
+// What about a definition recursive version of RegExp?
+// Would that be equivalent to SRE:s? IN what ways?
+// Check the paper for examples?
+// Check for other typical uses of defred re's 
+const split = arity(
+  ()         => {throw "Split got zero args."},
+  (delim)    => (str) => str.split(delim),
+  (delim, f) => (str) => str.split(delim).map(f),  
+)
+let xss = split(" ", split("")) ("hej du din ko"); 
+console.log( pretty(xss) );
+
+/***********
+ * OBJECTS *
+ ***********/
+// Takes an object and a key function
+// the key function is defined by
+//  {from: <list of input keys>, to: <output key>, fn: <a funciton with corresponding arity>}
+
+const withCol  = (o,{from,to,fn}) => {
+  let args = from.map( k => o[k] );
+  return Object.assign({[to]:fn(...args)}, o);
+};
 
 
+
+
+/*******************
+ * UNIT CONVERSION *
+ ******************/
+
+// REUTRN div, recur on rest
+// Takes a unit, a dividend and a function to handle the remainder, 
+// returns a list of quantities with units
+const divUQ = arity(
+    ()        => {throw "Got zero args."},
+    (u)       => {throw "Got one arg."},
+    (u,b)     => (a) => [ {unit:u, quantity:Math.floor(a/b)} ], // return the integer quotient
+    (u,b,f)   => (a) => {
+                        let quotient  = Math.floor(a/b);
+                        let remainder = a - quotient * b;
+                        return [...divUQ(u,b)(a), ...f(remainder)];
+                      },  
+   );
+
+const uqs2str = (objs) => objs.map( ({quantity,unit}) => `${quantity} ${unit}` ).join(" + ");  
+const d2ymd =
+divUQ("år"     ,   365, 
+  divUQ("månader",  30, 
+    divUQ("dagar"  , 1 )));
+
+
+const s2ydhms = 
+    divUQ("years"  ,   365*24*60*60,
+      divUQ("months" ,  30*24*60*60, 
+        divUQ("days"   ,   24*60*60, 
+          divUQ("hours"  ,    60*60, 
+            divUQ("minutes",     60, 
+              divUQ("seconds",    1 )))))); 
+
+console.log(uqs2str(s2ydhms(1000000000)));
+console.table(uqs2str(d2ymd(5428)));
+console.table(objs2csv(d2ymd(5428),["quantity","unit"]));
+console.table(csv2html(objs2csv(d2ymd(5428),["unit","quantity",],["Enhet","Kvantitet"])));

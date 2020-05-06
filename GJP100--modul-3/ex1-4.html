@@ -200,7 +200,7 @@
       <!--  Lånad kod för script injection -->
       <p>Ange sökord:</p>
       <form id="ex3x"  action="javasctipt:void(0)">
-        <input class="ui" type="text" id="query" value="javascript">
+        <input class="ui" type="text" id="query" value="crockford javascript">
         <input class="ui" type="button" onclick="doSearch(query.value)" value="Sök Libris">
         <div class="ui"></div>
       </form>
@@ -220,14 +220,25 @@
           document.body.appendChild(scrpt);
           scrpt.src = search_url;
         }
+
         function finishedLoading(result_json) {
           // Uppgift: skriv ut resultatet snyggare här än med bara en console.log:
           let objs = result_json.xsearch.list;
-          let keys      = ["identifyer","title", "creator"      , "isbn", "language"];
-          let disp_keys = ["ID","Titel", "Upphovsperson", "ISBN"   , "Språk"   ];
-          let csv = objs2csv(objs, keys, disp_keys);
-          let html = csv2html(csv);
-          HERE.innerHTML = html;
+
+          // extend the objs with links to the hits
+          let objs2 = objs.map( o=> withCol(o, {
+                'from': ["identifier", "title"],
+                'to'  : "link",
+                'fn' : (href,txt)=>`<a href="${href}">${txt}</a>`,
+              }
+            )
+          );
+          // select properties to display in the resulting table
+          let keys         = ["link", "type",     "creator"      , "isbn", "language"];
+          let disp_keys_as = ["Book", "Kategori", "Upphovsperson", "ISBN"   , "Språk"];
+          
+          // placera en html-tabell med csv från objektlistan,
+          HERE.innerHTML = csv2html( objs2csv(objs2, keys, disp_keys_as) );
         }
         // publicera callback så den kan nås av jsonp-anropet i det globala scopet
         window.finishedLoading = finishedLoading;
