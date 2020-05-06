@@ -261,24 +261,177 @@
               console.log(person.firstName + " likes " + person.favorite);
           }
 
-          var personA = {firstName:"Thomas", lastName:"Lundqvist", age:47, favorite:"apple"}
+          var personA = {
+            firstName:"Thomas", 
+            lastName:"Lundqvist", 
+            age:47, 
+            favorite:"apple"
+          }
           var personB = personA;
 
           personB.favorite = "pear";
 
-          printit(personA); // <strong>skriver ut "Thomas likes pear"</strong>
-          printit(personB); // <strong>skriver ut samma, personB är ett alias för personA</strong>
+          printit(personA); 
+            // <strong>skriver ut "Thomas likes pear"</strong>
 
-          personA = {firstName:"Robert", lastName:"Andersson Dahlberg", age:23, favorite:"banana"} 
+          printit(personB); 
+            // <strong>skriver ut samma, personB är ett alias för personA</strong>
 
-          printit(personA); // <strong>skriver ut "Robert likes banana", pekar till nytt objekt</strong>
-          printit(personB); // <strong>skriver ut "Thomas likes pear", ej påverkat av nydefinitionen av personA</strong>`;
+          personA = {
+            firstName:"Robert", 
+            lastName:"Andersson Dahlberg", 
+            age:23, 
+            favorite:"banana"
+          } 
+
+          printit(personA); 
+            // <strong>skriver ut "Robert likes banana", 
+            // pekar till nytt objekt</strong>
+
+          printit(personB); 
+            // <strong>skriver ut "Thomas likes pear", 
+            // ej påverkat av nydefinitionen av personA</strong>`;
 
           CODE.innerHTML = code;
           RUN.addEventListener('click', ()=>eval(code));
         }
       </script>
     </section>
+
+
+
+
+    <section>
+      <h2>Återbesök hos övning 22 från modul 1</h2>
+      <p>Koden som jag skrev i modul 1 blev inte så snygg. Den såg ut så här:
+        <pre>
+          let days = parseInt(DAYS.value);
+          let y = Math.floor(days/365);
+          let m = Math.floor( (days - y*365) / 30 );
+          let d = days -y*365 -m*30;</pre>
+          Den är väl helt OK, men man ser inte alls strukturen. Hur skulle man utvidga denna kod till ett antal flera enheter? I modul 3 har jag lärt mig nya metoder som jag provar att tillämpa för att få en snyggare kod, som går lättare att visa att den är korrekt och lämpar sig bättre för att utvidga.</p>
+        </p> Nu ser koden ut så här:
+        <pre>
+          const unit2units = divUQ("år", 365, divUQ("månader", 30, divUQ("dagar", 1 )));
+        </pre>
+        Det är fortfarande fyra rader, men koden är mera regelbunden, och det är lättare att se:
+        <ul>
+          <li>hur man skulle utvidga med flera enheter</li>
+          <li>och även lättare att se att koden är korrekt och inte t.ex. "nästan" korrekt.</li>
+        </ul>
+        Den nya koden bygger på en rutin som beräknar heltalskvotienten och sedan komponerar svaret från denna och resultatet från funktionen som tas in som tredje argument och som får restvärdet som argument.
+        </p>
+      <form id="ex1_1" action="javasctipt:void(0)">
+        <br> Dagar: <input class="ui in" type="text" value="1000">
+                    <input class="ui fn" type="button" value="slumpa antal dagar och visa">
+        <hr>    Visa uppdelat i <strong>år, månader och dagar </strong>
+        <br> <input class="ui fn" type="button" value="med text">
+            <div class="ui out"></div>
+        <br> <input class="ui fn" type="button" value="med tabell"> 
+            <div class="ui out"></div>
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [QTY, RND, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE] = query2elems("#ex1_1 .ui");
+          console.log([QTY, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE]);
+
+          // `unit2units` tar ett antal dagar och ger en lista med år, mänder och dagar
+          // använder divUQ som kan beräknar integer quotient och 
+          // ger ramindern till funktionen som eventuellt tredje argument  
+          const unit2units =
+            divUQ("år"     ,   365, 
+              divUQ("månader",  30, 
+                divUQ("dagar"  , 1 )));
+
+          RND.addEventListener('click',()=>{
+            QTY.value = rnd(10,2000);
+            SHOW_TEXT .dispatchEvent(new Event('click'));
+            SHOW_TABLE.dispatchEvent(new Event('click'));
+          });
+          SHOW_TEXT.addEventListener('click',()=>{
+            let qty = parseInt(QTY.value);
+            let unit_quantity_list = unit2units(qty) 
+            let html = unit_quantity_list.map( 
+                ({quantity,unit}) => `<strong>${quantity}</strong> ${unit}` 
+              ).join(" + ");
+            HERE_TEXT.innerHTML = `<strong>${qty}</strong> dagar = ${html}`;
+          });
+          SHOW_TABLE.addEventListener('click',()=>{
+            let qty = parseInt(QTY.value);
+            let unit_quantity_list = unit2units(qty); 
+            let html = csv2html( objs2csv( unit_quantity_list,["quantity","unit"] ) );
+            HERE_TABLE.innerHTML = `<strong>${qty}</strong> dagar = ${html}`;
+          });
+        }
+      </script>
+    </section>
+
+    <section>
+      <h2>Egendesignad extrauppgift för övning 1 från modul 1</h2>
+      <p>Använd koden du skrev i <i>övning 1 från modul 1</i> för att formulera motsvarande lösning, men gör nu om från sekunder till <strong>år, månader, dagar, timmar, minuter och sekunder</strong></p>
+
+      <p>
+        Allt som behöver ändras i lösningen är definitionen av <code>unit2units</code> och fyra ställen där "dagar" ska ersättas av "sekunder" i interfacet.
+        <pre>          
+          const unit2units = 
+            divUQ("år"     ,    365*24*60*60,
+              divUQ("månader",   30*24*60*60, 
+                divUQ("dagar"   ,   24*60*60, 
+                  divUQ("timmar"  ,    60*60, 
+                    divUQ("minuter",      60, 
+                      divUQ("sekunder",    1 )))))); </pre>
+      <emph>En extra utmaning kan vara att ge en funktion som tar en lista av objekt med enhet och kvantitet, så att användaren av divUQ slipper tänka på den rektursiva strukturen. Hur löser man det smidigast?</emph>
+      </p>
+      <form id="ex1_1x" action="javasctipt:void(0)">
+        <br> Sekunder: <input class="ui in" type="text" value="1000">
+                    <input class="ui fn" type="button" value="slumpa antal sekunder och visa">
+        <hr>    Visa uppdelat i <strong>år, månader och dagar </strong>
+        <br> <input class="ui fn" type="button" value="med text">
+            <div class="ui out"></div>
+        <br> <input class="ui fn" type="button" value="med tabell"> 
+            <div class="ui out"></div>
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [SECONDS, RND, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE] = query2elems("#ex1_1x .ui");
+          console.log([SECONDS, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE]);
+
+          // `unit2units` tar ett antal dagar och ger en lista med år, mänder och dagar
+          // använder divUQ som kan beräknar integer quotient och 
+          // ger ramindern till funktionen som eventuellt tredje argument  
+          const unit2units = 
+            divUQ("år"     ,    365*24*60*60,
+              divUQ("månader",   30*24*60*60, 
+                divUQ("dagar"   ,   24*60*60, 
+                  divUQ("timmar"  ,    60*60, 
+                    divUQ("minuter" ,     60, 
+                      divUQ("sekunder",    1 )))))); 
+
+          RND.addEventListener('click',()=>{
+            SECONDS.value = rnd(10,1000000000);
+            SHOW_TEXT .dispatchEvent(new Event('click'));
+            SHOW_TABLE.dispatchEvent(new Event('click'));
+          });
+          SHOW_TEXT.addEventListener('click',()=>{
+            let secs = parseInt(SECONDS.value);
+            let unit_quantity_list = unit2units(secs) 
+            let html = unit_quantity_list.map( 
+                ({quantity,unit}) => `<strong>${quantity}</strong> ${unit}` 
+              ).join(" + ");
+            HERE_TEXT.innerHTML = `<strong>${secs}</strong> sekunder = ${html}`;
+          });
+          SHOW_TABLE.addEventListener('click',()=>{
+            let secs = parseInt(SECONDS.value);
+            let unit_quantity_list = unit2units(secs) 
+            let html = csv2html( objs2csv( unit_quantity_list,["quantity","unit"] ) );
+            HERE_TABLE.innerHTML = `<strong>${secs}</strong> sekunder = ${html}`;
+          });
+        }
+      </script>
+    </section>
+    </section>
+
+
   </body>
 </html>
 
