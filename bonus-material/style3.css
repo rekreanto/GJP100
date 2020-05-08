@@ -1,24 +1,6 @@
-/***************
- * TOC
- ***************
- * 1. GENERAL
- * 2. FORMS
- * 3. FORMS INPUT
- * 4. FORMS OUTPUT
- * 5. FORMS BUTTONS
- * 6. TABLES
- */
-
-
-
-
-/***********
-* GENERAL *
-***********/
-
 body {
   background-color: hsl(0,0%,90%);
-  line-height: 1.5em;
+  line-height: 150%;
   margin:0;
   padding:0;
 }
@@ -32,14 +14,6 @@ section, h1 {
 h1,h2,h3 {
   font-family: sans-serif;
 }
-
-
-
-
-/*********
-* FORMS *
-*********/
-
 form {
   border: solid thin hsl(0,0%,64%);
   border-radius: 0.6rem;
@@ -57,54 +31,18 @@ input, button {
   text-align: right;
 
 }
-
-
-
-
-/***************
-* FORMS INPUT *
-***************/
-
 input.in  { box-shadow: inset 3px 3px 8px 0px rgba(0,0,0,0.35); }
-
-
-
-
-/***************
-* FORMS OUTPUT *
-***************/
-
-pre {
-  background-color: hsl(0,0%,100%);
-  border: solid 1px hsl(0,0%,85%);
-}
-input.out{
+input.out, div.out {
   box-shadow: 3px 3px 8px 0px rgba(0,0,0,0.35);
   border: solid 1px hsl(0,0%,55%);
   background-color: hsl(0,0%,90%);
-}  
-.out {
-  box-shadow: 3px 3px 8px 0px hsla(0,0%,0%,0.35);
-  border: solid 1px hsl(0,0%,55%);
-  background-color: hsl(0,0%,90%);
-  padding: 1em;
-  margin: 1em
 }
 
-.out.big {
-  font-size: 100px;
-  line-height: 120px;
-  padding: 2rem;
-  margin: 2rem;
-  font-family: monospace;
+div.out, pre.out {
+  padding: 1rem;
+  margin: 1rem
+
 }
-
-
-
-
-/*****************
-* FORMS BUTTONS *
-*****************/
 
 button, input[type=button] {
   text-transform: uppercase;
@@ -120,12 +58,15 @@ button:active, input[type=button]:active {
   color: hsl(0,0%,90%);; background-color: hsl(0,0%,24%);
 }
 
+pre {
+  background-color: hsl(0,0%,100%);
+  border: solid 1px hsl(0,0%,85%);
+}
 
 
-
-/**********
- * TABLES *
- **********/
+/**************
+* TABLE STYLE *
+**************/
 
 table {
   border-collapse: collapse;
@@ -145,3 +86,8 @@ td {
   padding: 0.4rem;
   font-family: monospace;
 }
+/*
+section {
+  border: solid 1px black;
+  background-color: hsla(0, 0%, 100%, 0.3);
+}*/

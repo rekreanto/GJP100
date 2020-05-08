@@ -7,44 +7,93 @@
     <link rel="stylesheet" href="style3.css">
     <style></style>
     <script src="utils3.js"></script>
+
+    <!-- SÝNTAX HIGHLIGHTING -->
+    <link rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
   </head>
   <body onload="">
+    
+    
+    
+    
     <h1>Modul 3, Övning 1-4</h1>
+
+
+
+
     <section>
       <h2>Övning 1</h2>
-      <p>1. Utgå från följande data:
-
-        <pre>var tempen = [ 
-         ["","00-08","08-16","16-24"], 
-         ["Malmö",12,16,9], 
-         ["Mariestad",13,15,10], 
-         ["Stockholm",13,15,13], 
-         ["Upphärad",14,16,15], 
-         ["Göteborg",13,14,12] 
-         ];</pre>
-        
+      <p>1. Utgå från följande data
+        <pre><code class="javascript">
+          let tempen = [ 
+            ["","00-08","08-16","16-24"], 
+            ["Malmö",12,16,9], 
+            ["Mariestad",13,15,10], 
+            ["Stockholm",13,15,13], 
+            ["Upphärad",14,16,15], 
+            ["Göteborg",13,14,12] 
+          ];
+        </code></pre>
         Vi har ett antal mätstationer utplacerade på strategiska positioner i sverige där vi mäter temperaturen. Vi vill göra utskriften enligt nedan och medeltemperaturen skal räknas ut (gör er lösning så likt utskriften nedan som möjligt):</p>
       <form id="ex1" action="javasctipt:void(0)">
-        <input class="elem" type="button" value="generate table">
-        <input class="elem" type="button" value="generate table with average">
-        <div class="elem"><!-- generated content goes here --></div>
+        <pre><code class="ui javascript"></code></pre>
+        <input class="ui fn" type="button" value="add column 'Medelvärde'">
+        <input class="ui fn" type="button" value="add column 'Minimum'">
+        <input class="ui fn" type="button" value="add column 'Maximum'">
+        <input class="ui fn" type="button" value="undo">
+        <div class="ui"><!-- generated content goes here --></div>
       </form>
       
       <script>
       { // varje övning har ett eget scope, så inte variabelnamn riskerar kollidera
         // DATA
-       let tempen = [ 
+       let data = [ 
           ["","00-08","08-16","16-24"], 
           ["Malmö",12,16,9], 
           ["Mariestad",13,15,10], 
           ["Stockholm",13,15,13], 
           ["Upphärad",14,16,15], 
           ["Göteborg",13,14,12] 
-          ];
-        let [GENERATE, GENERATE_AVG,HERE] = query2elems("#ex1 > .elem");
-        console.log(GENERATE, HERE);
+        ];
+        let history = [data];
 
-        // append a column with title and calculated average temperatures
+        let [DATA, ADD_AVG, ADD_MIN, ADD_MAX, UNDO,HERE] = query2elems("#ex1 .ui");
+
+        let updateDataView = () => {
+          let data = history[history.length-1];
+          DATA.innerHTML = 
+            `let tempen = [\n${ data.map(x=>"    "+JSON.stringify(x)).join(",<br>") }\n];`;
+          hljs.highlightBlock(DATA);
+          HERE.innerHTML = csv2html(data);
+        };
+        updateDataView();
+
+
+        let handler = (name,fn) => () => {
+          let data = history[history.length-1];
+          // transfrom the csv data structure into objects, add colum, transform back to csv
+          let objs = csv2objs(data).map( keyfn(
+            ["00-08","08-16","16-24"], name, (...xs) => fn(...xs).toFixed(2))
+          );
+          history.push( objs2csv(objs,Object.getOwnPropertyNames(objs[0]).sort()) );
+          updateDataView();
+        }
+
+        ADD_AVG.addEventListener('click', handler("Medelvärde", avg     ) );
+        ADD_MIN.addEventListener('click', handler("Minimum"   , Math.min) );
+        ADD_MAX.addEventListener('click', handler("Maximum"   , Math.max) );
+        
+
+        UNDO.addEventListener('click', ()=>{
+          if(history.length>1){ history.pop() } else { console.log("No more actions to undo")};
+          updateDataView();
+        })
+        
+// append a column with title and calculated average temperatures
         let withAverage = ([row, ...rows]) => {
           return [
             [ ...row, "medel"],
@@ -53,23 +102,18 @@
             ),
           ];
         }
-
-        let showTable = (xss) => () => {
-          console.table(xss);
-          HERE.innerHTML = csv2html(xss);
-        };
-        GENERATE    .addEventListener('click', showTable(tempen));
-        GENERATE_AVG.addEventListener('click', showTable( withAverage(tempen) ) );
       }
       </script>
     </section>
+
+
 
 
     <section>
       <h2>Övning 2</h2>
       <p>2. Nedan är data som kommer från svenska städers mätstationer. Använd alert (eller annat valfritt sätt) för att skriva ut alla Stockholms temperaturer med hjälp av datan nedan:
 
-        <pre>
+        <pre><code class="javascript">
         var tempen = {
           "stad" : [
             {"namn" : "Malmö", "natt" : "12", "morgon" : "14","kväll" : "10"},
@@ -78,7 +122,7 @@
             {"namn" : "Mariestad", "natt" : "11", "morgon" : "16","kväll" : "11"}
           ]
         };
-        </pre>
+      </code></pre>
       <form id="ex2" action="javasctipt:void(0)">
         Stad: 
         <input class="ui in" type="text" value="Stockholm">
@@ -123,16 +167,23 @@
         }
       </script>
     </section>
+
+
+
+
+
     <section>
       <h2>Övning 3</h2>
       <p>3. Gör om uppgift 9 och 10 från modul 2 som handlar om läraren Morgan. Programmet ska ha samma funktionalitet men istället för att lagra namn och betyg som två arrayer ska du använda en array av lämpliga objekt istället. se exemplet på en aray med objekt nedan.
 
-       <pre>var exempelArayMedObjekt = [
+       <pre><code class="javascript">
+      var exempelArayMedObjekt = [
         {"namn" : "kalle", "betyg" : "A"},
         {"namn" : "sara", "betyg" : "E"},
         {"namn" : "erik", "betyg" : "F"},
         {"namn" : "mia", "betyg" : "B"}
-        ];</pre>
+        ];
+      </code></pre>
       </p>
       <form id="ex3" action="javasctipt:void(0)">
         <input class="ui" type="button" value="visa datastruktur i konsollen"> <hr>
@@ -185,7 +236,7 @@
           let grade = GRADE.value;
           let names = Objects.filter(o => o.grade == grade).map(o => o.name); // accept all results
           HERE2.innerHTML = "För ";
-          HERE2.innerHTML += "betyget <strong>"+grade+"</strong> hittades följande elever: <strong>"+names.join(',') + "</strong>";
+          HERE2.innerHTML += "betyget <strong>"+grade+"</strong> hittades följande elever: <strong>"+names.join(', ') + "</strong>";
         });
       }
       </script>
@@ -201,16 +252,16 @@
       <p>Ange sökord:</p>
       <form id="ex3x"  action="javasctipt:void(0)">
         <input class="ui" type="text" id="query" value="crockford javascript">
-        <input class="ui" type="button" onclick="doSearch(query.value)" value="Sök Libris">
+        <input class="ui" type="button" onclick="doSearch(query.value)" value="Sök i Libris och visa resultat">
         <div class="ui"></div>
       </form>
       
       <script>
       {
         let [QUERY, SEARCH, HERE] = query2elems("#ex3x .ui");
-        console.log([QUERY, SEARCH, HERE]);
+        // console.log([QUERY, SEARCH, HERE]);
         function doSearch(query) {
-          console.log("Startar sökning efter: " + query);
+          // console.log("Startar sökning efter: " + query);
         
           // Begär padded JSON
           let search_url = "http://libris.kb.se/xsearch?format=json&callback=finishedLoading&n=20&query=" + encodeURI(query);
@@ -222,20 +273,18 @@
         }
 
         function finishedLoading(result_json) {
-          // Uppgift: skriv ut resultatet snyggare här än med bara en console.log:
+          // Uppgift: skriv ut resultatet snyggare här än med bara en // console.log:
           let objs = result_json.xsearch.list;
 
           // extend the objs with links to the hits
-          let objs2 = objs.map( o=> withCol(o, {
-                'from': ["identifier", "title"],
-                'to'  : "link",
-                'fn' : (href,txt)=>`<a href="${href}">${txt}</a>`,
-              }
-            )
+          let objs2 = objs.map( keyfn(
+                                  ["identifier", "title"], "link",
+                                  (href,txt)=>`<a href="${href}">${txt}</a>`
+                                )
           );
           // select properties to display in the resulting table
           let keys         = ["link", "type",     "creator"      , "isbn", "language"];
-          let disp_keys_as = ["Book", "Kategori", "Upphovsperson", "ISBN"   , "Språk"];
+          let disp_keys_as = ["Verk", "Kategori", "Upphovsperson", "ISBN"   , "Språk"];
           
           // placera en html-tabell med csv från objektlistan,
           HERE.innerHTML = csv2html( objs2csv(objs2, keys, disp_keys_as) );
@@ -244,18 +293,19 @@
         window.finishedLoading = finishedLoading;
       }
       </script>
+    </section>
 
     <section>
       <h2>Övning 4</h2>
       <p>4. Studera koden nedan och förklara vad som skrivs ut. Tänk först - provkör sedan!</p>
       <form id="ex4" action="javasctipt:void(0)">
-        <pre class="ui"></pre>
+        <pre><code class="ui"></code></pre>
         <input class="ui" type="button" value="Provkör koden i konsollen">
       </form>
       <script>  
         { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
 
-          let [CODE,RUN] = query2elems("#ex4 > .ui");
+          let [CODE,RUN] = query2elems("#ex4 .ui");
           let code = `
           function printit(person) {
               console.log(person.firstName + " likes " + person.favorite);
@@ -290,146 +340,16 @@
 
           printit(personB); 
             // <strong>skriver ut "Thomas likes pear", 
-            // ej påverkat av nydefinitionen av personA</strong>`;
+            // ej påverkat av nydefinitionen av personA</strong>
+            `;
 
           CODE.innerHTML = code;
-          RUN.addEventListener('click', ()=>eval(code));
+          RUN.addEventListener('click', () => eval(code));
         }
       </script>
     </section>
 
 
-
-
-    <section>
-      <h2>Återbesök hos övning 22 från modul 1</h2>
-      <p>Koden som jag skrev i modul 1 blev inte så snygg. Den såg ut så här:
-        <pre>
-          let days = parseInt(DAYS.value);
-          let y = Math.floor(days/365);
-          let m = Math.floor( (days - y*365) / 30 );
-          let d = days -y*365 -m*30;</pre>
-          Den är väl helt OK, men man ser inte alls strukturen. Hur skulle man utvidga denna kod till ett antal flera enheter? I modul 3 har jag lärt mig nya metoder som jag provar att tillämpa för att få en snyggare kod, som går lättare att visa att den är korrekt och lämpar sig bättre för att utvidga.</p>
-        </p> Nu ser koden ut så här:
-        <pre>
-          const unit2units = divUQ("år", 365, divUQ("månader", 30, divUQ("dagar", 1 )));
-        </pre>
-        Det är fortfarande fyra rader, men koden är mera regelbunden, och det är lättare att se:
-        <ul>
-          <li>hur man skulle utvidga med flera enheter</li>
-          <li>och även lättare att se att koden är korrekt och inte t.ex. "nästan" korrekt.</li>
-        </ul>
-        Den nya koden bygger på en rutin som beräknar heltalskvotienten och sedan komponerar svaret från denna och resultatet från funktionen som tas in som tredje argument och som får restvärdet som argument.
-        </p>
-      <form id="ex1_1" action="javasctipt:void(0)">
-        <br> Dagar: <input class="ui in" type="text" value="1000">
-                    <input class="ui fn" type="button" value="slumpa antal dagar och visa">
-        <hr>    Visa uppdelat i <strong>år, månader och dagar </strong>
-        <br> <input class="ui fn" type="button" value="med text">
-            <div class="ui out"></div>
-        <br> <input class="ui fn" type="button" value="med tabell"> 
-            <div class="ui out"></div>
-      </form>
-      <script>
-        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
-          let [QTY, RND, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE] = query2elems("#ex1_1 .ui");
-          console.log([QTY, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE]);
-
-          // `unit2units` tar ett antal dagar och ger en lista med år, mänder och dagar
-          // använder divUQ som kan beräknar integer quotient och 
-          // ger ramindern till funktionen som eventuellt tredje argument  
-          const unit2units =
-            divUQ("år"     ,   365, 
-              divUQ("månader",  30, 
-                divUQ("dagar"  , 1 )));
-
-          RND.addEventListener('click',()=>{
-            QTY.value = rnd(10,2000);
-            SHOW_TEXT .dispatchEvent(new Event('click'));
-            SHOW_TABLE.dispatchEvent(new Event('click'));
-          });
-          SHOW_TEXT.addEventListener('click',()=>{
-            let qty = parseInt(QTY.value);
-            let unit_quantity_list = unit2units(qty) 
-            let html = unit_quantity_list.map( 
-                ({quantity,unit}) => `<strong>${quantity}</strong> ${unit}` 
-              ).join(" + ");
-            HERE_TEXT.innerHTML = `<strong>${qty}</strong> dagar = ${html}`;
-          });
-          SHOW_TABLE.addEventListener('click',()=>{
-            let qty = parseInt(QTY.value);
-            let unit_quantity_list = unit2units(qty); 
-            let html = csv2html( objs2csv( unit_quantity_list,["quantity","unit"] ) );
-            HERE_TABLE.innerHTML = `<strong>${qty}</strong> dagar = ${html}`;
-          });
-        }
-      </script>
-    </section>
-
-    <section>
-      <h2>Egendesignad extrauppgift för övning 1 från modul 1</h2>
-      <p>Använd koden du skrev i <i>övning 1 från modul 1</i> för att formulera motsvarande lösning, men gör nu om från sekunder till <strong>år, månader, dagar, timmar, minuter och sekunder</strong></p>
-
-      <p>
-        Allt som behöver ändras i lösningen är definitionen av <code>unit2units</code> och fyra ställen där "dagar" ska ersättas av "sekunder" i interfacet.
-        <pre>          
-          const unit2units = 
-            divUQ("år"     ,    365*24*60*60,
-              divUQ("månader",   30*24*60*60, 
-                divUQ("dagar"   ,   24*60*60, 
-                  divUQ("timmar"  ,    60*60, 
-                    divUQ("minuter",      60, 
-                      divUQ("sekunder",    1 )))))); </pre>
-      <emph>En extra utmaning kan vara att ge en funktion som tar en lista av objekt med enhet och kvantitet, så att användaren av divUQ slipper tänka på den rektursiva strukturen. Hur löser man det smidigast?</emph>
-      </p>
-      <form id="ex1_1x" action="javasctipt:void(0)">
-        <br> Sekunder: <input class="ui in" type="text" value="1000">
-                    <input class="ui fn" type="button" value="slumpa antal sekunder och visa">
-        <hr>    Visa uppdelat i <strong>år, månader och dagar </strong>
-        <br> <input class="ui fn" type="button" value="med text">
-            <div class="ui out"></div>
-        <br> <input class="ui fn" type="button" value="med tabell"> 
-            <div class="ui out"></div>
-      </form>
-      <script>
-        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
-          let [SECONDS, RND, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE] = query2elems("#ex1_1x .ui");
-          console.log([SECONDS, SHOW_TEXT, HERE_TEXT, SHOW_TABLE, HERE_TABLE]);
-
-          // `unit2units` tar ett antal dagar och ger en lista med år, mänder och dagar
-          // använder divUQ som kan beräknar integer quotient och 
-          // ger ramindern till funktionen som eventuellt tredje argument  
-          const unit2units = 
-            divUQ("år"     ,    365*24*60*60,
-              divUQ("månader",   30*24*60*60, 
-                divUQ("dagar"   ,   24*60*60, 
-                  divUQ("timmar"  ,    60*60, 
-                    divUQ("minuter" ,     60, 
-                      divUQ("sekunder",    1 )))))); 
-
-          RND.addEventListener('click',()=>{
-            SECONDS.value = rnd(10,1000000000);
-            SHOW_TEXT .dispatchEvent(new Event('click'));
-            SHOW_TABLE.dispatchEvent(new Event('click'));
-          });
-          SHOW_TEXT.addEventListener('click',()=>{
-            let secs = parseInt(SECONDS.value);
-            let unit_quantity_list = unit2units(secs) 
-            let html = unit_quantity_list.map( 
-                ({quantity,unit}) => `<strong>${quantity}</strong> ${unit}` 
-              ).join(" + ");
-            HERE_TEXT.innerHTML = `<strong>${secs}</strong> sekunder = ${html}`;
-          });
-          SHOW_TABLE.addEventListener('click',()=>{
-            let secs = parseInt(SECONDS.value);
-            let unit_quantity_list = unit2units(secs) 
-            let html = csv2html( objs2csv( unit_quantity_list,["quantity","unit"] ) );
-            HERE_TABLE.innerHTML = `<strong>${secs}</strong> sekunder = ${html}`;
-          });
-        }
-      </script>
-    </section>
-    </section>
 
 
   </body>

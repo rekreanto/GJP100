@@ -1,40 +1,45 @@
 /*  UTILITY FUNCTIONS for MODULE 3
 *   ============================== 
-*  0. TYPE PREDICATES
-*  1. FUNCTION DEFINITON
-*  2. FUNCTION APPLICATION
-*  3. DOM MANIPULATION
-*  4. MATH RANDOMNESS
-*  5. MATH ARITHMETIC
-*  6. HTML GENERATION
-*  7. ARRAY MANIPULATION
-*  8. PRETTYPRINT
-*  9. COMMA SEPARATED VALUES
+* 1. DOM MANIPULATION
+* 2. FUNCTION APPLICATION
+* 3. FUNCTION DEFINITON
+* 4. MATH RANDOMNESS
+* 5. MATH ARITHMETIC
+* 6. HTML GENERATION
+* 7. ARRAY MANIPULATION
+* 8. PRETTYPRINT
+* 9. COMMA SEPARATED VALUES
 * 10. OBJECTS
 * 11. UNIT CONVERSION
-* 12. TESTING
 *
 *
 */
 
 
-/*******************
- * TYPE PREDICATES *
- *******************/
 
-const isArray     = Array.isArray;
-const isFunction  = (x) => typeof x === 'function';
-const isInteger   = Number.isInteger;
-const isNumber    = (x) => typeof x === 'number' && isFinite(x);
-const isObject    = (x) => x && typeof value === 'object' && x.constructor === Object 
-const isString    = (x) => typeof x === 'string' || x instanceof String;
 
-console.assert(  isArray  ( [1,2,3] ), " isArray  ( [1,2,3] )" );
-console.assert( !isArray  (   "123" ), "!isArray  ( [1,2,3] )" );
-console.assert(  isInteger(     123 ), " isInteger(     123 )" );
-console.assert( !isInteger(     1.3 ), "!isInteger(     1.3 )" );
-console.assert(  isString(    "1.3" ), ' isString(    "1.3" )' );
-console.assert( !isString(      1.3 ), "!isString(      1.3 )" );
+/********************
+ * DOM MANIPULATION *
+ ********************/
+
+// get the elem for an id
+const id2elem = (id) => document.getElementById(id);
+// get the first elem for an query
+const query2elem = (q) => document.querySelector(q);
+// get all elems for an query as a real Array (not a node list)
+const query2elems = (q) => Array.from( document.querySelectorAll(q) );
+
+
+
+
+/************************
+ * FUNCTION APPLICATION *
+ ************************/
+
+// fixes the given args *before* the remaining args, returning a new function
+const fx = (f, ...xs) => (...ys) => f(...xs, ...ys);
+// fixes the given args *after* the remaining args, returning a new function
+const fy = (f, ...xs) => (...ys) => f(...ys, ...xs);
 
 
 
@@ -60,32 +65,6 @@ const arity = (min) => (...fs) => (...xs) => fs[ qty(...xs) - min ](...xs);
 
 
 
-/************************
- * FUNCTION APPLICATION *
- ************************/
-
-// fixes the given args *before* the remaining args, returning a new function
-const fx = (f, ...xs) => (...ys) => f(...xs, ...ys);
-// fixes the given args *after* the remaining args, returning a new function
-const fy = (f, ...xs) => (...ys) => f(...ys, ...xs);
-
-
-
-
-/********************
- * DOM MANIPULATION *
- ********************/
-
-// get the elem for an id
-const id2elem = (id) => document.getElementById(id);
-// get the first elem for an query
-const query2elem = (q) => document.querySelector(q);
-// get all elems for an query as a real Array (not a node list)
-const query2elems = (q) => Array.from( document.querySelectorAll(q) );
-
-
-
-
 /********************
  * MATH: RANDOMNESS *
  *******************/
@@ -105,23 +84,7 @@ const rnd = arity(0)(
             )(x),
   (a, b) => a + rnd(b-a),
 );
-
-// return a scrambled copy of the input array
-const scramble = cond(
-  isString,  (str) => scramble(str.split('')).join(''),
-  isArray ,  (xs)  => {
-               let ys = [];
-               let len = xs.length;
-               for(let i=0;i<len;i++){
-                 let idx = rnd(xs.length);
-                 ys.push( xs.splice(idx,1)[0] );
-               }
-               return ys;
-            }
-);
-
-
-//console.assert(scramble("lorem ipsum").length == scramble("lorem ipsum").length,"");
+  
   
   
   
@@ -131,13 +94,7 @@ const scramble = cond(
 
 const plus    = (a,b)   => a+b;
 const mul     = (a,b)   => a*b;
-const rem     = (a,b)   => a%b; // in javascript, % is the remainder operator
-// implementation of mod comes from from https://exploringjs.com/deep-js/ch_remainder-vs-modulo.html
-const mod     = (a,b)   => {
-                              let quotient = Math.floor(a/b);
-                              let modulo   = a - b * quotient;
-                              return modulo; 
-                            };
+const rest    = (a,b)   => a%b;
 const qty     = (...xs) => xs.length;
 const sum     = (...xs) => xs.reduce( plus, 0 );
 const prod    = (...xs) => xs.reduce( mul,  0 ); 
@@ -239,49 +196,135 @@ const split = arity(1)(
 /***********
  * OBJECTS *
  ***********/
-// keyfn :: ([Key], Key, xs => r ) => r
-// Lifts a function to work over objects
-// @from: array of arugument keys
-// @to  : the result key
-// @fn  : the function
+// Takes an object and a key function
+// the key function is defined by
+//  {from: <list of input keys>, to: <output key>, fn: <a funciton with corresponding arity>}
+
+const withCol  = (o,{from,to,fn}) => {
+  let args = from.map( k => o[k] );
+  return Object.assign({[to]:fn(...args)}, o);
+};
+
+// Given arguments and result keys and a function
 const keyfn = (from, to, fn) => (o) => {
   let args = from.map( k => o[k] );
   return Object.assign({[to]:fn(...args)}, o);
 };
 
 
-/***********
- * TESTING *
- ***********/
 
-// returns an array of elements from a (inclusive) to b (inclusive) in steps of s
-// a defaults to 1 and step to zeros defaults to 1
-// a and be must be either integers or one  character strings
-// 
-const fromto = 
-  cond(
-    isString,   arity(2)(
-                  (a,b)      => fromto(a,b,1),
-                  (a,b,step) => {
-                                let a_code = a.charCodeAt(0);
-                                let b_code = b.charCodeAt(0);
-                                let codes = fromto(a_code,b_code,step);
-                                let chars = codes.map(c => String.fromCharCode(c));
-                                return chars;
-                            },
-                ),
-    isInteger,  arity(1)(
-                  (b)        => fromto(0,b,1),
-                  (a,b)      => fromto(a,b,1),
-                  (a,b,step) => {
-                                  // cover the case when a > b
-                                  let n = Math.abs(b-a);
-                                  step  = Math.abs(step)||1; // step of zero would loop forever 
-                                  sign  = Math.sign(b-a);
 
-                                  let xs = [];
-                                  for(let i = 0; i<=n; i+=step) xs.push(a+i*sign); 
-                                  return xs; 
-                                }
-                )
+/*******************
+ * UNIT CONVERSION *
+ ******************/
+
+// REUTRN div, recur on rest
+// Takes a unit, a dividend and a function to handle the remainder, 
+// returns a list of quantities with units
+const divUQ = arity(2)(
+    (u,b)     => (a) => [ {unit:u, quantity:Math.floor(a/b)} ], // return the integer quotient
+    (u,b,f)   => (a) => {
+                        let quotient  = Math.floor(a/b);
+                        let remainder = a - quotient * b;
+                        return [...divUQ(u,b)(a), ...f(remainder)];
+                      },  
+   );
+{
+  // lite demo-kod som jag lämnar här för tillfället
+  const uqs2str = (objs) => objs.map( ({quantity,unit}) => `${quantity} ${unit}` ).join(" + ");  
+  const d2ymd =
+  divUQ("år"     ,   365, 
+    divUQ("månader",  30, 
+      divUQ("dagar"  , 1 )));
+
+
+  const s2ydhms = 
+      divUQ("years"  ,   365*24*60*60,
+        divUQ("months" ,  30*24*60*60, 
+          divUQ("days"   ,   24*60*60, 
+            divUQ("hours"  ,    60*60, 
+              divUQ("minutes",     60, 
+                divUQ("seconds",    1 )))))); 
+
+  // console.log(uqs2str(s2ydhms(1000000000)));
+  // console.table(uqs2str(d2ymd(5428)));
+  // console.table(objs2csv(d2ymd(5428),["quantity","unit"]));
+  // console.table(csv2html(objs2csv(d2ymd(5428),["unit","quantity",],["Enhet","Kvantitet"])));
+}
+
+
+/******************************
+ * UNIT CONVERSION WITH UNITS *
+ *****************************/
+
+// OBJECT VERSION
+
+const divmod = ({from, to, ratio}) => (o) => {
+  console.log("{from, to, ratio}) => (o)",from,to,ratio,o);
+  let quotient  = Math.trunc(o[from]/ratio);
+  let remainder = o[from]-ratio*quotient;
+  return Object.assign(
+    Object.assign({},o),
+    {
+      [from]: remainder,
+      [to]  : quotient,
+    }
   )
+};
+let ap = (fn) => (h) => { h.push( fn( h[h.length-1] ) ); return h};
+{
+
+
+  let h = [{days:1001}];
+  [ 
+    {from:'days', to:'years',  ratio: 365},
+    {from:'days', to:'months', ratio:  30},
+  ].forEach((t)=>{
+      ap(divmod(t))(h);
+      console.table(h)
+   }
+  )
+
+
+}
+
+// CONCATENATIVE VERSION
+
+let isFunction = (x) => typeof x === 'function';
+// and the same but concatenative style
+
+const qr = (h) => {
+  let b = h.pop();
+  let a = h.pop();
+  let quotient  = Math.floor(a/b); 
+  let remainder = a  -  b * quotient;
+  h.push(quotient);
+  h.push(remainder);
+}
+
+
+function evconc(code){ // evaluate concatenative code
+  let h=[];
+  code.forEach(cond(
+    isFunction, (fn)  => { fn(h); },      // evaluate functions
+    otherwise , (arg) => { h.push(arg); } // push other stuff
+  ));
+  return h;
+}
+
+ymd = [
+  365, qr,
+   30, qr,
+];
+
+ymdhms = [
+  365*24*60*60, qr,
+   30*24*60*60, qr,
+      24*60*60, qr,
+         60*60, qr,
+            60, qr,
+];
+
+console.log("[1001, ...ymd]", evconc([1001, ...ymd]));
+269768992
+console.log("[269768992, ...ymdhms]", evconc([269768992, ...ymdhms]));
