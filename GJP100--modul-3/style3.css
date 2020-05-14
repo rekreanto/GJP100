@@ -7,6 +7,7 @@
  * 4. FORMS OUTPUT
  * 5. FORMS BUTTONS
  * 6. TABLES
+ * 7. CODE
  */
 
 
@@ -31,6 +32,7 @@ section, h1 {
 
 h1,h2,h3 {
   font-family: sans-serif;
+  text-align: left;
 }
 
 
@@ -74,10 +76,10 @@ input.in  { box-shadow: inset 3px 3px 8px 0px rgba(0,0,0,0.35); }
 * FORMS OUTPUT *
 ***************/
 
-pre {
+/* pre {
   background-color: hsl(0,0%,100%);
   border: solid 1px hsl(0,0%,85%);
-}
+} */
 input.out{
   box-shadow: 3px 3px 8px 0px rgba(0,0,0,0.35);
   border: solid 1px hsl(0,0%,55%);
@@ -87,16 +89,21 @@ input.out{
   box-shadow: 3px 3px 8px 0px hsla(0,0%,0%,0.35);
   border: solid 1px hsl(0,0%,55%);
   background-color: hsl(0,0%,90%);
-  padding: 1em;
-  margin: 1em
+  padding: 1rem;
+  margin: 1rem
 }
 
 .out.big {
-  font-size: 100px;
-  line-height: 120px;
-  padding: 2rem;
-  margin: 2rem;
+  font-size: 80px;
+  line-height: 100px;
+  padding: 1rem;
+  margin: 1rem;
   font-family: monospace;
+  transition: transform 225ms;
+}
+
+.out.big:hover {
+  transform: scale(1.01);
 }
 
 
@@ -118,8 +125,12 @@ button, input[type=button] {
 button:active, input[type=button]:active {
   box-shadow: inset 3px 3px 8px 0px rgba(0,0,0,0.75);
   color: hsl(0,0%,90%);; background-color: hsl(0,0%,24%);
+  transition: transform 195ms;;
 }
 
+button:hover, input[type=button]:hover {
+    transform: scale(1.01);
+} 
 
 
 
@@ -145,3 +156,14 @@ td {
   padding: 0.4rem;
   font-family: monospace;
 }
+
+
+/********
+ * CODE *
+ ********/
+
+ code {
+   color: hsla(30,70%,30%);
+   font-weight: 600;
+   font-size: 1.1em;
+ }

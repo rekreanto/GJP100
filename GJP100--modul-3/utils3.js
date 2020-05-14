@@ -1,5 +1,6 @@
 /*  UTILITY FUNCTIONS for MODULE 3
 *   ============================== 
+* -1. COMPARISON
 *  0. TYPE PREDICATES
 *  1. FUNCTION DEFINITON
 *  2. FUNCTION APPLICATION
@@ -13,28 +14,30 @@
 * 10. OBJECTS
 * 11. UNIT CONVERSION
 * 12. TESTING
+* 13. NODE CREATION
 *
 *
 */
 
+/***************
+ *  COMPARISON *
+ ***************/
 
-/*******************
- * TYPE PREDICATES *
- *******************/
+const not     = (p)   => (x) => !p;
+const lt      = (y)   => (x) => x <  y;
+const lte     = (y)   => (x) => x <= y;
+const gt      = (y)   => (x) => x >  y;
+const gte     = (y)   => (x) => x >= y;
+const all     = (p)   => (...bs) => bs.map( matches(p) ).reduce( (acc, r)  => acc && r, true );
 
-const isArray     = Array.isArray;
-const isFunction  = (x) => typeof x === 'function';
-const isInteger   = Number.isInteger;
-const isNumber    = (x) => typeof x === 'number' && isFinite(x);
-const isObject    = (x) => x && typeof value === 'object' && x.constructor === Object 
-const isString    = (x) => typeof x === 'string' || x instanceof String;
 
-console.assert(  isArray  ( [1,2,3] ), " isArray  ( [1,2,3] )" );
-console.assert( !isArray  (   "123" ), "!isArray  ( [1,2,3] )" );
-console.assert(  isInteger(     123 ), " isInteger(     123 )" );
-console.assert( !isInteger(     1.3 ), "!isInteger(     1.3 )" );
-console.assert(  isString(    "1.3" ), ' isString(    "1.3" )' );
-console.assert( !isString(      1.3 ), "!isString(      1.3 )" );
+const some  = (...bs) => bs.reduce( (acc, b)  => acc || b, false );
+const none  = (...bs) => bs.reduce( (acc, b) => acc && !b, true );
+
+
+
+const odd     =          (x) => x%2 === 1;
+const even    =          (x) => x%2 === 0;
 
 
 
@@ -50,12 +53,85 @@ const cond = (...cfs) => (...xs) => {
   for(let i = 0;i < cfs.length; i += 2) if( cfs[i](...xs) ) return cfs[i+1](...xs);
   throw `cond: no match for input '${xs}'`;
 };
-// test for the default clause
-const otherwise = () => true;
+const qty     = (...xs) => xs.length;
+const arity   = (...xs) => xs.length;
+
+const caseof = (f) => (...cfs) => (...xs) => {
+
+  for(let i = 0;i < cfs.length; i += 2){ 
+    let isMatch = f? matches(cfs[i])(f(...xs)): matches(cfs[i])(...xs); // use f if available
+    if( isMatch ) return cfs[i+1](...xs);
+  }
+  throw `caseof( ${f.name} ): no match for input '${xs}'`;
+};
+
+
+
 
 // multi-functions that dispaches on a function of all the args
 // dispatch on the dispatch function disp using the result as an index to mf
-const arity = (min) => (...fs) => (...xs) => fs[ qty(...xs) - min ](...xs);
+// const caseof_arity = (min) => (...fs) => (...xs) => fs[ qty(...xs) - min ](...xs);
+
+
+
+
+/*******************
+ * TYPE PREDICATES *
+ *******************/
+
+
+const isArray     = Array.isArray;
+const isFunction  = (x) => typeof x === 'function';
+const isInteger   = Number.isInteger;
+const isNumber    = (x) => typeof x === 'number' && isFinite(x);
+const isObject    = (x) => x && typeof x === 'object' && x.constructor === Object 
+const isString    = (x) => typeof x === 'string' || x instanceof String;
+const isRegExp    = (x) => x && typeof x === 'object' && x.constructor === RegExp;
+const isNode      = (x) => x && x.nodeType;
+const isPrimitive = (x) => !(typeof x === 'object');
+const isAnything  = (x) => true; 
+const hasArity    = cond(
+  isInteger,  (n) => (...xs) => xs.length == n,
+  isFunction, (p) => (...xs) => p( xs.length )
+);
+
+
+
+const and     = caseof( arity )(
+  1      , (p)   => (q) => (x) => p(x) && q(x),
+  2      , (p,q)        => (x) => p(x) && q(x),
+  gt(2)  , (p, ...ps)   => (x) => p(x) && and(...ps)
+);
+const or     = cond(
+  hasArity(1)       , (p)   => (q) => (x) => p(x) || q(x),
+  hasArity(2)       , (p,q)        => (x) => p(x) || q(x),
+  hasArity( gt(2) ) , (p, ...ps)   => (x) => p(x) || or(...ps)
+);
+
+const matches  = cond(
+  hasArity(1)       , cond(
+                        isRegExp     , (re)  => (x) => re.test(x),
+                        isFunction   , (p)   => (x) => p(x),
+                        isPrimitive  , (val) => (x) => val === x
+                      ),
+  hasArity(gt(1))   , (...ps) => (...xs) => {
+    console.log(ps,xs);
+    console.log(zip(ps,xs));
+    return zip(ps,xs).map( ([p,x]) => matches(p)(x) ).reduce( (acc,b) => acc && b, true);
+  }
+);
+
+
+
+
+console.assert(  isArray  ( [1,2,3] ), " isArray  ( [1,2,3] )" );
+console.assert( !isArray  (   "123" ), "!isArray  ( [1,2,3] )" );
+console.assert(  isInteger(     123 ), " isInteger(     123 )" );
+console.assert( !isInteger(     1.3 ), "!isInteger(     1.3 )" );
+console.assert(  isString(    "1.3" ), ' isString(    "1.3" )' );
+console.assert( !isString(      1.3 ), "!isString(      1.3 )" );
+
+
 
 
 
@@ -96,14 +172,13 @@ const query2elems = (q) => Array.from( document.querySelectorAll(q) );
 // one argument <array>    : pick a random element
 // two arguments <int,int> : return a random integer between a inclusive and b non-inclusive
 
-const rnd = arity(0)(
-  ()     => Math.random(), 
-  (x)    => cond( 
-              Number.isInteger, (int) => Math.floor( int * rnd() ),
-              Array.isArray,    (arr) => arr[Math.floor( arr.length * rnd() )],
-              otherwise,        (t)   => { throw `RND1: expected <array> or <int> but was given '${xs}'`; }
+const rnd = caseof( arity )(
+  0, ()     => Math.random(), 
+  1, (x)    => cond( 
+              Number.isInteger,  (int) => Math.floor( int * rnd() ),
+              Array.isArray   ,  (arr) => arr[Math.floor( arr.length * rnd() )],
             )(x),
-  (a, b) => a + rnd(b-a),
+  2, (a, b) => a + rnd(b-a),
 );
 
 // return a scrambled copy of the input array
@@ -138,7 +213,6 @@ const mod     = (a,b)   => {
                               let modulo   = a - b * quotient;
                               return modulo; 
                             };
-const qty     = (...xs) => xs.length;
 const sum     = (...xs) => xs.reduce( plus, 0 );
 const prod    = (...xs) => xs.reduce( mul,  0 ); 
 const avg     = (...xs) => sum(...xs) / qty(...xs);
@@ -162,9 +236,9 @@ const tag = (...xs) => [tag0,tag1,tag2][xs.length](...xs); // dispatch on arity
   const tag2 = (tagname, f) => (strs) => tag1(tagname)( strs.map( f ).join("\n") );
 */
 
-const tag = arity(1)( // dispatch on arity
-  (tagname)    => (str)  =>`<${tagname}>${ str }</${tagname}>`,       // base case
-  (tagname, f) => (strs) => tag(tagname)( strs.map( f ).join("\n") ), // recursive case
+const tag = caseof( arity )( // dispatch on arity
+  1, (tagname)    => (str)  =>`<${tagname}>${ str }</${tagname}>`,       // base case
+  2, (tagname, f) => (strs) => tag(tagname)( strs.map( f ).join("\n") ), // recursive case
 );
 
 /***********************
@@ -227,9 +301,9 @@ const csv2html = tag("table", tag("tr", tag("td")));
 // Would that be equivalent to SRE:s? IN what ways?
 // Check the paper for examples?
 // Check for other typical uses of defred re's 
-const split = arity(1)(
-  (delim)    => (str) => str.split(delim),
-  (delim, f) => (str) => str.split(delim).map(f),  
+const split = caseof( arity )(
+  1, (delim)    => (str) => str.split(delim),
+  2, (delim, f) => (str) => str.split(delim).map(f),  
 )
 {
   let xss = split(" ", split("")) ("hej du din ko"); 
@@ -258,30 +332,124 @@ const keyfn = (from, to, fn) => (o) => {
 // a defaults to 1 and step to zeros defaults to 1
 // a and be must be either integers or one  character strings
 // 
-const fromto = 
+const dotdot = 
   cond(
-    isString,   arity(2)(
-                  (a,b)      => fromto(a,b,1),
-                  (a,b,step) => {
+    isString,   caseof( arity )(
+                  2, (a,b)      => dotdot(a,b,1),
+                  3, (a,b,step) => {
                                 let a_code = a.charCodeAt(0);
                                 let b_code = b.charCodeAt(0);
-                                let codes = fromto(a_code,b_code,step);
+                                let codes = dotdot(a_code,b_code,step);
                                 let chars = codes.map(c => String.fromCharCode(c));
                                 return chars;
                             },
                 ),
-    isInteger,  arity(1)(
-                  (b)        => fromto(0,b,1),
-                  (a,b)      => fromto(a,b,1),
-                  (a,b,step) => {
+    isInteger,  caseof( arity )(
+                  1, (b)        => dotdot(0,b,1),
+                  2, (a,b)      => dotdot(a,b,1),
+                  3, (a,b,step) => {
                                   // cover the case when a > b
                                   let n = Math.abs(b-a);
                                   step  = Math.abs(step)||1; // step of zero would loop forever 
                                   sign  = Math.sign(b-a);
 
                                   let xs = [];
-                                  for(let i = 0; i<=n; i+=step) xs.push(a+i*sign); 
+                                  for(let i = 0; i<=n; i+=step) xs.push(a + i*sign); 
                                   return xs; 
                                 }
-                )
-  )
+                ),
+  );
+
+// samma som dotdot, men intervall a till b exklusivt
+// stödjer ej strängar som input, då de inte funkar bra med exklusiva intervall
+const dotdotdot = caseof( arity )(
+                    1,  (b)        => dotdotdot(0,b,1),
+                    2,  (a,b)      => dotdotdot(a,b,1),
+                    3,  (a,b,step) => {
+                                      console.log("jjj");
+                                      // cover the case when a > b
+                                      let n = Math.abs(b-a);
+                                      step  = Math.abs(step)||1; // step of zero would loop forever 
+                                      sign  = Math.sign(b-a);
+
+                                      let xs = [];
+                                      for(let i = 0; i<n; i+=step) xs.push(a + i*sign); 
+                                      return xs; 
+                                    }
+                   );
+
+
+
+/*****************
+ * NODE CREATION *
+ *****************/
+
+
+ 
+// ap :: (<function>+)(<value>*) -> xs
+const ap = (...fs) => (...xs) => {
+  let func = x => fs.reduce( (acc,f) => f(acc), x);
+  xs.map((x) => func(x));
+} 
+//elem  :: (<tagname>)( <string>|<props>|<events>|<nodes> *)|<parent-elem>| -> <elem>
+const addElem = (tagname) => (...fs) => (parent) => {
+  let elm = document.createElement(tagname); // create the element
+  fs.forEach( 
+    cond(
+      isString   , str => {},
+      isFunction , (f) => { f(elm); } 
+    )
+  );          // apply the modifyers to the element
+  parent.appendChild(elm);                   // insert the element into the dom
+}; 
+
+// addClass :: (<classname>+)|<elem>| -> <elem>
+const addClass = (...xs) => (...elms) => {
+  elms.forEach(
+    (elm) => { xs.forEach( (x) => { elm.classList.add(x); } ); }
+  );
+  return elms;
+};
+
+// prop  :: (<key>, <value>)|<elem>| -> <elem>
+const addProp = (key, val) => (...elm) => {
+  elms.forEach(
+    (elm) => { elm[key] = val; }
+  );
+  return elms;
+};
+
+// addStyle  :: (<key>, <value>)|<elem>| -> <elem>
+const addStyle = (key, val) => (...elms) => {
+  elms.forEach(
+    (elm) => { elm.style[key] = val; }
+  );
+  return elms;
+};
+
+// addEvent :: (<event-type>, <handler>)|<elem>| -> <elem>
+const addEvent = (ev, fn) => (...elms) => {
+  elms.forEach(
+    (elm) => { elm.addEventListener(ev, fn); }
+  );
+  return elms;
+};
+
+
+
+
+/*****************************
+ * NODE CREATION: THE, A, OF *
+ *****************************/
+
+// namespace
+//let elem = {};
+
+// elem.the = (<descr>) |<mutation>*|
+/* elem.the = (query) => (...ms){
+
+} */
+
+// elem.a = (<descr>) (<mutation>*) /\
+
+// elem.of = ()

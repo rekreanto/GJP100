@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henning von Rosen</title>
+    <link rel="stylesheet" href="style3.css">
+    <style></style>
+    <script src="utils3.js"></script>
+
+    <!-- SÝNTAX HIGHLIGHTING -->
+    <link rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  </head>
+  <body onload="">
+    
+    
+    
+    
+    <h1>Modul 3, Övning 5-11</h1>
+
+
+
+
+    <section>
+      <h2>Övning 5</h2>
+      <p>Gör ett eget namespace och lägg till funktionen <code>addera</code>. Funktionen addera ska ta två tal som inparameter och skriva ut summan av dessa på lämpligt ställe (t.ex. genom att ändra innerHTML i ett element)./p>
+      <form id="ex5" action="javasctipt:void(0)">
+        Ett tal: <input class="ui in" type="text" value="42"> <br>
+        Ett tal: <input class="ui in" type="text" value="38"> <br>
+        <input class="ui in" type="button" value="addera de två talen">
+        <input class="ui in" type="button" value="slumpa och addera de två talen"> <br>
+        <div class="out ui big">__</div> 
+
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [A, B, ADD, RND, HERE] = query2elems("#ex5 .ui");
+
+          HERE.style.display ="inline-block";
+
+          let myNameSpace = {};
+
+          myNameSpace.addera = (a,b) => {
+            HERE.innerText = a+b;
+          }
+          RND.addEventListener('click', () => {
+              let [a,b] = [A,B].map( x => { x.value = rnd(0,43); } );
+              ADD.dispatchEvent(new Event('click'));
+            }
+          );
+          ADD.addEventListener('click', () => {
+              let [a,b] = [A,B].map(x=>parseFloat(x.value));
+              myNameSpace.addera(a,b);
+            }
+          );
+        }
+      </script>
+
+
+
+
+    </section>
+
+
+
+
+    <section>
+      <h2>Övning 6</h2>
+      <p>Använd gärna namespace. Lägg till en variabel som heter antalClick. Skapa en funktion som heter click och varje gång funktionen körs ska 1 läggas till variabeln antalClick. Total antal klick ska skrivas ut på skärmen på valfritt ställe. Funktionen ska "triggas" när man trycker på en knap</p>
+      <form id="ex6" action="javasctipt:void(0)">
+        <input class="ui in" type="button" value="klicka mig">
+        <hr>
+        <div class="ui out big"></div> 
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [INC,HERE] = query2elems("#ex6 .ui");
+
+          HERE.style.display ="inline-block";
+
+          // init
+          let myNameSpace = {};
+          myNameSpace.antalKlick = 0;
+          HERE.innerText = myNameSpace.antalKlick;
+
+          INC.addEventListener('click',()=>{
+            myNameSpace.antalKlick++;
+            HERE.innerText = myNameSpace.antalKlick;
+          }); 
+        }
+      </script>
+    </section>
+
+    <section>
+      <h2>Övning 7</h2>
+      <p>Skriv ett program som men hjälp av javascript ändrar bakgrundsfärgen på ett div-element när man håller musen över den, och sedan ändrar tillbaka till ursprungsfärgen när man flyttar bort muspekaren. Bygg ut uppgiften ytterligare med någon valfri funktionalitet i javascript.</p>
+
+      <form id="ex7" action="javasctipt:void(0)">
+        <div class="ui out">HOOVRA MIG</div>
+        <input class ="ui fn" type="button" value="Nästa färgpar">
+        <input class ="ui fn" type="button" value="Lägg till färgpar">
+        <input class ="ui fn" type="button" value="nollställ">
+        <pre><code class="ui out javascript"></code></pre>
+      </form>
+
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [HERE,STEP,ADD_COLOR,RESET,DATA] = query2elems("#ex7 .ui");
+
+          // objekt med färginformation
+          let color = {index:0, list:[]};
+
+          let showData = (data)=>{
+            DATA.innerHTML = pretty(data);
+            hljs.highlightBlock(DATA);
+          }
+          let addColors = () => {
+            let hue = rnd(0, 360); 
+            color.list.push(`hsla(${hue},50%,50%,0.8)`,`hsla(${hue},100%,60%,1.0)`);
+          } 
+
+          let nextColor = () => {
+            color.index = (color.index + 2) % (color.list.length);
+            return color.list[color.index]; 
+          };
+          let update = ()=> {
+            HERE.style.backgroundColor = color.list[color.index];
+            showData(color);
+          }
+
+
+          // Init
+          addColors();
+          addColors();
+          
+          update();
+          HERE.classList.add("big");
+          HERE.style.textAlign = "center";
+          
+          STEP.addEventListener('click', ()=>{
+              nextColor();
+              update();
+            }
+          );
+          // Events
+          HERE.addEventListener('mouseover', ()=>{
+              HERE.style.backgroundColor = color.list[color.index+1];
+            }
+          );
+          HERE.addEventListener('mouseout', ()=>{
+            HERE.style.backgroundColor = color.list[color.index];
+            }
+          );
+          ADD_COLOR.addEventListener('click', ()=>{
+              // lägg till färger i listan
+              addColors();
+              nextColor();
+              nextColor();
+
+              update();
+            }
+          );
+          RESET.addEventListener('click',()=>{
+            color.index = 0;
+            color.list = [];
+            addColors();
+            addColors();
+
+            update();
+          })
+        }
+      </script>
+    </section>
+
+
+
+
+    <section>
+      <h2>Övning 8</h2>
+      <p>Skapa ett program som består av ett textfält (t.ex. <input class="in" type="text">), en knapp och ett div-element. När man trycker på knappen skall det som står i textrutan skrivas ut i div-elementet. Bygg ut uppgiften ytterligare med någon valfri funktionalitet i javascript.</p>
+      <form id="ex8" action="javasctipt:void(0)">
+        <input class="ui in" type="text" value="Lorem ipsum">
+        <input class="ui fn" type="button" value="lagra och visa text">
+        <hr>
+        <input class="ui fn" type="button" value="slumpa bokstäver">
+        <input class="ui fn" type="button" value="blanda bokstäver">
+        <input class="ui fn" type="button" value="undo">
+        <input class="ui fn" type="button" value="återställ">
+        <hr>
+
+        <div class="ui out big"></div>
+        <pre><code class="ui out javascript"></code></pre>
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [TEXT,SHOW,RND,MIX,UNDO,RESET,HERE,HISTORY] = query2elems("#ex8 .ui");
+          let history = ["Lorem ipsum"];
+          let update = ()=>{
+            TEXT.value = history[history.length-1];
+            HERE.innerHTML = history[history.length-1];
+            HISTORY.innerHTML = "// history\n"+pretty(history);
+            hljs.highlightBlock(HISTORY);
+          };
+          update();
+          RND.addEventListener('click', ()=>{
+              let src = history[history.length-1].split('');
+              let text = src.map( ch=>rnd( src ) ).join('');
+              history.push(text);
+
+              update();
+            }
+          );
+          MIX.addEventListener('click',()=>{
+            let text = scramble( history[history.length-1] ); 
+            history.push(text);
+            
+            update();
+          });
+          UNDO.addEventListener('click',()=>{
+            if(history.length>1) history.pop();
+            
+            update();
+          });
+          RESET.addEventListener('click',()=>{
+            if(history.length>1) history = history.slice(0,1);
+            
+            update();
+          });
+          SHOW.addEventListener('click', ()=>{
+            let text = TEXT.value;
+            history = [text];
+
+            update();
+          }
+          );
+        }
+      </script>
+    </section>
+
+
+
+
+    <section>
+      <h2>Övning 9</h2>
+      <p>Skapa ett program där ett div-element rör sig fram och tillbaka i x-led på skärmen automatiskt. Använd setInterval eller setTimeout. Bygg ut uppgiften ytterligare med någon valfri funktionalitet i javascript.</p>
+      <form id="ex9" action="javasctipt:void(0)">
+        <div class="ui out">Se lönsing av Modul 2 övning 22</div>
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+      
+        }
+      </script>
+    </section>
+
+
+    <section>
+      <h2>Övning 10</h2>
+      <p>Skapa en klass som heter <code>Vara</code> den ska innehålla följande attribut: 
+        <code>namn</code>, <code>pris</code>, <code>beskrivning</code>, <code>antal</code> samt en metod som heter <code>calcSubTotal</code> . <code>calcSubTotal</code> ska returnera <code>pris * antal</code> (alternativt skriv ut totalpriset någonstans på sidan). Skapa ett objekt av denna klass direkt när sidan laddas. Anropa metoden <code>calcSubTotal</code> genom att trycka på en knapp.</p>
+        <p>Extra: Diskutera eventuella problem med modelleringen ovan.</p>
+
+      <form id="ex10" action="javasctipt:void(0)">
+        Slumpa fram nytt objekt som representerar ett inslag på ett kvitto 
+        <input name="CREATE_OBJECT" class="ui fn" type="button" value="slumpa fram ett objekt"> <br>
+        <input name="DELETE_OBJECT" class="ui fn" type="button" value="ta bort senaste objektet"> <hr>
+        <h2>Kvitto</h2><div name="RECEIPT" class="ui out javascript"></div>
+        
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+      
+          // Några funktoner för att skapa slumpiva Varor med slumpvisa egenskaper i testsyfte
+          let rndAdjektiv   = () => rnd(["icke vegetarisk", "smutsig", "kletig", "möglig", "slemmig", "omogen", "lyxig","svettig"]);
+          let rndSubstantiv = () => rnd(["apelsin", "tomat", "tandkräm", "tvål", "toarulle","glass","engångsgrill"]);
+          let rndBeskrivning= () => rnd(["oumbärlig", "bäst på marknaden", "oslagbar kvalitet", "hamstra nu", "buy or die"]);
+          let rndPris       = () => 5 + rnd(10) + rnd([0, 0, 0.5, 0.95, 0.95, 0.95, 0.99]);
+          let rndAntal      = () => rnd(1,10);
+          let rndNamn       = () => `en ${rndAdjektiv()} ${rndSubstantiv()}`;
+          let rndVara       = () => new Vara(rndNamn(), rndBeskrivning(), rndPris(),rndAntal());
+
+          /*** OBECT DEFINTION ***/
+          // representerar en rad på kvittot (namnet vara är enligt specifikationen)
+          // totalkostnaden för raden kan beräknas dynamiskt
+          class Vara {
+            constructor(namn, beskrivning, pris, antal){
+              this.namn        = namn;
+              this.beskrivning = beskrivning;
+              this.pris        = pris;
+              this.antal       = antal;
+            }
+            calcSubTotal(){
+              return this.antal * this.pris;
+            }
+            toString(){
+              return `"<b>${this.namn}</b>"  (${this.beskrivning}), á-pris: SEK <b>${this.pris.toFixed(2)}</b>, ${this.antal}st`;
+            };
+          }
+
+          // publicera klassen så den kan användas i nästa övning som också är i eget scope
+          window.Vara = Vara; 
+          /*** DATA ***/
+          // varor :: [{vara, kostnad}]
+          let varor = [];
+
+
+          /*** ACTIONS ***
+           * Denna lösning avviker från än de de föregående:
+           *  + Formuläret fångar alla event, och dispatchar dem beroende på värdet 
+           *    för dispatch event.target.name
+           *  + argumenten till funktionerna är mängden av alla event.data-_ attribut 
+           * Motivet för denna lösning är att underlätta att ha en kanpp per kvittorad
+           */ 
+          
+          const actions = 
+          {
+            CREATE_OBJECT: ()=>{
+              console.log("clicked", "CREATE_OBJECT");
+              let obj = rndVara();
+              varor.unshift({vara: obj, belopp:null});
+              update();
+            },
+            CALCULATE_PRIZE: ({index})=>{
+              let line   = varor[index]; // idx anger vilken rad på kvittot som ska uppdateras med pris
+              let amount = line.vara.calcSubTotal();
+              line.belopp = amount;
+              update();
+            },
+            DELETE_OBJECT: ()=>{
+              varor.shift();
+              update();
+            },
+            DEFAULT: ()=>{ 
+              console.log("User pressed outside of active elements");
+            },
+          }
+
+          /*** UI ***/
+          let RECEIPT = query2elem("#ex10 [name=RECEIPT]");
+          console.log()
+          let form = id2elem("ex10");
+          form.addEventListener('click',(e)=>{
+              let fn = actions[ e.target.name || 'DEFAULT' ];
+              fn(e.target.dataset);
+            }
+          );
+          
+          // kod för att skriva ut kvittot
+          // vid varje uppdtering, skrivs kvittot ut på nytt
+          let update = ()=>{
+            RECEIPT.innerHTML = varor.map(({vara,belopp},idx)=>{
+              return `<div class="line" style="display: flex; flex-direction: column;font-family:monospace;" >
+                        <div class="item">
+                          ${vara.toString()}
+                        </div>
+                        <div class="prize"> 
+                          ${
+                            isNumber(belopp)?
+                              `<div class="out big">SEK ${belopp.toFixed(2)}</div>`:
+                              `<input 
+                                name="CALCULATE_PRIZE" 
+                                data-index=${idx}
+                                  class="ui fn" 
+                                  type="button" 
+                                  value="beräkna dess kostnad">
+                                `
+                          }
+                        </div>
+                      </div>`;
+            }).join("\n<hr>\n")
+          }
+          
+        }
+      </script>
+    </section>
+
+    
+
+      
+
+
+    <section>
+      <h2>Övning 11</h2>
+
+        <p>Återanvänd om möjligt klassen som skapades i föregående övning. Skapa en klass som heter <code>Kundkorg</code> . En kundkorg innehåller flera varor alltså är ett av attributen en array av Varor. Kundvagnen har en metod som heter <code>calcTotal</code>  som loopar igenom alla varor i kundvagnen och skriver ut totalpriset någonstans på skärmen. Det är ok att initiera ett antal objekt direkt när sidan laddas. </p>)
+      <form id="ex11" action="javasctipt:void(0)">
+        Slumpa fram nytt objekt som representerar ett inslag på ett kvitto 
+        <input name="CREATE_OBJECT" class="ui fn" type="button" value="slumpa fram ett objekt"> <br>
+        <input name="DELETE_OBJECT" class="ui fn" type="button" value="ta bort senaste objektet"> <hr>
+        <h2>Totalt värde av kundkorg</h2>
+        <div class="ui out big total" style="background-color: darkgreen;color: white;"></div>
+        <h2>Kvitto</h2><div name="RECEIPT" class="ui out"></div>
+        
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+      
+          // Några funktoner för att skapa slumpiva Varor med slumpvisa egenskaper i testsyfte
+          let rndAdjektiv   = () => rnd(["icke vegetarisk", "smutsig", "kletig", "möglig", "slemmig", "omogen", "lyxig","svettig"]);
+          let rndSubstantiv = () => rnd(["apelsin", "tomat", "tandkräm", "tvål", "toarulle","glass","engångsgrill"]);
+          let rndBeskrivning= () => rnd(["oumbärlig", "bäst på marknaden", "oslagbar kvalitet", "hamstra nu", "buy or die"]);
+          let rndPris       = () => 5 + rnd(10) + rnd([0, 0, 0.5, 0.95, 0.95, 0.95, 0.99]);
+          let rndAntal      = () => rnd(1,10);
+          let rndNamn       = () => `en ${rndAdjektiv()} ${rndSubstantiv()}`;
+          let rndVara       = () => new Vara(rndNamn(), rndBeskrivning(), rndPris(),rndAntal());
+
+          /*** OBECT DEFINTION ***/
+          // representerar en rad på kvittot (namnet vara är enligt specifikationen)
+          // totalkostnaden för raden kan beräknas dynamiskt
+ 
+          class Kundkorg {
+            constructor(){
+              this.varor = [];
+            }
+            calcTotal(){
+              let priser = this.varor.map(({vara})=>vara.calcSubTotal());
+              let total = priser.reduce((acc,x)=>acc+x,0);
+              return total;
+            }
+
+          }
+
+          /*** DATA ***/
+          // varor :: [{vara, kostnad}]
+          let kundkorg = new Kundkorg();
+
+
+          /*** ACTIONS ***
+           * Denna lösning avviker från än de de föregående:
+           *  + Formuläret fångar alla event, och dispatchar dem beroende på värdet 
+           *    för dispatch event.target.name
+           *  + argumenten till funktionerna är mängden av alla event.data-_ attribut 
+           * Motivet för denna lösning är att underlätta att ha en kanpp per kvittorad
+           */ 
+          
+          const actions = 
+          {
+            CREATE_OBJECT: ()=>{
+              console.log("clicked", "CREATE_OBJECT");
+              let obj = rndVara();
+              kundkorg.varor.unshift({vara: obj, belopp:null});
+              actions.CALCULATE_PRIZE({index:0})
+              update();
+            },
+            CALCULATE_PRIZE: ({index})=>{
+              let line   = kundkorg.varor[index]; // idx anger vilken rad på kvittot som ska uppdateras med pris
+              let amount = line.vara.calcSubTotal();
+              line.belopp = amount;
+              update();
+            },
+            DELETE_OBJECT: ()=>{
+              kundkorg.varor.shift();
+              update();
+            },
+            DEFAULT: ()=>{ 
+              console.log("User pressed outside of active elements");
+            },
+            CALCULATE_TOTAL: ()=>{
+              let total = kundkorg.calcTotal();
+              console.log("Totalt värde kundkorg: ",total);
+              TOTAL.innerHTML = `SEK ${total.toFixed(2)}`;
+              
+            },
+          }
+
+          /*** UI ***/
+          let RECEIPT = query2elem("#ex11 [name=RECEIPT]");
+          let TOTAL = query2elem("#ex11 .total");
+          console.log()
+          let form = id2elem("ex11");
+          form.addEventListener('click',(e)=>{
+              let fn = actions[ e.target.name || 'DEFAULT' ];
+              fn(e.target.dataset);
+            }
+          );
+          
+          // kod för att skriva ut kvittot
+          // vid varje uppdtering, skrivs kvittot ut på nytt
+          let update = ()=>{
+            
+            RECEIPT.innerHTML = kundkorg.varor.map(({vara,belopp},idx)=>{
+              TOTAL.innerHTML = `<input name="CALCULATE_TOTAL"class="ui fn" type="button"  value="uppdatera kundkorgens totala värde">`;
+              return `<div class="line" style="display: flex; flex-direction: row;font-family:monospace;" >
+                        <div class="item">
+                          ${vara.toString()}
+                        </div>
+                        <div class="prize"> 
+                          ${`<div class="out big">SEK ${belopp.toFixed(2)}</div>`}
+                        </div>
+                      </div>`;
+            }).join("\n<hr>\n")
+          }
+          
+        }
+      </script>
+    </section>
+
+
+
+  </body>
+</html>
+
+<!-- TEMPLATE för övningar
+    <section>
+      <h2>Övning _</h2>
+      <p></p>
+      <form id="ex_" action="javasctipt:void(0)">
+
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+      
+        }
+      </script>
+    </section>
+
+
+
+
+
+-->
+
+
