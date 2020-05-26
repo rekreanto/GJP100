@@ -51,7 +51,7 @@ const even    =          (x) => x%2 === 0;
 // and applies the first function for which the condition resturns true
 const cond = (...cfs) => (...xs) => {
   for(let i = 0;i < cfs.length; i += 2) if( cfs[i](...xs) ) return cfs[i+1](...xs);
-  throw `cond: no match for input '${xs}'`;
+  throw `cond: no match for input '${xs}' (${cfs})`;
 };
 const qty     = (...xs) => xs.length;
 const arity   = (...xs) => xs.length;
@@ -438,18 +438,92 @@ const addEvent = (ev, fn) => (...elms) => {
 
 
 
-/*****************************
- * NODE CREATION: THE, A, OF *
- *****************************/
+/*************************
+ * ELEM CREATION: THE, A *
+ *************************/
 
-// namespace
-//let elem = {};
+let A = (tagname) => (...props) => (...elms) => (pelem) => {
+  let e = document.createElement(tagname);
+  props.forEach(prop => prop(e));
+  elms.forEach(cond(
+    isFunction , elm  => {console.log("hej");return elm(e)},
+    isString   , str  => e.appendChild(document.createTextNode(str))
+    ));
+  console.log(props, elms)
+  if(pelem) pelem.appendChild(e);
+  console.log("e",tagname,e);
+  return e;
+}
+let THE = (query) => (...props) => (...elems) => (pelem) => {
+  let e = document.querySelector(query);
+  props.forEach(prop => prop(e));
+  elms.forEach(cond(
+    isFunction , elm  => {console.log("hej");return elm(e)},
+    isString   , str  => e.appendChild(document.createTextNode(str))
+    ));
+  if(pelem) pelem.appendChild(e);
+  return e;
+}
 
-// elem.the = (<descr>) |<mutation>*|
-/* elem.the = (query) => (...ms){
+CSS = (...props) => (elm) => {
+  for(let i=0; i < props.length; i+=2 ) elm.style[props[i]] = props[i+1];
+  return elm;
+};
 
-} */
+CSS.px = m => `${m}px`;
 
-// elem.a = (<descr>) (<mutation>*) /\
+CSS.addClass = (...cls) => (elm) => {
+  elm.classList.add(...cls);
+  return elm;
+}
 
-// elem.of = ()
+// En klass för att skapa färg enligt hsla
+CSS.hsla = class HSLA {
+  // takes h = <int 0..360>, s = <int 0..100>, l = <int 0..100>, a = <float 0..1>
+  constructor({h, s, l, a}={}){
+
+    // default färg är starkt mörk röd
+    this.h = h % 360 || rnd(0,360);
+    this.s = s       || rnd(50,100);
+    this.l = l       || rnd(0,30);
+    this.a = a       || rnd(8,100)/100;
+
+  }
+  
+  toString(){
+    // decimals must be removed from `h`,`s` and `l`
+    // decimals of `a` are reduced to two for brevity
+    return `hsla(${
+      Math.floor(this.h) 
+    }, ${
+      Math.floor(this.s)
+    }%, ${
+      Math.floor(this.l)
+    }%, ${
+      this.a.toFixed(2)
+    })`;
+  }
+  contrastColor(){
+    // produces a new color that is readable on the original color
+    // due to decent lightness contrast
+    let l = this.l<45? 90: 10;
+    let h = (360-this.h)%360;
+    return new CSS.hsla({h:h,s:95,l:l,a:0.95});
+  }
+  lighterColor(w=1){
+    // takes a weight factor and
+    // produces a new color that is readable on the original color
+    // w=1 ger en 14% ljusökning
+    let l = (this.l*w + 100)/(100*w + 100);
+    return {l:l, ...this};
+  }
+  hueShiftedCOlor(dH=10){
+    // producesshifts the hue dH degrees
+    this.hue = (this.hue + dH)%360;
+    return this;
+  }
+}
+
+const ON = (...args) => (elm) => {
+  elm.addEventListener(...args);
+}; 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henning von Rosen</title>
+    <link rel="stylesheet" href="style3.css">
+    <style></style>
+    <script src="utils3.js"></script>
+
+    <!-- SÝNTAX HIGHLIGHTING -->
+    <link rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  </head>
+  <body onload="">
+    
+    
+    
+    
+    <h1>Modul 3, Övning 12-13</h1>
+  
+
+
+    <section>
+      <h2>Övning 12</h2>
+      <p>Rita ett klassdiagram med klasserna Kundvagn och Vara. Kundvagn skall innehålla en metod för att kalkylera totalpris samt ett attribut med en array av Vara detta attribut kan vi kalla för Varoror. Vara skall innehålla namn,beskrivning, pris och antal (paint fungerar om ni inte vill ladda hem något annat ritverktyg).</p>
+
+
+      <form id="ex12" action="javasctipt:void(0)">
+        <img class="out" src="ex12.svg">
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+      
+        }
+      </script>
+    </section>
+
+    <section>
+      <h2>Övning 13</h2>
+      <p>13. Använd (och demonstrera) minst två klasser i ett eget program (fritt val men det får inte vara samma som i tidigare uppgifter) klasserna skal innehålla attribut och metoder. </p>
+      <form id="ex13" action="javasctipt:void(0)">
+        <h1 class="ui title">Skapa & fånga Såpbubblor</h1>
+        Försök nudda alla!<br>
+        <input class="ui fn" type="button", value="Skapa en slumpvist vandrande såpbubbla">
+        <input class="ui fn" type="button", value="Skapa 100 såpbubblor">
+        
+        <p>Jag har gjort två klasser, dels en klass som skapar såpbubbleinstanser, och en som skapar slumvisa färger och stödjer skapandet av relaterade färger, den serialiseras till css-syntax.</p>
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [TITLE, MK_BALL,MK_MANY] = query2elems("#ex13 .ui");
+          let FORM = query2elem("#ex13");
+
+          let mk_ball = ()=>{
+            console.log("MK_BALL clicked", Date.now());
+            // testa att skapa en färg
+            let c = new CSS.hsla();
+            let cc = c.contrastColor();
+            // dekorera form-fältet
+            CSS( 'backgroundColor', c  )( FORM );
+            CSS( 'color'          , cc )( TITLE );
+            new Ball();
+          }
+
+          MK_BALL.addEventListener('click', mk_ball);
+          MK_MANY.addEventListener('click', ()=>{
+            let i=100; while(i--) mk_ball();
+          });
+          CSS = (...props) => (elm) => {
+            for(let i=0; i < props.length; i+=2 ) elm.style[props[i]] = props[i+1];
+            return elm;
+          };
+
+          CSS.px = m => `${m}px`;
+
+          CSS.addClass = (...cls) => (elm) => {
+            elm.classList.add(...cls);
+            return elm;
+          }
+          
+          // En klass för att skapa färg enligt hsla
+          CSS.hsla = class HSLA {
+            // takes h = <int 0..360>, s = <int 0..100>, l = <int 0..100>, a = <float 0..1>
+            constructor({h, s, l, a}={}){
+
+              // default färg är starkt mörk röd
+              this.h = h % 360 || rnd(0,360);
+              this.s = s       || rnd(50,100);
+              this.l = l       || rnd(0,30);
+              this.a = a       || rnd(8,100)/100;
+
+            }
+            
+            toString(){
+              // decimals must be removed from `h`,`s` and `l`
+              // decimals of `a` are reduced to two for brevity
+              return `hsla(${
+                Math.floor(this.h) 
+              }, ${
+                Math.floor(this.s)
+              }%, ${
+                Math.floor(this.l)
+              }%, ${
+                this.a.toFixed(2)
+              })`;
+            }
+            contrastColor(){
+              // produces a new color that is readable on the original color
+              // due to decent lightness contrast
+              let l = this.l<45? 90: 10;
+              let h = (360-this.h)%360;
+              return new CSS.hsla({h:h,s:95,l:l,a:0.95});
+            }
+            lighterColor(w=1){
+              // takes a weight factor and
+              // produces a new color that is readable on the original color
+              // w=1 ger en 14% ljusökning
+              let l = (this.l*w + 100)/(100*w + 100);
+              return {l:l, ...this};
+            }
+            hueShiftedCOlor(dH=10){
+              // producesshifts the hue dH degrees
+              this.hue = (this.hue + dH)%360;
+              return this;
+            }
+          }
+
+          class Ball {
+            constructor(r,x,y,fps){
+
+              // init properties
+              this.r      = r      || rnd(50,200);
+              this.x      = x      || rnd(window.innerWidth - this.r*2);
+              this.y      = y      || rnd(window.innerHeight - this.r*2);
+              this.fps    = fps    || rnd(1,20);
+              this.dt     = Math.round(1000/this.fps) 
+
+              // init color
+              this.color = new CSS.hsla({
+                h: rnd(0,360),
+                s: rnd(0,100), 
+                l: rnd(0,100), 
+                a: rnd(1,10)/10, 
+              });
+
+              // init velocity
+              this.dx = null;
+              this.dy = null;
+              this.update();
+
+              // create DOM element for visible ui
+              this.elem = 
+                A("div")(
+                  ON('mouseover',()=>{
+                    this.elem.parentNode.removeChild(this.elem);
+                  }),
+                  CSS.addClass("ball"),
+                  CSS(
+                      "position"        , "fixed"                         ,
+                      "width"           , CSS.px(this.r)                  ,
+                      "height"          , CSS.px(this.r)                  ,
+                      "borderRadius"    , CSS.px(this.r)                  ,
+                      "backgroundColor" , this.color                      ,
+                      "color"           , this.color.contrastColor()      ,
+                      "border"          , "solid 1px hsla(0,0%,0%,0.22)"  ,
+                      /* en cirkulär gradient för att skapa illusionen av rundhet*/
+                      "background"      , `radial-gradient(circle at ${   
+                        Math.floor(this.r/3)
+                      }px ${
+                        Math.floor(this.r/3)
+                      }px, ${
+                        "hsla(0,0%,100%,0.4)"
+                      }, ${
+                        this.color
+                      }`          
+                  )
+                )(
+                  A("h1")( CSS("backgroundColor", this.color.lighterColor()))("")
+                )(FORM); 
+
+                this.process = window.setInterval( ()=>{this.update();}, this.dt);
+            }
+            updatePosition(){
+              this.dx += rnd(-2,3);
+              this.dy += rnd(-2,3);
+              this.x = (this.x + this.dx) % window.innerWidth;
+              this.y = (this.y + this.dy) % window.innerHeight;
+              
+
+            };
+            update(){
+              this.updatePosition();
+              if(this.elem) CSS(
+                'left' , CSS.px(this.x),
+                'top'  , CSS.px(this.y)
+              )(this.elem);
+
+              
+            }
+
+          }
+        }
+      </script>
+    </section>
+
+
+  </body>
+  </html>

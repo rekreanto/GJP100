@@ -248,11 +248,59 @@
       <h2>Övning 9</h2>
       <p>Skapa ett program där ett div-element rör sig fram och tillbaka i x-led på skärmen automatiskt. Använd setInterval eller setTimeout. Bygg ut uppgiften ytterligare med någon valfri funktionalitet i javascript.</p>
       <form id="ex9" action="javasctipt:void(0)">
-        <div class="ui out">Se lönsing av Modul 2 övning 22</div>
+        <input class="ui fn" type="button" value ="Låt alla sidelement röra på sig">
+        <input class="ui fn" type="button" value ="Återställ alla sidelement">
       </form>
       <script>
         { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
-      
+          let [MV_ALL, RESET] = query2elems("#ex9 .ui");
+
+          // Skapa ett div element med innehåll och sätt in det i formuläret `#ex9`
+          let e = 
+            A('div')(
+              CSS.addClass('ui','out'),
+              CSS(
+                'position','absolute',
+                'textAlign','center',
+                'width', '200px'
+              ),
+            )(
+              A('h1')(
+                CSS('textTransform','uppercase')
+              )("ett div-element"),
+              "som rör sig fram och tillbaka i x-led på skärmen automatiskt"
+            )(query2elem('#ex9'));
+
+            ANIMATIONS = [];
+            let mv = (elm) => {
+              CSS('position','relative')(elm);
+              let x = 0;
+              let dx = rnd(2,6);
+              const update = ()=>{
+                CSS('left', CSS.px(x))(elm);
+                x = (x+dx)%(window.innerWidth);
+              }
+              ANIMATIONS.push( [elm, window.setInterval(update,50) ] );
+            }
+            // move the specific element
+            mv(e);
+
+            // move all elems on page
+            MV_ALL.addEventListener('click',()=>{
+              query2elems('body > *').forEach(elm => {
+                mv(elm);
+              });
+            });
+            RESET.addEventListener('click', () => {
+              // stop motion
+              ANIMATIONS.forEach(([elm,t]) => {
+                window.clearInterval(t);
+                CSS('position','static')(elm);
+              });
+              // restart movement of the one element
+              mv(e);
+            });
+            
         }
       </script>
     </section>
