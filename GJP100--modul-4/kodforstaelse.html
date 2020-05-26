@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henning von Rosen</title>
+ 
+    <style></style>
+    <script src="utils4.js"></script>
+
+    <!-- SÝNTAX HIGHLIGHTING -->
+    <link rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  </head>
+  <body>
+    
+    
+    
+    
+    <h1>Teori/kodförståelse (4p)</h1>
+    <p>Själva koden ligger i script-taggar, så att den är syntax-highlightad även vid editering. Alla anrop till <code>alert</code> har omdirigerats till <code>console.log</code>, så att sidan går att ladda utan avbrott</p>
+
+
+
+    <section>
+      <h2>Fråga 1 (<code>if</code>)</h2>
+      <p></p>
+      <pre>
+        <code class="hljs js">
+          
+        </code>
+      </pre>
+    </section>
+
+
+
+
+    <section>
+      <h2>Fråga 2 (<code>for</code>)</h2>
+      <p></p>
+      <pre>
+        <code class="hljs js">
+        </code>
+      </pre>
+    </section>
+
+
+
+
+    <section>
+      <h2>Fråga 3 (<code>function</code>)</h2>
+      <p></p>
+      <pre><code class="hljs js"></code></pre>
+    </section>
+
+
+
+
+    <section>
+      <h2>Fråga 4 (<code>if</code>)</h2>
+      <p></p>
+      <pre>
+        <code class="hljs js">
+        </code>
+      </pre>
+
+
+    </section>
+
+    <script>
+      // override alert so that the document can be loaded
+      function alert(...xs){
+        console.log(...xs);
+      }
+    </script>
+    <script class="ex">
+      { 
+        var tal1 = 10;
+        var tal2 = 20;
+
+        if(tal1 == 10)
+        // sant
+        {
+                tal2=tal1;
+                // bägge talen har värdet 10
+        }
+
+        if(tal2 > 10)
+        // sant
+        {
+              alert("Gnu!");
+              // visa varningsruta med en sträng i
+        } 
+        else if(tal1 < 5)
+        // falskt
+        {
+              alert("Kanin!");
+              tal1=5;
+              // körs ej
+        }
+
+        if( tal1 <= tal2 && tal2 <= 30)
+        // sant
+        {
+                alert ("JA!");
+                // "JA!" visas
+        }
+        else 
+        {
+                alert ("NEJ!");
+                // körs ej
+        }
+      }
+    </script>
+
+
+    <script class="ex">
+      { 
+        var tal1 = 10;
+        var tal2 = 20;
+        // två variabler initieras med 10 repektive 20
+
+        for(var i=0; i< tal2; i++)
+        // vi kör en loop med i = 0; 1; 2 ... 19
+        {
+          if(i>tal1 && i!=13)
+          // om i är större än 10 och dessutom inte lika med 13 ... 
+          {
+            alert(i);
+            // ...så visar vi 11; 12; 14; 15; ... 19 i en varnignsruta
+          }
+        }
+      }
+    </script>
+
+
+    <script class="ex">
+      { 
+        function getGrade(studentPoints, minPointsForG, minPointsForVG)
+        // funktionen tar tre parametrar
+        {
+          if (studentPoints < minPointsForG)
+          {
+            return "U";
+          }
+          // poängen räckte inte till G, så "U" returneras
+
+          else if(studentPoints < minPointsForVG)
+          {
+            return "G";
+          }
+          // poängen räckte inte till G men inte till VG, så "G" returneras
+
+          else
+          {
+            return "VG";
+          }
+          // poängen är större än graänsen till VG, så "VG" returneras
+
+        }
+        alert(getGrade(5,10,16));
+        // "U" visades i en varningsruta
+
+        alert(getGrade(12,10,16));	
+        // "G" visades i en varnignsruta
+
+        alert(getGrade(18,10,16));
+        // "VG" visades i en varnignsruta
+
+        var grade = getGrade(8,10,16);
+        // "U" lagrades i en variabel
+
+        if (grade == "U")
+        {
+          alert("tyvärr, du fick "+ grade +" och behöver göra omexamination")
+        }
+        // innehållet i `grade` var "U", så en varnignstext visades
+        
+      }
+    </script>
+
+
+    <script class="ex">
+      {
+        var jul = ["Hajar som hajar","Snö", "Julklapp", "Gran"];
+        // En array med 4 element definerades
+
+        jul[4]= "Snöängel"; 
+        // "Snöängel" lades till som femte element i arrayen
+
+        jul.push("Glögg");  
+        // "Glögg" lades till sist i arrayen
+
+        jul.push("Pepparkakshus"); 
+        // ~> "Glögg" lades till sist i arrayen
+
+        jul.shift();
+        // Första elementet togs bort. Arrayen börjar nu med "Snö"
+
+        alert(jul[0]);
+        // En varningsruta med "Snö" visades.
+
+        for (var i=0 ; i < jul.length; i++)
+        {
+                alert(jul[i]);
+        }
+        // Varje element i arrayen visades i en egen varningsruta
+
+        var slumptal = Math.floor(Math.random() * jul.length);
+        // Ett tal som är ett giltigt index till arrayen slumpas fram
+
+        alert("Slumpade nyckeln till julfriden:" + jul[slumptal]);
+        // Ett slumpvis valt element visades i en varningsruta
+      }
+    </script>
+
+    <script>
+      {
+        let cs = query2elems("script.ex");
+        let elms = query2elems("section pre code");
+
+        console.log(cs)
+        console.log(elms)
+        
+        
+        console.assert(cs.length == elms.length);
+        // garantera att vi hittat lika många element
+        
+        for(let i = 0; i<cs.length; i++){
+          console.log(cs[i])
+          
+          // placera koden i dokumentet
+          elms[i].textContent = cs[i].textContent;
+
+          // dekorera koden
+          hljs.highlightBlock(elms[i]);
+          
+        }
+        
+      }  
+    </script>
+
+  </body>
+</html>
+
