@@ -14,7 +14,7 @@
 * 10. OBJECTS
 * 11. UNIT CONVERSION
 * 12. TESTING
-* 13. NODE CREATION
+* 13. ELEMENT CREATION
 *
 *
 */
@@ -438,9 +438,9 @@ const addEvent = (ev, fn) => (...elms) => {
 
 
 
-/*************************
- * ELEM CREATION: THE, A *
- *************************/
+/********************
+ * ELEMENT CREATION *
+ ********************/
 
 let A = (tagname) => (...props) => (...elms) => (pelem) => {
   let e = document.createElement(tagname);

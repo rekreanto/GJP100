@@ -1,5 +1,7 @@
+
+
 /* 
-Tuple
+Tup
 APPLY
 SUM
 MOD
@@ -9,37 +11,37 @@ PLUR
 */
 
 //Take a value into CPS
-const Tuple = (...xs) => K => K(...xs);
-const ID = (...xs) => Tuple(...xs);
-const MUL = (y) => (x) => Tuple(x * y);
+const Tup = (...xs) => K => K(...xs);
+ 
 
-const Succ = Tuple;
-const Fail = _ => null; 
+const ID  = (...xs) => Tup(...xs);
+const MUL = (y) => (x) => Tup(x * y);
+const id  = (x) => x;
+const mul = (y) => (x) => (x * y);
 
 const APPLY = (...fs) => (...xs) => {
   let flen = fs.length;
   let xlen = xs.length;
   let len = Math.max(flen,xlen);
-  let ys = [];
-  for(let i = 0; i < len; i++) r.push(fs[i%flen](xs[i%xlen]));
-  return Tuple(...ys);
+  let rs = [];
+  for(let i = 0; i < len; i++) rs.push( fs[i%flen]( xs[i%xlen] ) );
+  return Tup(...rs);
 }
 
 const SUM = (...xs) => {
   let r = 0;
   for(let i = 0; i<xs.length; i++) r += xs[i];
-  return Tuple(r);
+  return Tup(r);
 }
 
 const MOD = (n) => (m) => {
   let quotient = Math.trunc(m/n);
   let modulo = m - n*quotient;
-  return Tuple(modulo);
+  return Tup(modulo);
 }
 
-const EQ = (y) => (x) => x===y? SUCC(x): FAIL() );
+const EQ = (y) => (x) => Tup(x===y);
 
-const IS = (mx) => Tuple( mx !== null )
 
 
 

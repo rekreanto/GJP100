@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henning von Rosen</title>
+ 
+    <link rel="stylesheet" href="natCPS.css">
+    <script src="natCPS.js"></script>
+    <script src="natHSM.js"></script>
+    <script src="utils.js"></script>
+    
+
+    <!-- SÝNTAX HIGHLIGHTING -->
+    <link rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  </head>
+  <body>
+    
+    
+    
+    
+    <h1>CPS examples</h1>
+    
+
+    
+    
+    <section>
+
+      <h2>EAN validering</h2>
+      <p></p>
+      <form id="cps1" action="javasctipt:void(0)">
+        Mata in en EAN-kod: <input class="ui in" type="text" value="7612738932190">
+                            <input class="ui fn" type="button" value="Validera i DAS">
+                            <input class="ui fn" type="button" value="Validera i CPS">
+      </form>
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+          let [inputEAN, doValidate,doValidateCPS] = query2elems('#cps1 .ui')
+
+          doValidate.addEventListener('click',()=>{
+            let ds = inputEAN.value.split('').map( str => parseInt(str) );
+            let result = isValid(ds);
+            console.log("DAS",ds,result);
+          }) 
+
+
+          doValidateCPS.addEventListener('click',()=>{
+            let ds = inputEAN.value.split('').map( str => parseInt(str) );
+            let result = isValidCPS(ds);
+            console.log("CPS",ds,result);
+          }) 
+
+          const isValid = (xs) => {
+            let s=0;
+            for(let i=0;i<xs.length;i++) s += xs[i]*(i%2 === 1 ? 3: 1);
+            return s%10 === 0;
+          }  
+
+          const isValidCPS = (xs) => Tup(...xs)( APPLY( id, mul(3) ))( SUM )( MOD(10) )( EQ(0) )( SING );
+
+        }
+      </script>
+    </section>
+
+    <section>
+      <h2>CPS exempel: SimpleTimer</h2>
+      <p>A simple timer with no nested states, but fully implemented according to natHSM principles. natHSM princples define how HSM are integrated into the language level of natCPS.</p>
+      <p>SimpleTimer needs HSM Timers and HSM branching constructs, but no HSM nesting or HSM parallelism.</p>
+      
+        <div class="out" style="background-color: hsl(40,40%,60%,0.8);display: inline-block; border-radius: 1rem;text-align: center;">
+          <div class="out big" style="background-color: white; display:inline-block; font-family: monospace; border-radius: 1rem;">
+            <span class="ui">00</span>:<span class="ui">00</span>
+          </div>
+          <br>
+          <input class="ui in" type="button" value="MINS +1">
+          <input class="ui in" type="button" value="SECS +1"> 
+          <br>
+          <input class="ui in" type="button" value="RESET">
+          <input class="ui in" type="button" value="START">
+          <br> 
+          <input class="ui in" type="button" value="TIC">
+        </div>
+
+      
+      <script>
+        { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+      
+        }
+      </script>
+    </section>
+
+  </body>
+  </html>
+<!--
+  <section>
+    <h2>CPS exempel _</h2>
+    <p></p>
+    <form id="ex_" action="javasctipt:void(0)">
+
+    </form>
+    <script>
+      { // varje övning får ett eget scope, så inte variabelnamn riskerar kollidera
+    
+      }
+    </script>
+  </section>
+-->

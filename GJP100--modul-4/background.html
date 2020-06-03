@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henning von Rosen</title>
+ 
+    <link rel="stylesheet" href="natCPS.css">
+    <script src="natCPS.js"></script>
+    <script src="natHSM.js"></script>
+    <script src="utils.js"></script>
+    
+
+    <!-- SÝNTAX HIGHLIGHTING -->
+    <link rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  </head>
+  <body>
+    <bold>Slutprojekt GJP100 av Henning sato von Rosen</bold>
+    <h1> Implementation av Kökstimern Linksy</h1>
+    <img align="right" src="https://tshop.r10s.jp/foxxiweb/cabinet/yitem06/linksy0006-1.jpg?fitin=330:330">
+    <em>Sammanfattning</em>
+    <p>En av de viktigaste svårigheterna med att skapa bra UI är att det är önskvärt att de är dynamiska och anpassar sig till det tillstånd som applikationen befinner sig i. <span data-ref="horrocks--1999"></span> Jag har valt att göra ett projekt inom dynamiska UI, nämligen att återimplementera kökstimern Linksy, som vi har hemma i vårt kök, i mjukva, i form av ett dynamiskt UI på en webbsida. Jag har även anpassat funktionaliteten så att etiketterna på knapparna ändras efter vilken funktion knappen har i aktuellt tillstånd, samt visas som avaktiverad när knappen saknar funktion.
+    </p>
+    <h2>Projektets omfattning</h2>
+    <h2>Exempel på dynamiskt beteende hos Linksy</h2>
+    <p>Att implementera digitala kökstimers eller s.k. äggklockor på en webbsida är mer utmanande än man kanske spontant tror. Intressant nog är det utmanande av samma orsak som det är utmanande att implementera användargränssnitt i html/css/js: Nämligen att html/css/js främst stödjer skapandet av statiska dokument. Ju mer dynamiskt UI man vill ha, desto mer kaotisk riskerar koden att bli.
+    </p>
+      
+    <p>Orsken är att kökstimers, så väl som dynamiska UI har ett beteende som är modalt, dvs det ändras beroende på vilket tillstånd applikationen befinner sig i. T.ex. har ett klick på knappen "STOP/reset" på Linksy (nere till vänster på bilden) tre olika betydelser:
+    </p>
+    <ul>
+      <li>RESET = Tiden nollställs <em>[när man håller på att ställa in tiden]</em></li>
+      <li>RESET = Nedräkningen pausas <em>[när timern räknar ned]</em></li>
+      <li>RESET = Återgå till att ställa in tiden <em>[när timern håller på att pipa]</em></li>
+    </ul>
+    
+    <h2>Projektmål</h2>
+    <p>Det resultatorienterade målet är att skapa en naturtrogen återimplementation av kökstimern Linksy, samt gör dess UI mera dynamiskt i form av dynamiska etiketter på knapparna och förmågan att visa när en knapp är avakktiverad. Pedagogiskt sett önskar jag att lära mig metoder att skapa dynamiska UI systematiskt.</p>
+
+    <p><strong>Personlig motivation</strong> Jag har inlärningsproblem och väldigt svårt att hantera oöversiktliga kodbaser även om de är små, så jag är mycket motiverad att lära mig något system för att hålla komplexiteten på en låg och konstant nivå inom varje modul även när komplexiteten i själva applikationen växer. eftersom jag tycker detta är väldigt svårt är detta ett perfekt projekt för mig.
+    </p>
+
+    <h2>Anpassningar av Linksys UI</h2>
+    <p>Den fysiska timern kan inte ändra texten på knapparna, även om de får olika betydelser i olika tillstånd, eller saknar betydelse helt i vissa tillstånd (t.ex. nummerknapparna vid nedräkning). Detta är däremot möjligt och rimligt på en datorskärm. Ett typiskt exempel är textsektioner som kan expanderas eller kollapsas, där knappen som expanderar först har en ikon för "expansion" och sedan får en annan ikon dom står för "kollaps".
+    </p>
+
+    <p>I implementationen av Linksy har jag valt att anpassa märkningen på alla knapparna så att den återspeglar den handling som sker när man trycker på en knapp utifrån timerns aktuella tillstånd.
+    </p>
+    <h2>Strategi för implementation</h2>
+    <p>
+    Ett sätt att modellera dynamiska UI är att använda sig av tillståndsmaskiner, så kallade Finite State Machines. Man definierar en sådan maskin genom att definiera tillsånd, event och transitioner som är övergångar till nya tillstånd. Dessa är dock för primitiva för att vara konkret användbara för att modellera/implmentera dynamiska UI. Det finns dock en utvidgad formalism som kallades "Statecharts" av sin upphovsman David Harel, <span data-ref="harel--1987"></span> och som senare kommit att kallas Hierarkisa tillståndsmaskiner (Hierarchical State Machines, HSM) och är samma formalism som används inom UML. Se <span data-ref="world-of-statecharts--www"></span> för en allsidig introduktion.
+    </p>
+    
+    <h2>Existerande implentationer vs. egen implementation av HSM</h2>
+    <p>
+      Den mest allsidiga implementation av Statechats i JavaScript är <code>xstate</code> <span data-ref="xstate--www"></span> och har skapts av David Kourshid. Han har gjort en lättillgänglig presentation av hur man kan använda xstate <span data-ref="xstate--www"></span>. Jag har funnit den väldigt inspirerande och kraftfull, men samtidigt har jag svårt att använda den eftersom den just har så mycket funktionalitet samtidigt som koden blir stor och ej väl integrerad i det omgivande språket, dvs hur man skriver sin vanliga kod. Det blir liksom ytterligare ett "språk" eller en grupp av konventioner att hålla reda på, utöver html, css och javascript. Det blir för mycket för mig. Jag har därför valt att göra en minimal konvention för hur staecharts kan uttryckas i javascript och som har som mål att vara mer kompakt och lättläst. Medtoden som jag använder för att uppnå detta är Continuation Passing Style (CPS). I CPS är varje funktion mer uttrycksfull än vad som är möjligt i vanliga funktioner. Det beror på att man istället för att applicera en funktion på argument så ger man nästa funktion som ska anropas till funktionen som ett argument. Det leder till att funktionen kan bestämma hur beräkningen ska fortsätta. Då kan man uttrycka alla former av kontrollflöden genom att definiera funktioner. HSM är visserligen en exttremt kraftfull form av kontrollflöde, men eftersom det handlar om ett kontrollflöde kan den uttryckas mha funktioner definierade enligt CPS. 
+    </p>
+
+
+
+  <section class="references">
+    <ol>
+      <li id="horrocks_-1999">HORROCKS, Ian. <em>Constructing the user interface with HSM.</em> Addison-Wesley Longman Publishing Co., Inc., 1999.</li>
+      <li id="world-of-HSM--www">En vänlig och allsidig introduktion till statecharts <a href="https://statecharts.github.io/">https://statecharts.github.io/</a></li>
+      <li id="harel--1987">HAREL, David. Statecharts: <em>A visual formalism for complex systems.</em> Science of computer programming, 1987, 8.3: 231-274.</li>
+      <li id="xstate-www">Den mest omfattande och mångsidiga implmentationen av statecharts i JavaScript: <a href="https://xstate.js.org/">https://xstate.js.org/</a></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ol>
+  </section>
+
+  </body>
+  </html>
