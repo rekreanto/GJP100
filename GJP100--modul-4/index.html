@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Henning von Rosen -- Linksy definiton</title>
+ 
+    <link rel="stylesheet" href="linksy.css">
+    <script src="utils4.js"></script>
+    
+    <!-- MATERIAL ICONS -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <!-- SÝNTAX HIGHLIGHTING -->
+    <link rel="stylesheet"
+    href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/styles/atom-one-dark.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.0.0/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+  </head>
+  <body>
+    <script>
+      const Linksy = (parent) => {
+        // Creates a UI modelling the Linksy Kitchen Timer
+
+        // Produce a DOM structure and insert it into `parent`
+        let elmLINKSY = 
+          A("div.linksy")(
+            withATTR('title','Linksy Kitchen Timer')
+           )(
+            A("div.linksy__display")(
+              withSTYLE('grid-area','dsp')
+              )(
+                A("span.ui.linksy__minutes")()("00"),
+                ":",
+                A("span.ui.linksy__seconds")()("00"),
+            ),
+            A("div.keypad")(
+              withSTYLE(
+                'display','grid',
+                'grid-template-areas',`
+                  "dsp     dsp"
+                  "btn10m btn10s"
+                  "btn05m btnSTART"
+                  "btn03m btnSTART"
+                  "btn01m btnSTART"
+                  "btnSTOP btnSTOP"`))(
+              A("button.ui.set")(
+                withSTYLE('grid-area','btn10m'))('+10min'),
+              A("button.ui.set")(
+                withSTYLE('grid-area','btn05m'))('+ 5min'),
+              A("button.ui.set")(
+                withSTYLE('grid-area','btn03m'))('+ 3min'),
+              A("button.ui.set")(
+                withSTYLE('grid-area','btn01m'))('+ 1min'),
+              A("button.ui.set")(
+                withSTYLE('grid-area','btn10s'))('+10sec'),
+              A("button.ui.control.stop.material-icons")(
+                withSTYLE('grid-area','btnSTOP'))("clear"),
+              A("button.ui.control.play.material-icons")(
+                withSTYLE('grid-area','btnSTART'))("play_arrow")
+            )
+          )(parent);
+          
+          // Get vaiables that points to all the ui elements
+          // by querying into the newly created DOM structure
+          let stateMINS=0;
+          let stateSECS=0;
+          
+          let [elmMINS,elmSECS,btn10m,btn05m,btn03m,btn01m,btn10s,btnSTOP,btnSTART] = Array.from(elmLINKSY.querySelectorAll('.ui'));
+            
+          // Create a state machine that handles all the behaviour
+          
+      }
+      
+      let elmBODY = THE("body")(
+        withSTYLE('background-color','hsl(0,0%,95%)')
+      )(
+        A('input.add')(withATTR('value','ADD TIMER',  'type','button',  'onclick','addLinksy();'))(),
+        A("P")()(
+          "Final Project for GJP100 spring 2020"
+        ),
+        A("h1")()(
+          "Modeling the Kitchen Timer Linksy as a Wep Page UI"
+        ),
+        A("P")(
+          withSTYLE('display','none')
+        )(
+          "Programming UI's are hard because behaviour and appearance change dynamicly depending on the state. This is hard, maybe because the tools for defining web pages were originally intended for creation of static content. Also, programming langauges tend to have mych better support for defining data transformation than for defining reactive behaviour. This is an insteresting problem that can be difficult if not handled in a systematic way. In this project will build a UI that mimics the very modal behaviour of the Linksy Kitchen Timer as closely as possible. During the design and construction, I will observe how well the tools used are adapted for defining highly synamic reactive behaviour. "
+        ),
+        A("P")(
+          withSTYLE('display','hidden')
+        )(
+          "My project is to recreate the", A('B')()("Linksy Kitchen Timer"), "that we have in our Kitchen at home as a UI widget on a webpage. During the design and construction of the Timer widget I hope to learn more about which systematic methods are useful for modeling dynamic UI's."
+        ),
+        A("div.showroom")(
+          withSTYLE(
+            'display','flex',
+            'flex-direction','row',
+            'flex-wrap','wrap',
+            'justify-content','space-evenly',
+            'margin','2rem'))(
+          A("IMG")(
+            withATTR(
+              'src','https://tshop.r10s.jp/foxxiweb/cabinet/yitem06/linksy0006-1.jpg?fitin=330:330'))()
+        )
+      );
+      query2elem('input.add').addEventListener('click',() => {console.log("ADD");Linksy(query2elem('.showroom'))})
+    </script>
+    </div>
+
+  </body>
+</html>

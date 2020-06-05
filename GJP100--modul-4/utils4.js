@@ -65,23 +65,47 @@ const query2elems = (q) => Array.from( document.querySelectorAll(q) );
 /****************
  * DOM CREATION *
  ****************/
+const SPLIT = (delim) => (str) => (K) => {
+  K(...str.split(delim));
+};
 
-let A = (tagname) => (...props) => (...elms) => (pelem) => {
-  let e = document.createElement(tagname);
+let A = (tagdesc) => (...props) => (...elms) => (pelem) => {
+  let e;
+  SPLIT('.')(tagdesc)(
+    (tagname, ...classes) => {
+      e = document.createElement(tagname);
+      if(classes.length > 0) withCLASS(...classes)(e);
+    }
+  );
   props.forEach(prop => prop(e));
-  let addCild = cond(
-    isFunction , elm  => elm(e),
+  let addChild = cond(
+    isFunction , mkElm  => mkElm(e),
     isString   , str  => e.appendChild(document.createTextNode(str)),
-    isArray    , xs   => xs.forEach(addCild)
+    isArray    , xs   => xs.forEach(addChild)
   );
   elms.forEach(addChild);
   console.log(props, elms)
-  if(pelem) pelem.appendChild(e);
+  pelem.appendChild(e);
   return e;
-} 
+}
 
+let THE = (query) => (...props) => (...elms) => {
+  let e = query2elem(query);
+  props.forEach(prop => prop(e));
+  let addChild = cond(
+    isFunction , mkElm  => mkElm(e),
+    isString   , str  => e.appendChild(document.createTextNode(str)),
+    isArray    , xs   => xs.forEach(addChild)
+  );
+  elms.forEach(addChild);
+  return e;
+}
 
-
+const withCLASS = (...cls) => (elm) => {
+  console.log("add classes",cls);
+  elm.classList.add(...cls);
+  return elm;
+}
 const withSTYLE = (...props) => (elm) => {
   for(let i=0; i < props.length; i+=2 ) elm.style[ hyphen2camel(props[i]) ] = props[i+1];
   return elm;
@@ -100,7 +124,5 @@ const withATTR = (...props) => (elm) => {
   for(let i=0; i < props.length; i+=2 ) elm[ props[i] ] = props[i+1];
   return elm;
 };
-
-const withATTR()
 
 const onCLICK = (f) => (elm) => elm.addEventListener()
