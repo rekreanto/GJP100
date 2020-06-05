@@ -360,8 +360,8 @@ const dotdot =
                 ),
   );
 
-// samma som dotdot, men intervall a till b exklusivt
-// stödjer ej strängar som input, då de inte funkar bra med exklusiva intervall
+// returns an array of elements from a (inclusive) to b (inclusive) in steps of s
+// a defaults to 1 and step to zeros defaults to 1 
 const dotdotdot = caseof( arity )(
                     1,  (b)        => dotdotdot(0,b,1),
                     2,  (a,b)      => dotdotdot(a,b,1),

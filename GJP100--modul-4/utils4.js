@@ -2,6 +2,8 @@
 *   ============================== 
 *  1. MATCHING
 *  2. BRANCHING 
+*  3. MATH: RANDOMNESS
+*  4. MATH: RANGES
 *   . DOM QUERYING
 *   . DOM CREATION
 *
@@ -32,9 +34,9 @@ const isAnything  = (x) => true;
 
 
 
-/*************
-*  BRANCHING *
-**************/
+/************
+* BRANCHING *
+*************/
 
 // the cond construct as in Clojure
 // takes pairs of condition and function
@@ -46,11 +48,73 @@ const cond = (...cfs) => (...xs) => {
 };
 const succeed = () => true;
 
+const hasArity    = cond(
+  isInteger,  (n) => (...xs) => xs.length == n,
+  isFunction, (p) => (...xs) => p( xs.length )
+);
 
+
+/********************
+ * MATH: RANDOMNESS *
+ *******************/
+
+// imported from my GJP100 module 3 code
+
+// function rnd is oveloaded in four ways:
+// no  argument            : return a float between 0 inclusive and 1 non-inclusive
+// one argument <int>      : return a random integer between 0 and n non-inclusive
+// one argument <array>    : pick a random element
+// two arguments <int,int> : return a random integer between a inclusive and b non-inclusive
+
+const rnd = cond(
+  hasArity(0), ()     => Math.random(), 
+  hasArity(1), (x)    => cond( 
+              Number.isInteger,  (int) => Math.floor( int * rnd() ),
+              Array.isArray   ,  (arr) => arr[Math.floor( arr.length * rnd() )],
+            )(x),
+  hasArity(2), (a, b) => a + rnd(b-a),
+);
+
+// return a scrambled copy of the input array
+const scramble = cond(
+  isString,  (str) => scramble(str.split('')).join(''),
+  isArray ,  (xs)  => {
+               let ys = [];
+               let len = xs.length;
+               for(let i=0;i<len;i++){
+                 let idx = rnd(xs.length);
+                 ys.push( xs.splice(idx,1)[0] );
+               }
+               return ys;
+            }
+);
+
+
+/****************
+ * MATH: RANGES *
+ ****************/
+
+// returns an array of elements from a (inclusive) to b (inclusive) in steps of s
+// a defaults to 1 and step to zeros defaults to 1 
+const upto = cond(
+  hasArity(1),  (b)        => upto(0,b,1),
+  hasArity(2),  (a,b)      => upto(a,b,1),
+  hasArity(3),  (a,b,step) => {
+                    // cover the case when a > b
+                    let n = Math.abs(b-a);
+                    step  = Math.abs(step)||1; // step of zero would loop forever 
+                    sign  = Math.sign(b-a);
+
+                    let xs = [];
+                    for(let i = 0; i<n; i+=step) xs.push(a + i*sign); 
+                    return xs; 
+                  }
+ );
 
 /*****************
  * DOM QUERYING *
  *****************/
+// imported from my code for GJP100 module 3
 
 // get the elem for an id
 const id2elem = (id) => document.getElementById(id);
@@ -65,6 +129,7 @@ const query2elems = (q) => Array.from( document.querySelectorAll(q) );
 /****************
  * DOM CREATION *
  ****************/
+// imported from my code for GJP100 module 3
 const SPLIT = (delim) => (str) => (K) => {
   K(...str.split(delim));
 };
@@ -84,7 +149,6 @@ let A = (tagdesc) => (...props) => (...elms) => (pelem) => {
     isArray    , xs   => xs.forEach(addChild)
   );
   elms.forEach(addChild);
-  console.log(props, elms)
   pelem.appendChild(e);
   return e;
 }
@@ -102,7 +166,6 @@ let THE = (query) => (...props) => (...elms) => {
 }
 
 const withCLASS = (...cls) => (elm) => {
-  console.log("add classes",cls);
   elm.classList.add(...cls);
   return elm;
 }

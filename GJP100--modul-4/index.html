@@ -20,13 +20,16 @@
   </head>
   <body>
     <script>
-      const Linksy = (parent) => {
+      const COLORTHEMES = "Red Ruby,Yellow ochre,Friendly Lime,Relaxing Grass Green,Vietname Lagoon,Heaven Sky High,Blue Velvet Violet,Lilarc Midsummer Dreams,Sprimgtime Cherry Blossom in Japan".split(',').map(str => `Color Theme: ${str}`)
+      const Linksy = (parent,hueIndex = rnd(360/COLORTHEMES.length)) => {
         // Creates a UI modelling the Linksy Kitchen Timer
-
+        
         // Produce a DOM structure and insert it into `parent`
-        let elmLINKSY = 
+        let elmLINKSY =
           A("div.linksy")(
-            withATTR('title','Linksy Kitchen Timer')
+            withATTR('title',`Linksy Kitchen Timer [${COLORTHEMES[hueIndex]}]`),
+            withSTYLE(
+              'background', `radial-gradient(circle at 100% 100%, hsl(${hueIndex*360/COLORTHEMES.length}, 57%, 54%), hsl(0, 0%, 95%))`)
            )(
             A("div.linksy__display")(
               withSTYLE('grid-area','dsp')
@@ -76,36 +79,60 @@
       let elmBODY = THE("body")(
         withSTYLE('background-color','hsl(0,0%,95%)')
       )(
-        A('input.add')(withATTR('value','ADD TIMER',  'type','button',  'onclick','addLinksy();'))(),
-        A("P")()(
-          "Final Project for GJP100 spring 2020"
+        A("nav.page-menu")()(
+          A('a.page')(withATTR('href','index.html'))('Timer Mania'),
+          A('a.page')(withATTR('href','kodforstaelse.html'))('Kodförståelse'),
+          A('a.page')(withATTR('href','reflektionstext.html'))('Reflektioinstext')
         ),
-        A("h1")()(
-          "Modeling the Kitchen Timer Linksy as a Wep Page UI"
+        A("div.intro")()(
+          A("P")()(
+            "Final Project for GJP100 spring 2020"
+          ),
+          A("h1")()(
+            "TIMER MANIA"
+          ),
+          A("P")(withSTYLE('font-style','italic'))("Modeling the Kitchen Timer Linksy as a Wep Page UI"),
+          A("P")(
+            withSTYLE('display','none')
+          )(
+            "Programming UI's are hard because behaviour and appearance change dynamicly depending on the state. This is hard, maybe because the tools for defining web pages were originally intended for creation of static content. Also, programming langauges tend to have mych better support for defining data transformation than for defining reactive behaviour. This is an insteresting problem that can be difficult if not handled in a systematic way. In this project will build a UI that mimics the very modal behaviour of the Linksy Kitchen Timer as closely as possible. During the design and construction, I will observe how well the tools used are adapted for defining highly synamic reactive behaviour. "
+          ),
+          A("P")(
+            withSTYLE('display','hidden')
+          )(
+            "My project is to recreate the ", A('B')()("Linksy Kitchen Timer"), " that we have in our Kitchen at home as a UI widget on a webpage. During the design and construction of the Timer widget I hope to learn more about which systematic methods are useful for modeling dynamic UI's."
+          )
         ),
-        A("P")(
-          withSTYLE('display','none')
-        )(
-          "Programming UI's are hard because behaviour and appearance change dynamicly depending on the state. This is hard, maybe because the tools for defining web pages were originally intended for creation of static content. Also, programming langauges tend to have mych better support for defining data transformation than for defining reactive behaviour. This is an insteresting problem that can be difficult if not handled in a systematic way. In this project will build a UI that mimics the very modal behaviour of the Linksy Kitchen Timer as closely as possible. During the design and construction, I will observe how well the tools used are adapted for defining highly synamic reactive behaviour. "
-        ),
-        A("P")(
-          withSTYLE('display','hidden')
-        )(
-          "My project is to recreate the", A('B')()("Linksy Kitchen Timer"), "that we have in our Kitchen at home as a UI widget on a webpage. During the design and construction of the Timer widget I hope to learn more about which systematic methods are useful for modeling dynamic UI's."
+        A("div.control-panel")()(
+          A('button.add-timer')()('ADD RANDOMLY THEMED TIMER'),
+          A('button.add-rainbow')()('LOVE TIMERS? CELEBRATE PRIDE MONTH!'),
+          A('button.remove-timers')()('BEGIN ANEW')
         ),
         A("div.showroom")(
           withSTYLE(
             'display','flex',
             'flex-direction','row',
             'flex-wrap','wrap',
-            'justify-content','space-evenly',
+            'justify-content','start',
             'margin','2rem'))(
-          A("IMG")(
-            withATTR(
-              'src','https://tshop.r10s.jp/foxxiweb/cabinet/yitem06/linksy0006-1.jpg?fitin=330:330'))()
+      
         )
       );
-      query2elem('input.add').addEventListener('click',() => {console.log("ADD");Linksy(query2elem('.showroom'))})
+      query2elem('button.add-timer').addEventListener('click',() => {
+        Linksy(query2elem('.showroom'))
+      });
+      query2elem('button.add-rainbow').addEventListener('click',() => {
+        upto(COLORTHEMES.length).forEach(
+          (hueIdx) => Linksy(query2elem('.showroom'),hueIdx)
+        )
+      });
+      query2elem('button.remove-timers').addEventListener('click',() => {
+        query2elem('.showroom').textContent = '';
+      });
+
+
+
+      
     </script>
     </div>
 

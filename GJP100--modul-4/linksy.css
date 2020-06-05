@@ -1,13 +1,57 @@
+html, body {
+  margin: 0;
+}
+
+a, button {
+  font-family: sans-serif;
+}
+
+nav.page-menu {
+  padding: 1rem;
+  background-color: hsla(0, 0%, 0%,0.2);
+  text-align: center; 
+}
+nav.page-menu > a {
+  padding: 1rem; 
+  margin: 1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  background-color: hsla(0, 0%, 100%,0.2);
+  border-bottom: solid 4px hsla(0, 0%, 0%, 0);
+}
+nav.page-menu > a:hover {
+  background-color: hsla(0, 0%, 100%,0.6);
+  border-bottom: solid 4px hsla(0, 0%, 0%, 0.6);
+}  
+.intro {
+  padding: 1rem;
+}
+.control-panel {
+  padding: 1rem;
+  background-color: hsla(0, 0%, 0%,0.2);
+  text-align: center;
+}
+.control-panel > * {
+  margin: 2rem; 
+}
+.control-panel button {
+  background: radial-gradient(circle at 100% 100%, hsl(160, 0%, 54%), hsl(0, 0%, 95%));
+  margin: 0.5rem;
+}
+.control-panel button:active {
+  background: radial-gradient(circle at 0% 0%, hsl(160, 0%, 54%), hsl(0, 0%, 95%));
+  margin: 0.5rem;
+}
+
 .linksy {
   display: inline-block;
   font-family: monospace;
   padding:  1.2rem;
-  margin: 0.8rem;
+  margin: 0.82rem;
   border: solid 1px gray;
   border-radius: 0.5rem;
-  background-color: hsla(210, 80%, 70%, 0.8); 
   box-shadow: 3px 3px 8px 0px rgba(0,0,0,0.35);
-  background: radial-gradient(circle at 100% 100%, hsl(210, 57%, 54%), hsl(0, 0%, 95%)); 
+  background: radial-gradient(circle at 100% 100%, hsl(160, 57%, 54%), hsl(0, 0%, 95%));
 }
 
 .linksy .keypad {
@@ -16,8 +60,8 @@
   grid-gap: 0.6rem;
 }
 
-
-.linksy button {
+/* .linksy */ 
+/* .linksy */ button {
   min-height: 2.4rem;
   min-width: 4rem;
   font-size: 1.1rem;
@@ -25,9 +69,9 @@
   border-radius: 0.2rem;
   background: radial-gradient(circle at 100% 100%, hsla(0,0%,80%,0.2),  hsl(0, 0%, 95%));
 }
-.linksy button:hover {  transform: scale(1.04); }
-.linksy button        { box-shadow: 0.05rem 0.05rem 0.1rem 0.05rem hsla(0, 0%, 0%,0.4); }
-.linksy button:active { 
+/* .linksy */ button:hover {  transform: scale(1.04); }
+/* .linksy */ button        { box-shadow: 0.05rem 0.05rem 0.1rem 0.05rem hsla(0, 0%, 0%,0.4); }
+/* .linksy */ button:active { 
   box-shadow: inset 0.05rem 0.05rem 0.1rem 0.05rem  hsla(0, 0%, 0%,0.4);
   background: radial-gradient(circle at 0% 0%, hsla(0,0%,80%,0.2),  hsl(0, 0%, 95%)); 
  }
