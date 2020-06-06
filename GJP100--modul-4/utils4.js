@@ -1,6 +1,7 @@
 /*  UTILITY FUNCTIONS for MODULE 3
 *   ============================== 
-*  1. MATCHING
+*  0. MATCHING
+*  1. COMPARISON
 *  2. BRANCHING 
 *  3. MATH: RANDOMNESS
 *  4. MATH: RANGES
@@ -15,7 +16,6 @@
  * MATCHING *
  ************/
 
-
 const isArray     = Array.isArray;
 const isFunction  = (x) => typeof x === 'function';
 const isInteger   = Number.isInteger;
@@ -25,12 +25,19 @@ const isString    = (x) => typeof x === 'string' || x instanceof String;
 const isRegExp    = (x) => x && typeof x === 'object' && x.constructor === RegExp;
 const isNode      = (x) => x && x.nodeType;
 const isPrimitive = (x) => !(typeof x === 'object');
-const isAnything  = (x) => true; 
-/* const hasArity    = cond(
-  isInteger,  (n) => (...xs) => xs.length == n,
-  isFunction, (p) => (...xs) => p( xs.length )
-);
- */
+
+/**************
+ * COMPARISON *
+ **************/
+
+const EQ     = (y)   => (x) => x === y;
+const NOT     = (p)   => (x) => !p;
+const LT      = (y)   => (x) => x <  y;
+const LTE     = (y)   => (x) => x <= y;
+const GT      = (y)   => (x) => x >  y;
+const GTE     = (y)   => (x) => x >= y;
+
+
 
 
 
@@ -187,5 +194,3 @@ const withATTR = (...props) => (elm) => {
   for(let i=0; i < props.length; i+=2 ) elm[ props[i] ] = props[i+1];
   return elm;
 };
-
-const onCLICK = (f) => (elm) => elm.addEventListener()

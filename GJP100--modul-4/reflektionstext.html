@@ -19,9 +19,45 @@
 
   </head>
   <body>
-    <nav class="page-menu"><a class="page" href="index.html">Timer Mania</a><a class="page" href="kodforstaelse.html">Kodförståelse</a><a class="page" href="reflektionstext.html">Reflektioinstext</a></nav>
+    <nav class="page-menu"><a class="page" href="index.html">Timer Mania</a><a class="page" href="reflektionstext.html">Reflektioinstext</a><a class="page" href="kodforstaelse.html">Kodförståelse</a></nav>
+
+    <div style="text-align:center;padding:3rem;"><img src="https://images-eu.ssl-images-amazon.com/images/I/51StFqXAFmL.jpg"></div>
+    <article style="margin:4rem;">
     <h1>Reflektionstext</h1>
-    <p></p>
+    <p>Nu blev det väldigt ont om tid pga sjukdom här, kan jag snälla få komplettera med reflektionstext.</p>
+    <h2>Provisorisk reflexionstext</h2>
+    <p>Jag har gjort min statemaskin själv, baserat på Harels original-artikel från 1987. Hans statecharts är det som UML använder i Hierarkiska Tillståndsmaskiner. Jag har infört några nya principer som gör det möjligt att skriva statemaskiner väldigt begripligt och nära vanlig JavaScript, och utan stora bibliotek.</p>
+    <p>Att min tillståndsmaksin är användarvänlig och lättanvänd kan det faktum att jag skrev hela min maskin som definerar Timerns beteende (med undantag alltsåför hjälpfunktionerna och UI-koden) för Linksy Kitchen Timer (förutom modala etiketter på knapparna, och notifieringen syns inte, men annars komlett funktionelitet som matchar förlagan) på ca 1.5h. Det tog extra tid pga en bugg i en hjälpfunktion. Felsökning gick relativt lätt, men extra stöd för det kan läggas in, tex i SEND-funktionen.</p>
+    <h2>Här är min outline iallfall:</h2>
+    <pre>
+# OUTLINE Reflektionstext (10min)
+    + min bakgrund
+      - velat programmera men inte kunnat
+      - cs edu, bar teoretiskt, kunde ej lära att skap program
+      - går webdesign, hittade kosttillskott som återställt förmåga att fokusera ocj automatisera i viss mån, men fortafarande svårt
+      - därför använder jag min teoretiska bakgrund i cs för att skapa sätt att skriva kod som gör att även jag kna programmera!
+
+      + Bidrag
+        - jag har läst Harels ursprungliga artikel om statecharts (som ligger till grund för hiearkiska tillståndsmaskiner som används i UML)
+        - jag har anpassat hans modell till förutsättnignarna i JavaScript
+        - gjort en version som använder så mycket som möjligt av js starka sidor, som closures
+        - definierat fyra begrepp och tre implmenterat tre grundläggande hjälpfunktioner (22 inehållsrader kod)
+      
+      + Vad jag gjort i mitt projekt
+        - modellerat Linksy Kökstimer nha tillståndsmaskin
+        - modifierat UI:t
+          + definierat UI helt i js mha en hjälpfunktion som jag utvecklat i modul 3
+          + anpassat timerns designe för webb-ui genom att gruppera, ge stil och form åt knapparna
+          + gjort det enkelt att lägga till modala texter/ikoner på knapparna
+          + lagt till kontextuella hjälptexter som visas när man håller muspekaren över ett UI en kort tidsrymd
+
+      + Problem
+        - fick inte till att stödja hierarkier, byggde därför en helt flat tillståndsmaskin
+        - kunde inte använda samma struktur som hjälpfunktionen för att hantera html i js, pga behovet av korsreferenser 
+      + Intressanta utvdigningar
+        - tillståndsmaskin som stödjer hierarkier (subtillstånd inuti tillstånd)
+        - osv.
+    </pre>
     <h2></h2>
     <p></p>
     <h2></h2>
@@ -30,8 +66,5 @@
     <p></p>
     <h2></h2>
     <p></p>
-    <h2></h2>
-    <p></p>
-    <h2></h2>
-    <p></p>
+  </article>
   </body></html>

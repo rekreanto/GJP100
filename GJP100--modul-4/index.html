@@ -7,6 +7,22 @@
  
     <link rel="stylesheet" href="linksy.css">
     <script src="utils4.js"></script>
+    <script src="ephemeral-state-machine.js"></script>
+    
+    <!-- FETCH WEBFONTS -->
+    <!-- Quicksand -->
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,600,700&display=swap&subset=latin-ext"
+      rel="stylesheet">
+
+    <!-- Merriweather Sans -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i,700,700i&display=swap&subset=latin-ext"
+      rel="stylesheet">
+
+    <!-- Roboto Condensed -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,300i,400,400i,700,700i&display=swap&subset=latin-ext"
+      rel="stylesheet">
     
     <!-- MATERIAL ICONS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -21,7 +37,7 @@
   <body>
     <script>
       const COLORTHEMES = "Red Ruby,Yellow ochre,Friendly Lime,Relaxing Grass Green,Vietname Lagoon,Heaven Sky High,Blue Velvet Violet,Lilarc Midsummer Dreams,Sprimgtime Cherry Blossom in Japan".split(',').map(str => `Color Theme: ${str}`)
-      const Linksy = (parent,hueIndex = rnd(360/COLORTHEMES.length)) => {
+      const Linksy = (parent,hueIndex = 5.5) => {
         // Creates a UI modelling the Linksy Kitchen Timer
         
         // Produce a DOM structure and insert it into `parent`
@@ -31,20 +47,16 @@
             withSTYLE(
               'background', `radial-gradient(circle at 100% 100%, hsl(${hueIndex*360/COLORTHEMES.length}, 57%, 54%), hsl(0, 0%, 95%))`)
            )(
-            A("div.linksy__display")(
+            A("div.linksy__display.ui")(
               withSTYLE('grid-area','dsp')
-              )(
-                A("span.ui.linksy__minutes")()("00"),
-                ":",
-                A("span.ui.linksy__seconds")()("00"),
-            ),
+              )("00:00"),
             A("div.keypad")(
               withSTYLE(
                 'display','grid',
                 'grid-template-areas',`
                   "dsp     dsp"
                   "btn10m btn10s"
-                  "btn05m btnSTART"
+                  "btn05m btn01s"
                   "btn03m btnSTART"
                   "btn01m btnSTART"
                   "btnSTOP btnSTOP"`))(
@@ -58,6 +70,8 @@
                 withSTYLE('grid-area','btn01m'))('+ 1min'),
               A("button.ui.set")(
                 withSTYLE('grid-area','btn10s'))('+10sec'),
+                A("button.ui.set")(
+                withSTYLE('grid-area','btn01s'))('+ 1sec'),
               A("button.ui.control.stop.material-icons")(
                 withSTYLE('grid-area','btnSTOP'))("clear"),
               A("button.ui.control.play.material-icons")(
@@ -65,14 +79,86 @@
             )
           )(parent);
           
-          // Get vaiables that points to all the ui elements
-          // by querying into the newly created DOM structure
-          let stateMINS=0;
-          let stateSECS=0;
+
           
-          let [elmMINS,elmSECS,btn10m,btn05m,btn03m,btn01m,btn10s,btnSTOP,btnSTART] = Array.from(elmLINKSY.querySelectorAll('.ui'));
+          let [elmDISP,btn10m,btn05m,btn03m,btn01m,btn10s,btn01s,btnSTOP,btnSTART] = Array.from(elmLINKSY.querySelectorAll('.ui'));
             
-          // Create a state machine that handles all the behaviour
+          /************************************
+           *  DEFINE EPHEMERAL STATE MACHINE  * 
+           ************************************
+             * with the purpose of handling   * 
+             * all the behaviour of the       *
+             * Linksy Kitchen Timer           *
+             ~  may all your days be timely   ~ 
+             **********************************/
+
+          // THE CONTEXT AND TRANSITON CONSTRUCTOR `SEND`
+          //   this definition does not follow the model
+          //   but is a hack that allows us to write a flat
+          //   ephemral state machine quickly
+
+          let ctx = [];
+          const SENDTO = (ctx) => (sf) => () => { 
+            ctx[0] = ctx[0](sf);
+            
+
+          }
+          let SEND = SENDTO(ctx);
+          // converts from seconds to `<minutes>:<seconds>`
+          // a show method for convenience
+          const sec2disp = (s)=>
+                `${ Math.trunc(s/60).toString().padStart(2,'0') }:${ (s%60).toString().padStart(2,'0') }`
+          // THE STATES WITH TRANSITIONS AND BOUNDARY ACTIONS
+          
+          const Setting       = Value(
+            modalTEXT((m,s)=>sec2disp(60*m + s))(elmDISP), 
+            onCLICK(btn10m)( SEND((m,s) => Setting((m+10)%100, s)) ),
+            onCLICK(btn05m)( SEND((m,s) => Setting((m+ 5)%100, s)) ),
+            onCLICK(btn03m)( SEND((m,s) => Setting((m+ 3)%100, s)) ),
+            onCLICK(btn01m)( SEND((m,s) => Setting((m+ 1)%100, s)) ),
+            onCLICK(btn10s)( SEND((m,s) => Setting(m, (s+ 10)%60)) ),
+            onCLICK(btn01s)( SEND((m,s) => Setting(m, (s+ 1)%60)) ),
+            onCLICK(btnSTOP)( SEND( (m,s) => Setting(0, 0) ) ),
+            onCLICK(btnSTART)( SEND( cond(
+              (m,s)=>(m+s)===0 , (m,s)=>CountingUp(0),
+              () => true       , (m,s)=>CountingDown(m*60+s)
+            )))
+          );
+          const CountingDown  = Value(
+            modalTEXT(sec2disp)(elmDISP),  
+            onTIMEOUT(1000)( SEND( cond(
+                GT(0), (s) => CountingDown(s-1),  
+                EQ(0), (s) => Notifying(s),
+              ))),
+            onCLICK(btnSTOP )( SEND( (s)=>Paused(s) ), modalTEXT( ()=>'pause' ) ),
+          );
+          const CountingUp    = Value(
+            modalTEXT(sec2disp)(elmDISP),   
+            onCLICK(btnSTOP)( SEND( (s)=>CountingUpPaused(s) ), modalTEXT( ()=>'pause' ) ),
+            onTIMEOUT(1000)( SEND( (s) => CountingUp((s+1)%6000) ) )
+          );
+          const Paused        = Value(
+            modalTEXT(sec2disp)(elmDISP), 
+            onCLICK(btnSTOP )( SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
+            onCLICK(btnSTART)( SEND( (s)=>CountingDown(s) ) ),
+
+          );
+          const CountingUpPaused        = Value(
+            modalTEXT(sec2disp)(elmDISP), 
+            onCLICK(btnSTOP )( SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
+            onCLICK(btnSTART)( SEND( (s)=>CountingUp(s) ) ),
+
+          );
+          const Notifying     = Value(
+            modalTEXT(sec2disp)(elmDISP),
+            modalCLASS('alarm')(elmLINKSY),
+            onTIMEOUT(5000) ( SEND( s => Setting(0, 0) ) ),
+            onCLICK(btnSTOP)( SEND( s => Setting(0, 0) ), modalTEXT( ()=>'cancel' ) )
+          );
+
+          ctx[0] = Setting(0,0)
+      
+
           
       }
       
@@ -81,8 +167,8 @@
       )(
         A("nav.page-menu")()(
           A('a.page')(withATTR('href','index.html'))('Timer Mania'),
-          A('a.page')(withATTR('href','kodforstaelse.html'))('Kodförståelse'),
-          A('a.page')(withATTR('href','reflektionstext.html'))('Reflektioinstext')
+          A('a.page')(withATTR('href','reflektionstext.html'))('Reflektioinstext'),
+          A('a.page')(withATTR('href','kodforstaelse.html'))('Kodförståelse')
         ),
         A("div.intro")()(
           A("P")()(
@@ -91,7 +177,7 @@
           A("h1")()(
             "TIMER MANIA"
           ),
-          A("P")(withSTYLE('font-style','italic'))("Modeling the Kitchen Timer Linksy as a Wep Page UI"),
+          A("P.subtitle")(withSTYLE('font-style','italic'))("Modeling the Kitchen Timer Linksy as a Wep Page UI"),
           A("P")(
             withSTYLE('display','none')
           )(
@@ -104,7 +190,7 @@
           )
         ),
         A("div.control-panel")()(
-          A('button.add-timer')()('ADD RANDOMLY THEMED TIMER'),
+          A('button.add-timer')()('ADD TIMER'),
           A('button.add-rainbow')()('LOVE TIMERS? CELEBRATE PRIDE MONTH!'),
           A('button.remove-timers')()('BEGIN ANEW')
         ),

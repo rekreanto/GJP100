@@ -1,10 +1,19 @@
 html, body {
   margin: 0;
+  font-family: 'Merriweather', 'Open Sans', sans-serif;
 }
 
-a, button {
-  font-family: sans-serif;
+a, button, h1,h2,h3, .subtitle {
+  font-family: 'Open Sans', Arial, sans-serif;
+  text-align: center;
+  color: hsla(0,55%,35%,0.9); 
 }
+
+.subtitle { margin-top: -2rem; }
+
+h1 { font-size: 3.6rem; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.5rem; }
 
 nav.page-menu {
   padding: 1rem;
@@ -21,7 +30,7 @@ nav.page-menu > a {
 }
 nav.page-menu > a:hover {
   background-color: hsla(0, 0%, 100%,0.6);
-  border-bottom: solid 4px hsla(0, 0%, 0%, 0.6);
+  border-bottom: solid 4px hsla(0,55%,35%,0.9); ;
 }  
 .intro {
   padding: 1rem;
@@ -31,8 +40,8 @@ nav.page-menu > a:hover {
   background-color: hsla(0, 0%, 0%,0.2);
   text-align: center;
 }
-.control-panel > * {
-  margin: 2rem; 
+.control-panel button {
+  margin: 3rem; 
 }
 .control-panel button {
   background: radial-gradient(circle at 100% 100%, hsl(160, 0%, 54%), hsl(0, 0%, 95%));
@@ -41,6 +50,29 @@ nav.page-menu > a:hover {
 .control-panel button:active {
   background: radial-gradient(circle at 0% 0%, hsl(160, 0%, 54%), hsl(0, 0%, 95%));
   margin: 0.5rem;
+}
+
+
+/*************************
+ * LINKSY KITHCHEN TIMER *
+ ************************/
+
+
+.linksy.alarm {
+  animation: alarm 0.225s ease-in-out infinite alternate-reverse;
+
+}
+
+@keyframes alarm {
+  0% {
+    transform: rotate(-1deg) scale(0.99);
+  }
+  50% {
+    transform: rotate(0deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(+1deg) scale(0.99);
+  }  
 }
 
 .linksy {
@@ -53,7 +85,10 @@ nav.page-menu > a:hover {
   box-shadow: 3px 3px 8px 0px rgba(0,0,0,0.35);
   background: radial-gradient(circle at 100% 100%, hsl(160, 57%, 54%), hsl(0, 0%, 95%));
 }
-
+.linksy button:disabled {
+  background-color: hsla(0, 0%, 40%, 0.3 ) !important;
+  color: hsla(0, 0%, 0%, 0.3) !important;
+}
 .linksy .keypad {
   margin-top: 0.8rem;
   padding: 0.5rem;
@@ -76,6 +111,8 @@ nav.page-menu > a:hover {
   background: radial-gradient(circle at 0% 0%, hsla(0,0%,80%,0.2),  hsl(0, 0%, 95%)); 
  }
 
+.linksy button { color: black; opacity: 0.66; }
+
 .linksy button.set {
   font-family: inherit;
   font-weight: bold;
@@ -93,9 +130,6 @@ nav.page-menu > a:hover {
 button.material-icons.play { font-size: 4rem; }
 button.material-icons.stop { font-size: 2rem; }
 
-.linksy input.set {
-
-}
 
 .linksy .linksy__display {
   font-size: 4rem;
