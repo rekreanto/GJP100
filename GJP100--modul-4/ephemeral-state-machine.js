@@ -29,17 +29,18 @@
 
                                             // EPHEMERAL STATE LIFE CYCLE
                                             // ==========================
-const Value = (...entryActions) =>          // :: <state constructor>
-(...xs) => {                                // ENTERING STATE 
-console.log("ENTERING with args ", xs);             
-let exitActions = entryActions              //   Perform Entry Actions 
-                    .map(act => act(...xs));
-                                            // ... STATE IS ALIVE ...
-return (stateFunction) => {                 // EXITING STATE
-  exitActions                               //  Perform Exit actions    
-    .map(act => act(...xs));  
-  return stateFunction(...xs);              // GIVE args to the next state funciton
-}                                 
+const Value = (name) => (...types) =>
+    (...entryActions) =>                        // :: <state constructor>
+    (...xs) => {                                // ENTERING STATE 
+    console.log("=> ", `${name}(${xs.join(', ')})`);             
+    let exitActions = entryActions              //   Perform Entry Actions 
+                        .map(act => act(...xs));
+                                                // ... STATE IS ALIVE ...
+    return (stateFunction) => {                 // EXITING STATE
+      exitActions                               //  Perform Exit actions    
+        .map(act => act(...xs));  
+      return stateFunction(...xs);              // GIVE args to the next state funciton
+  }                                 
 };
 
 
@@ -65,18 +66,19 @@ return (stateFunction) => {                 // EXITING STATE
                                                     // BEHAVIOUR LIFE CYCLE
                                                     // ====================  
 const onEVENT = (eventName) => (elem) =>            //
-    (transition, ...entryModals) =>                 // :: <behavior>
+    (helptext, transition, ...entryModals) =>                 // :: <behavior>
       (...xs) => {                                  // ON ENTRY:
-                                                
-        elem.removeAttribute('disabled'); //   enable
+                                                    //   add helptext
+        let revertAttribute = modalATTR('title', `[${helptext}]`)(elem)(...xs);                                     
+        elem.removeAttribute('disabled');           //   enable
                                                     //   Establish behaviour
         elem.addEventListener(eventName, transition);
                                                     //   Establish Modals
         let exitModals = entryModals.map(mdl => mdl(elem)(...xs));
                                                     //   BEHAVE until state exits
         return (...ys) => {                         // ON EXIT:  
-
-          elem.setAttribute('disabled',true); ;// disable                        
+          revertAttribute(...ys);                   //   remove helptext and restore previous value
+          elem.setAttribute('disabled',true); ;     // disable                        
                                                      //   Remove behaviour
           elem.removeEventListener(eventName, transition);
           exitModals.map(mdl => mdl(...ys));         //   Remove Modals
@@ -122,7 +124,6 @@ const onEVENT = (eventName) => (elem) =>            //
 const modalTEXT = (show) =>             // :: <modal>
     (elem)  =>                          // :: <boundary action>
     (...xs) => {                        // ENTER modality
-      console.log("modal text: ", show())
       let orig = elem.textContent;       //   Save original modality          
       elem.textContent = show(...xs);    //   Set temporary modality
                                          // ... BE MODAL ...

@@ -19,11 +19,9 @@
       href="https://fonts.googleapis.com/css?family=Merriweather+Sans:300,300i,400,400i,700,700i&display=swap&subset=latin-ext"
       rel="stylesheet">
 
-    <!-- Roboto Condensed -->
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,300i,400,400i,700,700i&display=swap&subset=latin-ext"
-      rel="stylesheet">
-    
+    <!-- PT Mono 400 -->
+    <link href="https://fonts.googleapis.com/css2?family=PT+Mono&display=swap" rel="stylesheet">
+
     <!-- MATERIAL ICONS -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
@@ -61,17 +59,17 @@
                   "btn01m btnSTART"
                   "btnSTOP btnSTOP"`))(
               A("button.ui.set")(
-                withSTYLE('grid-area','btn10m'))('+10min'),
+                withSTYLE('grid-area','btn10m'))('+10\''),
               A("button.ui.set")(
-                withSTYLE('grid-area','btn05m'))('+ 5min'),
+                withSTYLE('grid-area','btn05m'))('+ 5\''),
               A("button.ui.set")(
-                withSTYLE('grid-area','btn03m'))('+ 3min'),
+                withSTYLE('grid-area','btn03m'))('+ 3\''),
               A("button.ui.set")(
-                withSTYLE('grid-area','btn01m'))('+ 1min'),
+                withSTYLE('grid-area','btn01m'))('+ 1\''),
               A("button.ui.set")(
-                withSTYLE('grid-area','btn10s'))('+10sec'),
+                withSTYLE('grid-area','btn10s'))('+10"'),
                 A("button.ui.set")(
-                withSTYLE('grid-area','btn01s'))('+ 1sec'),
+                withSTYLE('grid-area','btn01s'))('+ 1"'),
               A("button.ui.control.stop.material-icons")(
                 withSTYLE('grid-area','btnSTOP'))("clear"),
               A("button.ui.control.play.material-icons")(
@@ -108,52 +106,59 @@
           // a show method for convenience
           const sec2disp = (s)=>
                 `${ Math.trunc(s/60).toString().padStart(2,'0') }:${ (s%60).toString().padStart(2,'0') }`
-          // THE STATES WITH TRANSITIONS AND BOUNDARY ACTIONS
           
-          const Setting       = Value(
+          // A STATE MACHINE FOR THE LINKSY KITCHEN TIMER
+          // DEFINED IN TERMS OF EPHEMERAL VALUES WITH TRANSITIONS, MODALS AND BOUNDARY ACTIONS
+          
+          const Int = isInteger;
+
+          const Setting       = Value('Setting')(Int,Int)(
             modalTEXT((m,s)=>sec2disp(60*m + s))(elmDISP), 
-            onCLICK(btn10m)( SEND((m,s) => Setting((m+10)%100, s)) ),
-            onCLICK(btn05m)( SEND((m,s) => Setting((m+ 5)%100, s)) ),
-            onCLICK(btn03m)( SEND((m,s) => Setting((m+ 3)%100, s)) ),
-            onCLICK(btn01m)( SEND((m,s) => Setting((m+ 1)%100, s)) ),
-            onCLICK(btn10s)( SEND((m,s) => Setting(m, (s+ 10)%60)) ),
-            onCLICK(btn01s)( SEND((m,s) => Setting(m, (s+ 1)%60)) ),
-            onCLICK(btnSTOP)( SEND( (m,s) => Setting(0, 0) ) ),
-            onCLICK(btnSTART)( SEND( cond(
-              (m,s)=>(m+s)===0 , (m,s)=>CountingUp(0),
-              () => true       , (m,s)=>CountingDown(m*60+s)
-            )))
-          );
-          const CountingDown  = Value(
+            onCLICK(btn10m)('add 10 minutes', SEND( (m,s) => Setting((m+10)%100, s)) ),
+            onCLICK(btn05m)('add 5 minutes',  SEND( (m,s) => Setting((m+ 5)%100, s)) ),
+            onCLICK(btn03m)('add 3 minutes',  SEND( (m,s) => Setting((m+ 3)%100, s)) ),
+            onCLICK(btn01m)('add 1 minute',   SEND( (m,s) => Setting((m+ 1)%100, s)) ),
+            onCLICK(btn10s)('add 10 seconds', SEND( (m,s) => Setting(m, (s+ 10)%60)) ),
+            onCLICK(btn01s)('add 1 second',   SEND( (m,s) => Setting(m, (s+  1)%60)) ),
+            onCLICK(btnSTOP)('reset to zero', SEND( (m,s) => Setting(0, 0) ) ),
+            onCLICK(btnSTART)(
+              'start counting down (or up if starting from zero)', 
+              SEND( cond(
+                (m,s)=>(m+s)===0 , (m,s)=>CountingUp(0),
+                () => true       , (m,s)=>CountingDown(m*60+s)
+            ))));
+          
+          const CountingDown  = Value('CountingDown')(Int)(
             modalTEXT(sec2disp)(elmDISP),  
             onTIMEOUT(1000)( SEND( cond(
                 GT(0), (s) => CountingDown(s-1),  
                 EQ(0), (s) => Notifying(s),
               ))),
-            onCLICK(btnSTOP )( SEND( (s)=>Paused(s) ), modalTEXT( ()=>'pause' ) ),
+            onCLICK(btnSTOP )('pause countdown', SEND( (s)=>Paused(s) ), modalTEXT( ()=>'pause' ) ),
           );
-          const CountingUp    = Value(
+          const CountingUp    = Value('CountingUp')(Int)(
             modalTEXT(sec2disp)(elmDISP),   
-            onCLICK(btnSTOP)( SEND( (s)=>CountingUpPaused(s) ), modalTEXT( ()=>'pause' ) ),
-            onTIMEOUT(1000)( SEND( (s) => CountingUp((s+1)%6000) ) )
+            onCLICK(btnSTOP)('pause counting up', SEND( (s)=>CountingUpPaused(s) ), modalTEXT( ()=>'pause' ) ),
+            onTIMEOUT(1000)( SEND( (s) => CountingUp((s+1)%6000) ) ) 
+            // jag tror timern stannar på maxtid ^^ istället för att loopa som i koden ovan
           );
-          const Paused        = Value(
+          const Paused        = Value('Paused')(Int)(
             modalTEXT(sec2disp)(elmDISP), 
-            onCLICK(btnSTOP )( SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
-            onCLICK(btnSTART)( SEND( (s)=>CountingDown(s) ) ),
+            onCLICK(btnSTOP )('cancel countdown', SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
+            onCLICK(btnSTART)('resume countdown', SEND( (s)=>CountingDown(s) ) ),
 
           );
-          const CountingUpPaused        = Value(
+          const CountingUpPaused        = Value('CountingUpPaused')(Int)(
             modalTEXT(sec2disp)(elmDISP), 
-            onCLICK(btnSTOP )( SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
-            onCLICK(btnSTART)( SEND( (s)=>CountingUp(s) ) ),
+            onCLICK(btnSTOP )('cancel counting up', SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
+            onCLICK(btnSTART)('resume counting up',  SEND( (s)=>CountingUp(s) ) ),
 
           );
-          const Notifying     = Value(
+          const Notifying     = Value('Notifying')(Int)(
             modalTEXT(sec2disp)(elmDISP),
             modalCLASS('alarm')(elmLINKSY),
             onTIMEOUT(5000) ( SEND( s => Setting(0, 0) ) ),
-            onCLICK(btnSTOP)( SEND( s => Setting(0, 0) ), modalTEXT( ()=>'cancel' ) )
+            onCLICK(btnSTOP)('cancel alarm', SEND( s => Setting(0, 0) ), modalTEXT( ()=>'cancel' ) )
           );
 
           ctx[0] = Setting(0,0)
@@ -191,7 +196,7 @@
         ),
         A("div.control-panel")()(
           A('button.add-timer')()('ADD TIMER'),
-          A('button.add-rainbow')()('LOVE TIMERS? CELEBRATE PRIDE MONTH!'),
+          A('button.add-rainbow')()('ADD RAINBOW TIMERS'),
           A('button.remove-timers')()('BEGIN ANEW')
         ),
         A("div.showroom")(
