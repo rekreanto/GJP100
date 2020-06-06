@@ -143,8 +143,8 @@
                 cond(
                       (m,s)=>(m+s)===0 , (m,s)=>CountingUp(0),
                       () => true       , (m,s)=>CountingDown(m*60+s)
-                ),
-                modalTITLE('start counting down (or up if starting from zero)'))));
+                )),
+                modalTITLE('start counting down')));
           
           const CountingDown = Value('CountingDown')(Int)(
             modalTEXT(sec2disp)(elmDISP),  

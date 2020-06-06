@@ -32,7 +32,7 @@
 const Value = (name) => (...types) =>
     (...entryActions) =>                        // :: <state constructor>
     (...xs) => {                                // ENTERING STATE 
-    console.log("=> ", `${name}(${xs.join(', ')})`);             
+    console.log(`${name}(${xs.join(', ')})`);             
     let exitActions = entryActions              //   Perform Entry Actions 
                         .map(act => act(...xs));
                                                 // ... STATE IS ALIVE ...
