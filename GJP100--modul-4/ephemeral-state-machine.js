@@ -66,10 +66,8 @@ const Value = (name) => (...types) =>
                                                     // BEHAVIOUR LIFE CYCLE
                                                     // ====================  
 const onEVENT = (eventName) => (elem) =>            //
-    (helptext, transition, ...entryModals) =>                 // :: <behavior>
-      (...xs) => {                                  // ON ENTRY:
-                                                    //   add helptext
-        let revertAttribute = modalATTR('title', `[${helptext}]`)(elem)(...xs);                                     
+    (transition, ...entryModals) =>                 // :: <behavior>
+      (...xs) => {                                  // ON ENTRY:                                    
         elem.removeAttribute('disabled');           //   enable
                                                     //   Establish behaviour
         elem.addEventListener(eventName, transition);
@@ -77,10 +75,8 @@ const onEVENT = (eventName) => (elem) =>            //
         let exitModals = entryModals.map(mdl => mdl(elem)(...xs));
                                                     //   BEHAVE until state exits
         return (...ys) => {                         // ON EXIT:  
-          revertAttribute(...ys);                   //   remove helptext and restore previous value
-          elem.setAttribute('disabled',true); ;     // disable                        
-                                                     //   Remove behaviour
-          elem.removeEventListener(eventName, transition);
+          elem.setAttribute('disabled',true); ;     //   disable
+          elem.removeEventListener(eventName, transition); // Revert behaviour
           exitModals.map(mdl => mdl(...ys));         //   Remove Modals
         }
       } 
@@ -142,6 +138,8 @@ const modalTEXT = (show) =>             // :: <modal>
         elem[attr] = val; ;         //   Revert to original modality
       }
     }
+
+  const modalTITLE = val => modalATTR('title',val);
 
   const modalCLASS = (...classes) =>
    (elem)  =>

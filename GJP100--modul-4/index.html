@@ -90,17 +90,18 @@
              ~  may all your days be timely   ~ 
              **********************************/
 
-          // THE CONTEXT AND TRANSITON CONSTRUCTOR `SEND`
+          // THE CONTEXT AND TRANSITON CONSTRUCTOR `TRANSITION`
           //   this definition does not follow the model
           //   but is a hack that allows us to write a flat
           //   ephemral state machine quickly
 
           let ctx = [];
-          const SENDTO = (ctx) => (sf,...acts) => () => { 
+          const TRANSITIONTO = (ctx) => (transitionName) => (sf,...acts) => () => { 
+            console.log(`| ${transitionName} |`)
             ctx[0] = ctx[0](sf);
             acts.forEach(act=>{act();});
           }
-          let SEND = SENDTO(ctx);
+          let TRANSITION = TRANSITIONTO(ctx);
 
           const log = (str) => () => {
             console.log(`|${str}|`);
@@ -115,54 +116,82 @@
           
           const Int = isInteger;
 
-          const Setting       = Value('Setting')(Int,Int)(
+          const Setting = Value('Setting')(Int,Int)(
             modalTEXT((m,s)=>sec2disp(60*m + s))(elmDISP), 
-            onCLICK(btn10m)('add 10 minutes', SEND( (m,s) => Setting((m+10)%100, s) ) ),
-            onCLICK(btn05m)('add 5 minutes',  SEND( (m,s) => Setting((m+ 5)%100, s)) ),
-            onCLICK(btn03m)('add 3 minutes',  SEND( (m,s) => Setting((m+ 3)%100, s)) ),
-            onCLICK(btn01m)('add 1 minute',   SEND( (m,s) => Setting((m+ 1)%100, s)) ),
-            onCLICK(btn10s)('add 10 seconds', SEND( (m,s) => Setting(m, (s+ 10)%60)) ),
-            onCLICK(btn01s)('add 1 second',   SEND( (m,s) => Setting(m, (s+  1)%60)) ),
-            onCLICK(btnSTOP)('reset to zero', SEND( (m,s) => Setting(0, 0) ) ),
-            onCLICK(btnSTART)(
-              'start counting down (or up if starting from zero)', 
-              SEND( cond(
-                (m,s)=>(m+s)===0 , (m,s)=>CountingUp(0),
-                () => true       , (m,s)=>CountingDown(m*60+s)
-            ))));
+            onCLICK(btn10m)( 
+              TRANSITION("+10'")( (m,s) => Setting((m+10)%100, s) ), 
+              modalTITLE('add 10 minutes') ),
+            onCLICK(btn05m)( 
+              TRANSITION("+5'")( (m,s) => Setting((m+ 5)%100, s)) , 
+              modalTITLE('add 5 minutes') ),
+            onCLICK(btn03m)( 
+              TRANSITION("+3'")( (m,s) => Setting((m+ 3)%100, s)) , 
+              modalTITLE('add 3 minutes') ),
+            onCLICK(btn01m)( 
+              TRANSITION("+1'")( (m,s) => Setting((m+ 1)%100, s)) , 
+              modalTITLE('add 1 minute') ),
+            onCLICK(btn10s)( 
+              TRANSITION('+10"')( (m,s) => Setting(m, (s+ 10)%60)) , 
+              modalTITLE('add 10 secondss') ),
+            onCLICK(btn01s)( 
+              TRANSITION('+1"')( (m,s) => Setting(m, (s+  1)%60)) , 
+              modalTITLE('add 1 second') ),
+            onCLICK(btnSTOP)( TRANSITION('RESET')( (m,s) => Setting(0, 0) ), 
+              modalTITLE('reset to zero') ),
+            onCLICK(btnSTART)( 
+              TRANSITION('START')( 
+                cond(
+                      (m,s)=>(m+s)===0 , (m,s)=>CountingUp(0),
+                      () => true       , (m,s)=>CountingDown(m*60+s)
+                ),
+                modalTITLE('start counting down (or up if starting from zero)'))));
           
-          const CountingDown  = Value('CountingDown')(Int)(
+          const CountingDown = Value('CountingDown')(Int)(
             modalTEXT(sec2disp)(elmDISP),  
-            onTIMEOUT(1000)( SEND( cond(
+            onTIMEOUT(1000)( TRANSITION('TIC')( cond(
                 GT(0), (s) => CountingDown(s-1),  
-                EQ(0), (s) => Notifying(s),
-              ))),
-            onCLICK(btnSTOP )('pause countdown', SEND( (s)=>Paused(s) ), modalTEXT( ()=>'pause' ) ),
-          );
+                EQ(0), (s) => Alarming((s))))),
+            onCLICK(btnSTOP)( 
+              TRANSITION('PAUSE')( (s)=>Paused(s) ), 
+              modalTEXT( ()=>'pause' ), 
+              modalTITLE('pause countdown')));
+
           const CountingUp    = Value('CountingUp')(Int)(
             modalTEXT(sec2disp)(elmDISP),   
-            onCLICK(btnSTOP)('pause counting up', SEND( (s)=>CountingUpPaused(s) ), modalTEXT( ()=>'pause' ) ),
-            onTIMEOUT(1000)( SEND( (s) => CountingUp((s+1)%6000) ) ) 
-            // jag tror timern stannar på maxtid ^^ istället för att loopa som i koden ovan
-          );
-          const Paused        = Value('Paused')(Int)(
-            modalTEXT(sec2disp)(elmDISP), 
-            onCLICK(btnSTOP )('cancel countdown', SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
-            onCLICK(btnSTART)('resume countdown', SEND( (s)=>CountingDown(s) ) ),
+            onCLICK(btnSTOP)( 
+              TRANSITION('PAUSE')( (s)=>CountingUpPaused(s) ),
+              modalTEXT( ()=>'pause' ),
+              modalTITLE('pause counting up') ),
+            onTIMEOUT(1000)( TRANSITION('TIC')( (s) => CountingUp((s+1)%6000) )));
 
-          );
+          const Paused = Value('Paused')(Int)(
+            modalTEXT(sec2disp)(elmDISP), 
+            onCLICK(btnSTOP)( 
+              TRANSITION('STOP')( (s)=>Setting(0, 0) ), 
+              modalTEXT( ()=>'stop' ), 
+              modalTITLE('cancel countdown')),
+            onCLICK(btnSTART)(
+              TRANSITION('RESUME')( (s)=>CountingDown(s) ),
+              modalTITLE('resume countdown')));
+
           const CountingUpPaused        = Value('CountingUpPaused')(Int)(
             modalTEXT(sec2disp)(elmDISP), 
-            onCLICK(btnSTOP )('cancel counting up', SEND( (s)=>Setting(0, 0) ), modalTEXT( ()=>'stop' )  ),
-            onCLICK(btnSTART)('resume counting up',  SEND( (s)=>CountingUp(s) ) ),
+            onCLICK(btnSTOP )( 
+              TRANSITION('STOP')( (s)=>Setting(0, 0) ), 
+              modalTEXT( ()=>'stop' ), 
+              modalTITLE('cancel counting up')),
+            onCLICK(btnSTART)( 
+              TRANSITION('RESUME')( (s)=>CountingUp(s)), 
+              modalTITLE('resume counting up')));
 
-          );
-          const Notifying     = Value('Notifying')(Int)(
+          const Alarming = Value('Alarming')(Int)(
             modalTEXT(sec2disp)(elmDISP),
             modalCLASS('alarm')(elmLINKSY),
-            onTIMEOUT(5000) ( SEND( s => Setting(0, 0) ) ),
-            onCLICK(btnSTOP)('cancel alarm', SEND( s => Setting(0, 0) ), modalTEXT( ()=>'cancel' ) )
-          );
+            onTIMEOUT(5000) ( TRANSITION('ALARM TIMEOUT')( s => Setting(0, 0) ) ),
+            onCLICK(btnSTOP)( 
+              TRANSITION('CANCEL')( s => Setting(0, 0) ), 
+              modalTEXT( ()=>'cancel' ), 
+              modalTITLE('cancel alarm')));
 
           ctx[0] = Setting(0,0)
       
