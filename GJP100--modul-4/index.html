@@ -34,8 +34,8 @@
   </head>
   <body>
     <script>
-      const COLORTHEMES = "Red Ruby,Yellow ochre,Friendly Lime,Relaxing Grass Green,Vietname Lagoon,Heaven Sky High,Blue Velvet Violet,Lilarc Midsummer Dreams,Sprimgtime Cherry Blossom in Japan".split(',').map(str => `Color Theme: ${str}`)
-      const Linksy = (parent,hueIndex = 5.5) => {
+      const COLORTHEMES = "Red Ruby,Orange County,Yellow ochre,uhu,Friendly Lime,Relaxing Grass Green,Vietnam Lagoon,Heaven Sky High,Aha,Blue Velvet Violet,Lilarc Midsummer Dreams,Sprimgtime Cherry Blossom in Japan".split(',').map(str => `Color Theme: ${str}`)
+      const Linksy = (parent,hueIndex = 7) => {
         // Creates a UI modelling the Linksy Kitchen Timer
         
         // Produce a DOM structure and insert it into `parent`
@@ -96,12 +96,15 @@
           //   ephemral state machine quickly
 
           let ctx = [];
-          const SENDTO = (ctx) => (sf) => () => { 
+          const SENDTO = (ctx) => (sf,...acts) => () => { 
             ctx[0] = ctx[0](sf);
-            
-
+            acts.forEach(act=>{act();});
           }
           let SEND = SENDTO(ctx);
+
+          const log = (str) => () => {
+            console.log(`|${str}|`);
+          }
           // converts from seconds to `<minutes>:<seconds>`
           // a show method for convenience
           const sec2disp = (s)=>
@@ -114,7 +117,7 @@
 
           const Setting       = Value('Setting')(Int,Int)(
             modalTEXT((m,s)=>sec2disp(60*m + s))(elmDISP), 
-            onCLICK(btn10m)('add 10 minutes', SEND( (m,s) => Setting((m+10)%100, s)) ),
+            onCLICK(btn10m)('add 10 minutes', SEND( (m,s) => Setting((m+10)%100, s) ) ),
             onCLICK(btn05m)('add 5 minutes',  SEND( (m,s) => Setting((m+ 5)%100, s)) ),
             onCLICK(btn03m)('add 3 minutes',  SEND( (m,s) => Setting((m+ 3)%100, s)) ),
             onCLICK(btn01m)('add 1 minute',   SEND( (m,s) => Setting((m+ 1)%100, s)) ),

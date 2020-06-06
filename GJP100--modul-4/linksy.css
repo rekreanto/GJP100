@@ -3,6 +3,10 @@ html, body {
   font-family: 'Merriweather', 'Open Sans', sans-serif;
 }
 
+p {
+ margin: 1rem;
+}
+
 a, button, h1,h2,h3, .subtitle {
   font-family: 'Open Sans', Arial, sans-serif;
   font-family: 'PT Mono', monospace;;
@@ -49,11 +53,11 @@ nav.page-menu > a:hover {
   margin: 3rem; 
 }
 .control-panel button {
-  background: radial-gradient(circle at 100% 100%, hsl(160, 0%, 54%), hsl(0, 0%, 95%));
+  background: radial-gradient(circle at 100% 100%, hsl(160, 0%, 74%), hsl(0, 0%, 95%));
   margin: 0.5rem;
 }
 .control-panel button:active {
-  background: radial-gradient(circle at 0% 0%, hsl(160, 0%, 54%), hsl(0, 0%, 95%));
+  background: radial-gradient(circle at 0% 0%, hsl(160, 0%, 74%), hsl(0, 0%, 95%));
   margin: 0.5rem;
 }
 
